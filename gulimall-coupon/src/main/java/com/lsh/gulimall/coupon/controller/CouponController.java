@@ -24,7 +24,6 @@ import com.lsh.gulimall.common.utils.PageUtils;
  */
 @RestController
 @RequestMapping("coupon/coupon")
-@CrossOrigin
 public class CouponController {
 	@Autowired
 	private CouponService couponService;

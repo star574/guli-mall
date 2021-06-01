@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 /**
  * @author codestar
  */
-@Component
 public class FeignClientImpl implements MemberFeignClient {
 	@Override
 	public R list() {
