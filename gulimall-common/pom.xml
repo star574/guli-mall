@@ -27,13 +27,14 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
-			<version>3.3.2</version>
+			<version>3.4.3</version>
 		</dependency>
 		<!--简化实体类，用@Data代替getset方法-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.8</version>
+			<optional>true</optional>
 		</dependency>
 		<!-- httpcomponent包。发送http请求 -->
 		<dependency>
@@ -61,14 +62,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--服务发现注册-->
 		<dependency>
 			<groupId>com.alibaba.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>com.alibaba.cloud</groupId>-->
-		<!--			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
-		<!--		</dependency>-->
+		<!--服务配置-->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
 	</dependencies>
 
 
@@ -77,7 +80,7 @@
 			<dependency>
 				<groupId>com.alibaba.cloud</groupId>
 				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
-				<version>2.1.0.RELEASE</version>
+				<version>2.1.4.RELEASE</version>
 				<!--					<version>2.2.0.RELEASE</version>-->
 				<type>pom</type>
 				<scope>import</scope>

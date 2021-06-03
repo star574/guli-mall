@@ -1,19 +1,17 @@
 package com.lsh.gulimall.coupon.controller;
 
+import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
-
+import com.lsh.gulimall.coupon.entity.CouponEntity;
+import com.lsh.gulimall.coupon.service.CouponService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Map;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.lsh.gulimall.coupon.entity.CouponEntity;
-import com.lsh.gulimall.coupon.service.CouponService;
-import com.lsh.gulimall.common.utils.PageUtils;
-
 
 /**
  * 优惠券信息
@@ -22,11 +20,16 @@ import com.lsh.gulimall.common.utils.PageUtils;
  * @email codestar@gmail.com
  * @date 2021-06-01 00:30:32
  */
+@Slf4j
 @RestController
 @RequestMapping("coupon/coupon")
+@RefreshScope
 public class CouponController {
 	@Autowired
 	private CouponService couponService;
+
+	@Value("${user.id}")
+	String userid;
 
 	/**
 	 * 列表
@@ -44,7 +47,6 @@ public class CouponController {
 	// // @RequiresPermissions("coupon:coupon:list")
 	public R list(@RequestParam Map<String, Object> params) {
 		PageUtils page = couponService.queryPage(params);
-
 		return R.ok().put("page", page);
 	}
 
@@ -56,7 +58,7 @@ public class CouponController {
 	// // @RequiresPermissions("coupon:coupon:info")
 	public R info(@PathVariable("id") Long id) {
 		CouponEntity coupon = couponService.getById(id);
-
+		log.warn("nacos配置成功"+userid);
 		return R.ok().put("coupon", coupon);
 	}
 

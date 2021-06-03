@@ -4,7 +4,7 @@
  Source Server         : vagrant
  Source Server Type    : MySQL
  Source Server Version : 50734
- Source Host           : 192.168.56.2:3306
+ Source Host           : 192.168.58.128:3306
  Source Schema         : gulimall_ums
 
  Target Server Type    : MySQL

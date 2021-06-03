@@ -1,17 +1,16 @@
 package com.lsh.gulimall.member.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-
+import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.member.Feign.MemberFeignClient;
+import com.lsh.gulimall.member.entity.MemberEntity;
+import com.lsh.gulimall.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.lsh.gulimall.member.entity.MemberEntity;
-import com.lsh.gulimall.member.service.MemberService;
-import com.lsh.gulimall.common.utils.PageUtils;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -33,8 +32,10 @@ public class MemberController {
 	/*服务调用*/
 	@GetMapping("/")
 	R getList() {
-		return memberFeignClient.list();
+		List<MemberEntity> list = memberService.list();
+		return R.ok().put("list", list).put("memberFeignClient", memberFeignClient.list());
 	}
+
 	/**
 	 * 列表
 	 */
