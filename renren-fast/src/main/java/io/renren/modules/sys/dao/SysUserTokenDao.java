@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 系统用户Token
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @Mapper
 public interface SysUserTokenDao extends BaseMapper<SysUserTokenEntity> {

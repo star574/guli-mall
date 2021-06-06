@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * 菜单管理
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 public interface SysMenuService extends IService<SysMenuEntity> {
 

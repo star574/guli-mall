@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 权限(Token)验证
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {

@@ -16,7 +16,7 @@ import java.sql.SQLException;
 /**
  * DruidDataSource
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  * @since 1.0.0
  */
 public class DynamicDataSourceFactory {

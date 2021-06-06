@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 配置多数据源
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @Configuration
 @EnableConfigurationProperties(DynamicDataSourceProperties.class)

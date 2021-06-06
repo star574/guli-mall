@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * XSS过滤
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 public class XssFilter implements Filter {
 

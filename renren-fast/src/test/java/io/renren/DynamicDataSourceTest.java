@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 /**
  * 多数据源测试
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

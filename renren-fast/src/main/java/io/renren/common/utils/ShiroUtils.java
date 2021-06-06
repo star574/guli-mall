@@ -17,7 +17,7 @@ import org.apache.shiro.subject.Subject;
 /**
  * Shiro工具类
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 public class ShiroUtils {
 

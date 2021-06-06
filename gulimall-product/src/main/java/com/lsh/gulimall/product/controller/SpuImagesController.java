@@ -24,7 +24,7 @@ import com.lsh.gulimall.common.utils.Query;
  * spu图片
  *
  * @author codestar
- * @email sunlightcs@gmail.com
+ * @email shihengluo574@gmail.com
  * @date 2021-05-31 22:31:07
  */
 @RestController

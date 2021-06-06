@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 系统用户
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 public interface SysUserService extends IService<SysUserEntity> {
 

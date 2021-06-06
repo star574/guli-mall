@@ -14,7 +14,7 @@ import lombok.Data;
  * 商品三级分类
  *
  * @author codestar
- * @email sunlightcs@gmail.com
+ * @email shihengluo574@gmail.com
  * @date 2021-05-31 22:31:07
  */
 @Data

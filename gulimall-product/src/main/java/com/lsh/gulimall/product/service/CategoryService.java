@@ -12,13 +12,30 @@ import java.util.Map;
  * 商品三级分类
  *
  * @author codestar
- * @email sunlightcs@gmail.com
+ * @email shihengluo574@gmail.com
  * @date 2021-05-31 22:31:07
  */
 public interface CategoryService extends IService<CategoryEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+	/**
+	 * //TODO
+	 *
+	 * @param params
+	 * @return PageUtils
+	 * @date 2021/6/7 上午1:24
+	 * @Description 分页查询
+	 */
+	PageUtils queryPage(Map<String, Object> params);
 
+	/**
+	 * //TODO
+	 *
+	 * @param
+	 * @return
+	 * @throws
+	 * @date 2021/6/7 上午1:25
+	 * @Description
+	 */
 	List<CategoryEntity> getCategoryServiceList();
 
 }

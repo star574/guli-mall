@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * mybatis-plus配置
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @Configuration
 public class MybatisPlusConfig {

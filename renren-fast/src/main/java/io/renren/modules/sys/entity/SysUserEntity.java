@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * 系统用户
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @Data
 @TableName("sys_user")

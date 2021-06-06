@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * 文件上传
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @RestController
 @RequestMapping("sys/oss")

@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * 系统菜单
  *
- * @author Mark sunlightcs@gmail.com
+ * @author Mark shihengluo574@gmail.com
  */
 @RestController
 @RequestMapping("/sys/menu")

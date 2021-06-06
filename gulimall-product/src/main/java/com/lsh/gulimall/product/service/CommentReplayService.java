@@ -11,7 +11,7 @@ import java.util.Map;
  * 商品评价回复关系
  *
  * @author codestar
- * @email sunlightcs@gmail.com
+ * @email shihengluo574@gmail.com
  * @date 2021-05-31 22:31:07
  */
 public interface CommentReplayService extends IService<CommentReplayEntity> {
