@@ -35,7 +35,8 @@ public interface CategoryService extends IService<CategoryEntity> {
 	 * @date 2021/6/7 上午1:25
 	 * @Description
 	 */
-	List<CategoryEntity> getCategoryServiceList();
+	List<CategoryEntity> getCategoryServiceList(String info);
 
+	boolean deleteById(Long[] catId);
 }
 
