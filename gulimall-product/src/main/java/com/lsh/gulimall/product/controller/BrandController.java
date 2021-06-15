@@ -1,11 +1,18 @@
 package com.lsh.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 
 import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.common.valid.AddGroup;
+import com.lsh.gulimall.common.valid.UpdateGroup;
+import com.lsh.gulimall.common.valid.updateStatusGroup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +23,8 @@ import com.lsh.gulimall.product.entity.BrandEntity;
 import com.lsh.gulimall.product.service.BrandService;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
+
+import javax.validation.Valid;
 
 
 /**
@@ -45,6 +54,8 @@ public class BrandController {
 
 	/**
 	 * 信息
+	 *
+	 * @Valid 校验注解
 	 */
 	@RequestMapping("/info/{brandId}")
 	// @RequiresPermissions("product:brand:info")
@@ -56,21 +67,35 @@ public class BrandController {
 
 	/**
 	 * 保存
+	 *
+	 * @Validated(AddGroup.class) 指定校验分组
 	 */
 	@RequestMapping("/save")
 	// @RequiresPermissions("product:brand:save")
-	public R save(@RequestBody BrandEntity brand) {
+	public R save(@Validated(AddGroup.class) @RequestBody BrandEntity brand) {
 		brandService.save(brand);
 
 		return R.ok();
 	}
+
+
+	/**
+	 * 修改状态
+	 */
+	@RequestMapping("/update/show-status")
+	// @RequiresPermissions("product:brand:update")
+	public R updateStatus(@Validated(updateStatusGroup.class) @RequestBody BrandEntity brand) {
+		brandService.updateById(brand);
+		return R.ok();
+	}
+
 
 	/**
 	 * 修改
 	 */
 	@RequestMapping("/update")
 	// @RequiresPermissions("product:brand:update")
-	public R update(@RequestBody BrandEntity brand) {
+	public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand) {
 		brandService.updateById(brand);
 
 		return R.ok();

@@ -28,7 +28,7 @@ public class OssController {
 	@Autowired
 	OSS ossClient;
 
-	@Value("${spring.cloud.alicloud.oss.Bucket}")
+	@Value("${spring.cloud.alicloud.oss.bucket}")
 	String bucket;
 	@Value("${spring.cloud.alicloud.oss.endpoint}")
 	String endpoint;

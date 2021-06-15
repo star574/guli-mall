@@ -21,12 +21,9 @@ public class ConfigController {
 
 	@Value("${useLocalCache:false}")
 	private boolean useLocalCache;
-	@Value("${user.id}")
-	private String userId;
 
 	@RequestMapping("/get")
 	public boolean get() {
-		System.out.println(userId);
 		return useLocalCache;
 	}
 

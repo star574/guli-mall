@@ -28,9 +28,6 @@ public class CouponController {
 	@Autowired
 	private CouponService couponService;
 
-	@Value("${user.id}")
-	String userid;
-
 	/**
 	 * 列表
 	 */
@@ -58,7 +55,6 @@ public class CouponController {
 	// // @RequiresPermissions("coupon:coupon:info")
 	public R info(@PathVariable("id") Long id) {
 		CouponEntity coupon = couponService.getById(id);
-		log.warn("nacos配置成功"+userid);
 		return R.ok().put("coupon", coupon);
 	}
 
