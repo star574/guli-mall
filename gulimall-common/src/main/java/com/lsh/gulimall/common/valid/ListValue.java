@@ -2,14 +2,11 @@ package com.lsh.gulimall.common.valid;
 
 
 import org.hibernate.validator.internal.constraintvalidators.bv.number.sign.NegativeOrZeroValidatorForInteger;
-import org.hibernate.validator.internal.constraintvalidators.bv.number.sign.NegativeValidatorForNumber;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import javax.validation.constraints.NotEmpty;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
