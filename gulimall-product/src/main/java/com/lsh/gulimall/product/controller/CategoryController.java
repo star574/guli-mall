@@ -56,7 +56,7 @@ public class CategoryController {
 	/**
 	 * 列表
 	 */
-	@GetMapping(path = {"/list/tree/{info}", "/list/tree/"})
+	@GetMapping(path = {"/list/tree/{info}", "/list/tree"})
 	// @RequiresPermissions("product:category:list")
 	public R list(@PathVariable(required = false) String info) {
 		List<CategoryEntity> categoryServiceList = categoryService.getCategoryServiceList(info);
