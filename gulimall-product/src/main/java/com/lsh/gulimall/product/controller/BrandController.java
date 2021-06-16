@@ -9,6 +9,7 @@ import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.common.valid.AddGroup;
 import com.lsh.gulimall.common.valid.UpdateGroup;
 import com.lsh.gulimall.common.valid.updateStatusGroup;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +35,7 @@ import javax.validation.Valid;
  * @email shihengluo574@gmail.com
  * @date 2021-05-31 22:31:07
  */
+@Slf4j
 @RestController
 @RequestMapping("product/brand")
 public class BrandController {
@@ -74,7 +76,7 @@ public class BrandController {
 	// @RequiresPermissions("product:brand:save")
 	public R save(@Validated(AddGroup.class) @RequestBody BrandEntity brand) {
 		brandService.save(brand);
-
+		log.warn("正在保存" + brand);
 		return R.ok();
 	}
 
@@ -85,6 +87,9 @@ public class BrandController {
 	@RequestMapping("/update/show-status")
 	// @RequiresPermissions("product:brand:update")
 	public R updateStatus(@Validated(updateStatusGroup.class) @RequestBody BrandEntity brand) {
+		/**/
+
+		log.warn("正在修改显示状态" + brand);
 		brandService.updateById(brand);
 		return R.ok();
 	}
@@ -96,6 +101,7 @@ public class BrandController {
 	@RequestMapping("/update")
 	// @RequiresPermissions("product:brand:update")
 	public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand) {
+		log.warn("正在修改" + brand);
 		brandService.updateById(brand);
 
 		return R.ok();

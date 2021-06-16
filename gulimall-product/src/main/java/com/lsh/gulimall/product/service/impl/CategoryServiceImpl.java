@@ -39,7 +39,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 	@Override
 	public List<CategoryEntity> getCategoryServiceList(String info) {
-		log.info("查询 " + info);
+		if (info != null) {
+			log.info("查询 " + info);
+		}
 		List<CategoryEntity> list = StringUtils.isEmpty(info) ? this.list() : this.list(new QueryWrapper<CategoryEntity>().like("name", info));
 		List<CategoryEntity> collect = list.stream().filter(categoryEntity -> categoryEntity.getParentCid().equals(0L)).map(categoryEntity -> {
 			categoryEntity.setChildren(getChildren(categoryEntity, list));

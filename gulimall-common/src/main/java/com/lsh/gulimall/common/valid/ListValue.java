@@ -24,7 +24,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 /*关联自定义的校验器 可以使用多个校验器*/
-@Constraint(validatedBy = {ListValueConstraintValidator.class, PositiveValidatorForNumber.class})
+//@Constraint(validatedBy = {ListValueConstraintValidator.class, PositiveValidatorForNumber.class})
+@Constraint(validatedBy = {ListValueConstraintValidator.class})
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 //@Repeatable(NotEmpty.List.class)

@@ -34,8 +34,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.8</version>
-			<optional>true</optional>
+			<version>1.18.20</version>
 		</dependency>
 		<!-- httpcomponent包。发送http请求 -->
 		<dependency>
