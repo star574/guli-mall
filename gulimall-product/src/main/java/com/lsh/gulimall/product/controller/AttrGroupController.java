@@ -1,10 +1,13 @@
 package com.lsh.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 
 import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.product.service.CategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +28,15 @@ import com.lsh.gulimall.common.utils.Query;
  * @email shihengluo574@gmail.com
  * @date 2021-05-31 22:31:07
  */
+@Slf4j
 @RestController
 @RequestMapping("product/attrgroup")
 public class AttrGroupController {
 	@Autowired
 	private AttrGroupService attrGroupService;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	/**
 	 * 列表
@@ -37,7 +44,7 @@ public class AttrGroupController {
 	@RequestMapping("/list/{catelogId}")
 	// @RequiresPermissions("product:attrgroup:list")
 	public R list(@PathVariable Long catelogId, @RequestParam Map<String, Object> params) {
-		PageUtils page = attrGroupService.queryPage(catelogId,params);
+		PageUtils page = attrGroupService.queryPage(catelogId, params);
 
 		return R.ok().put("page", page);
 	}
@@ -50,6 +57,10 @@ public class AttrGroupController {
 	// @RequiresPermissions("product:attrgroup:info")
 	public R info(@PathVariable("attrGroupId") Long attrGroupId) {
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
+
+		Long catelogId = attrGroup.getCatelogId();
+
+		attrGroup.setCatelogPath(categoryService.findCatelogPath(catelogId));
 
 		return R.ok().put("attrGroup", attrGroup);
 	}
@@ -82,9 +93,9 @@ public class AttrGroupController {
 	@RequestMapping("/delete")
 	// @RequiresPermissions("product:attrgroup:delete")
 	public R delete(@RequestBody Long[] attrGroupIds) {
-		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
+		log.warn("删除:   " + Arrays.asList(attrGroupIds));
 
-		return R.ok();
+		return attrGroupService.removeByIds(Arrays.asList(attrGroupIds)) ? R.ok() : R.error();
 	}
 
 }

@@ -38,5 +38,9 @@ public interface CategoryService extends IService<CategoryEntity> {
 	List<CategoryEntity> getCategoryServiceList(String info);
 
 	boolean deleteById(Long[] catId);
+
+	Long[] findCatelogPath(Long catelogId);
+
+	boolean updateCascade(CategoryEntity category);
 }
 

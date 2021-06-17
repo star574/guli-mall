@@ -8,7 +8,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * @author codestar
  */
-@MapperScan("com.lsh.gulimall.product.dao")
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GulimallProductApplication {

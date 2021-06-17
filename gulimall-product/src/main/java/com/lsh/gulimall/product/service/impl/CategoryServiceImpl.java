@@ -1,13 +1,12 @@
 package com.lsh.gulimall.product.service.impl;
 
 import com.lsh.gulimall.common.utils.PageUtils;
+import com.lsh.gulimall.product.service.CategoryBrandRelationService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,12 +19,20 @@ import com.lsh.gulimall.product.entity.CategoryEntity;
 import com.lsh.gulimall.product.service.CategoryService;
 
 import com.lsh.gulimall.common.utils.Query;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * @author codestar
+ */
 @Service("categoryService")
 @Slf4j
+@Transactional
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+	@Autowired
+	CategoryBrandRelationService categoryBrandRelationService;
+
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -65,6 +72,40 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 		}
 
 		return this.removeByIds(Arrays.asList(catIds));
+	}
+
+	/**
+	 * //TODO
+	 *
+	 * @param catelogId
+	 * @return catelogPath完整路径
+	 * @throws
+	 * @date 2021/6/17 下午10:59
+	 * @Description
+	 */
+	@Override
+	public Long[] findCatelogPath(Long catelogId) {
+		List<Long> longs = new ArrayList<>();
+		List<Long> paths = findParentPath(catelogId, longs);
+		Collections.reverse(paths);
+		return paths.toArray(new Long[0]);
+	}
+
+	/*关联更新*/
+
+	@Override
+	public boolean updateCascade(CategoryEntity category) {
+		/*关联更新*/
+		return this.updateById(category) && categoryBrandRelationService.updateCategory(category);
+	}
+
+	private List<Long> findParentPath(Long catelogId, List<Long> longs) {
+		longs.add(catelogId);
+		CategoryEntity categoryEntity = this.getById(catelogId);
+		if (categoryEntity.getParentCid() != 0) {
+			findParentPath(categoryEntity.getParentCid(), longs);
+		}
+		return longs;
 	}
 
 	public List<CategoryEntity> getChildren(CategoryEntity current, List<CategoryEntity> list) {

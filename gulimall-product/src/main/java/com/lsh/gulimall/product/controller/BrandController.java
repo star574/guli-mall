@@ -96,9 +96,9 @@ public class BrandController {
 	// @RequiresPermissions("product:brand:update")
 	public R update(@Validated(UpdateGroup.class) @RequestBody BrandEntity brand) {
 		log.warn("正在修改" + brand);
-		brandService.updateById(brand);
 
-		return R.ok();
+
+		return brandService.updateDetailById(brand)?R.ok():R.error();
 	}
 
 	/**

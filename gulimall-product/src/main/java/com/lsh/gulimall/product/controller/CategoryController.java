@@ -61,7 +61,7 @@ public class CategoryController {
 	public R list(@PathVariable(required = false) String info) {
 		List<CategoryEntity> categoryServiceList = categoryService.getCategoryServiceList(info);
 
-		return R.ok().put("categoryServiceList", categoryServiceList);
+		return R.ok().put("data", categoryServiceList);
 	}
 
 
@@ -94,7 +94,8 @@ public class CategoryController {
 	// @RequiresPermissions("product:category:update")
 	public R update(@RequestBody CategoryEntity category) {
 		log.info("更新:   " + category);
-		return categoryService.updateById(category) ? R.ok() : R.error();
+		/*关联更新*/
+		return categoryService.updateCascade(category) ? R.ok() : R.error();
 	}
 
 	/**
