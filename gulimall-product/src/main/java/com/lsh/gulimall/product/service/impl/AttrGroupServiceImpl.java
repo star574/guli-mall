@@ -1,5 +1,6 @@
 package com.lsh.gulimall.product.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.lsh.gulimall.product.entity.AttrEntity;
@@ -44,6 +45,10 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 	@Autowired
 	private AttrAttrgroupRelationService attrAttrgroupRelationService;
 
+
+	@Autowired
+	private AttrGroupService attrGroupService;
+
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
 		IPage<AttrGroupEntity> page = this.page(
@@ -81,7 +86,11 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
 		List<Long> ids = list.stream().map(attrAttrgroupRelationEntity -> attrAttrgroupRelationEntity.getAttrId()).collect(Collectors.toList());
 
-		return (List<AttrEntity>) attrService.listByIds(ids);
+		if (ids.size() != 0) {
+			return (List<AttrEntity>) attrService.listByIds(ids);
+		} else {
+			return new ArrayList<>();
+		}
 	}
 
 
@@ -101,9 +110,14 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 	public PageUtils getAllRelation(Long attrgroupId, Map<String, Object> params) {
 
 		/*获取未关联的attr_id*/
-		List<AttrAttrgroupRelationEntity> attrgroupRelationEntityList = attrAttrgroupRelationService.list(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id", attrgroupId).select("attr_id"));
-		List<Long> ids = attrgroupRelationEntityList.stream().map(attrAttrgroupRelationEntity -> attrAttrgroupRelationEntity.getAttrId()).collect(Collectors.toList());
+//		List<AttrAttrgroupRelationEntity> attrgroupRelationEntityList = attrAttrgroupRelationService.list(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id", attrgroupId).select("attr_id"));
+		List<AttrAttrgroupRelationEntity> attrgroupRelationEntityList = attrAttrgroupRelationService.list(new QueryWrapper<AttrAttrgroupRelationEntity>().select("attr_id"));
+		List<Long> ids = attrgroupRelationEntityList.stream().map(AttrAttrgroupRelationEntity::getAttrId).collect(Collectors.toList());
 
+		Long catelogId = attrGroupService.getById(attrgroupId).getCatelogId();
+
+		List<AttrEntity> attrEntityList = attrService.list(new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId));
+		List<Long> attrIds = attrEntityList.stream().map(AttrEntity::getAttrId).collect(Collectors.toList());
 
 		/*检索关键字*/
 		String key = (String) params.get("key");
@@ -121,9 +135,20 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 		} else if (!StringUtils.isEmpty(sidx)) {
 			wrapper = wrapper.orderByAsc(sidx);
 		}
+
+		if (ids.size() != 0) {
+			wrapper = wrapper.notIn("attr_id", ids);
+		}
+
+		if (attrIds.size() != 0) {
+			wrapper = wrapper.in("attr_id", attrIds);
+		} else {
+			return new PageUtils(new Page<AttrEntity>());
+		}
+
 		IPage<AttrEntity> page = attrService.page(
 				new Query<AttrEntity>().getPage(params),
-				wrapper.notIn("attr_id", ids)
+				wrapper
 		);
 		return new PageUtils(page);
 	}
@@ -154,9 +179,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 			List<AttrAttrgroupRelationEntity> list = attrAttrgroupRelationService.list(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id", attrGroupId).select("attr_id"));
 			List<Long> ids = list.stream().map(attrAttrgroupRelationEntity -> attrAttrgroupRelationEntity.getAttrId()).collect(Collectors.toList());
 
-
 			CatelogAttrGroupVo catelogAttrGroupVo = new CatelogAttrGroupVo();
-
 
 			Collection<AttrEntity> attrEntities = attrService.listByIds(ids);
 

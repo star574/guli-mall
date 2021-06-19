@@ -1,5 +1,6 @@
 package com.lsh.gulimall.product.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lsh.gulimall.common.constant.ProductConstant;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,20 +59,26 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
 	@Override
 	public PageUtils queryattrPage(Long catelogId, Map<String, Object> params, String attrType) {
-		/*检索关键字*/
+
+		//		检索关键字
 		String key = (String) params.get("key");
-		/*排序字段*/
+//		排序字段
 		String sidx = (String) params.get("sidx");
-		/*排序方式*/
+//		排序方式
 		String order = (String) params.get("order");
 
 		QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
 		if (catelogId != 0) {
 			wrapper = wrapper.eq("catelog_id", catelogId);
-
 		}
 		if (!StringUtils.isEmpty(key)) {
 			wrapper = wrapper.like("attr_name", key);
+		}
+
+		if ("base".equals(attrType)) {
+			wrapper.eq("attr_type", 1);
+		} else {
+			wrapper.eq("attr_type", 0);
 		}
 
 		if ("desc".equals(order) && !StringUtils.isEmpty(sidx)) {
@@ -82,21 +90,16 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 				new Query<AttrEntity>().getPage(params),
 				wrapper
 		);
-
-
-		PageUtils attrpage = new PageUtils(page);
-		List<AttrEntity> records = (List<AttrEntity>) attrpage.getList();
-		/*返回AttrVo*/
 		List<AttrVo> attrVoList = new ArrayList<>();
-
-		for (AttrEntity record : records) {
-			/*获取每一个vo的groupid*/
-			AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = attrAttrgroupRelationService.getOne(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", record.getAttrId()));
-			if (attrAttrgroupRelationEntity != null) {
+		System.out.println(page.getRecords());
+		for (AttrEntity record : page.getRecords()) {
+			AttrRespVo attrVo = new AttrRespVo();
+			BeanUtils.copyProperties(record, attrVo);
+			List<AttrAttrgroupRelationEntity> attrgroupRelationEntityList = attrAttrgroupRelationService.list(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", record.getAttrId()));
+			for (AttrAttrgroupRelationEntity attrAttrgroupRelationEntity : attrgroupRelationEntityList) {
+				/*获取每一个vo的groupid*/
 				Long attrGroupId = attrAttrgroupRelationEntity.getAttrGroupId();
 				AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
-				AttrRespVo attrVo = new AttrRespVo();
-				BeanUtils.copyProperties(record, attrVo);
 				/*封装vo数据*/
 				attrVo.setAttrGroupId(attrGroupId);
 				attrVo.setCatelogPath(categoryService.findCatelogPath(record.getCatelogId()));
@@ -113,30 +116,16 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 				String categoryName = stringBuilder.substring(0, stringBuilder.length() - 1);
 				attrVo.setCatelogName(categoryName);
 
-				AttrGroupEntity attrGroupEntity = attrGroupService.getById(attrAttrgroupRelationEntity.getAttrGroupId());
+				AttrGroupEntity attrGroupEntity = attrGroupService.getById(attrGroupId);
 				if (attrGroupEntity != null) {
 					attrVo.setDescript(attrGroupEntity.getDescript());
 				}
-				attrVoList.add(attrVo);
-			} else {
-				AttrVo attrVo = new AttrVo();
-				/*封装vo数据*/
-				BeanUtils.copyProperties(record, attrVo);
-				attrVoList.add(attrVo);
 			}
+			attrVoList.add(attrVo);
 		}
-		/*区分 销售/基本 数据*/
-		List<AttrVo> collect = attrVoList.stream().filter(attrVo -> {
-			if ("base".equals(attrType)) {
-				return attrVo.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode();
-			} else {
-				return attrVo.getAttrType() == ProductConstant.AttrEnum.ATTR_TYPE_SALE.getCode();
-			}
-		}).collect(Collectors.toList());
-		attrpage.setList(collect);
-		attrpage.setTotalPage(collect.size() % attrpage.getPageSize() == 0 ? collect.size() / attrpage.getPageSize() : collect.size() / attrpage.getPageSize() + 1);
-		attrpage.setTotalCount(collect.size());
-		return attrpage;
+		PageUtils pageUtils = new PageUtils(page);
+		pageUtils.setList(attrVoList);
+		return pageUtils;
 	}
 
 	@Transactional
@@ -197,7 +186,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 		if (attrVo.getAttrType().equals(ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode())) {
 			QueryWrapper<AttrAttrgroupRelationEntity> wrapper = new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", attrVo.getAttrId());
 			if (attrAttrgroupRelationService.count(wrapper) > 0) {
-				attrAttrgroupRelationService.update(wrapper);
+				AttrAttrgroupRelationEntity one = attrAttrgroupRelationService.getOne(wrapper);
+				one.setAttrGroupId(attrVo.getAttrGroupId());
+				attrAttrgroupRelationService.updateById(one);
 			} else {
 				AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
 				attrAttrgroupRelationEntity.setAttrId(attrVo.getAttrId());

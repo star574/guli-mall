@@ -61,7 +61,6 @@ public class AttrEntity implements Serializable {
 	private Integer showDesc;
 
 	/*value_type*/
-	@TableField(exist = false)
 	private Integer valueType;
 
 }

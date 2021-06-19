@@ -124,7 +124,7 @@ public class AttrGroupController {
 	}
 
 
-	/*获取所有关联分组列表*/
+	/*获取没有关联分组列表*/
 	@GetMapping("{attrgroupId}/noattr/relation")
 	public R getAllRelation(@PathVariable Long attrgroupId, @RequestParam Map<String, Object> params) {
 		PageUtils page = attrGroupService.getAllRelation(attrgroupId, params);
