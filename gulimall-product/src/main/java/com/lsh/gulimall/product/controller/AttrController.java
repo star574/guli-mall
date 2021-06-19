@@ -1,23 +1,27 @@
 package com.lsh.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 
 import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.product.entity.AttrAttrgroupRelationEntity;
+import com.lsh.gulimall.product.entity.vo.AttrGroupRelationVo;
+import com.lsh.gulimall.product.entity.vo.AttrRespVo;
+import com.lsh.gulimall.product.entity.vo.AttrVo;
+import com.lsh.gulimall.product.service.AttrAttrgroupRelationService;
+import com.lsh.gulimall.product.service.AttrGroupService;
+import com.lsh.gulimall.product.service.CategoryService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import com.lsh.gulimall.product.entity.AttrEntity;
 import com.lsh.gulimall.product.service.AttrService;
-
-
 
 
 /**
@@ -30,63 +34,81 @@ import com.lsh.gulimall.product.service.AttrService;
 @RestController
 @RequestMapping("product/attr")
 public class AttrController {
-    @Autowired
-    private AttrService attrService;
+	@Autowired
+	private AttrService attrService;
 
-    /**
-     * 列表
-     */
-    @RequestMapping("/list")
-    // // @RequiresPermissions("
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = attrService.queryPage(params);
+	@Autowired
+	private CategoryService categoryService;
 
-        return R.ok().put("page", page);
-    }
+	@Autowired
+	private AttrAttrgroupRelationService attrAttrgroupRelationService;
+
+	@Autowired
+	private AttrGroupService attrGroupService;
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping("/list")
+	// // @RequiresPermissions("
+	public R list(@RequestParam Map<String, Object> params) {
+		PageUtils page = attrService.queryPage(params);
+		return R.ok().put("page", page);
+	}
+
+	/**
+	 * 属性列表
+	 */
+	@RequestMapping("/{attrType}/list/{catelogId}")
+	// // @RequiresPermissions("
+	public R attrBaseList(@PathVariable String attrType, @PathVariable Long catelogId, @RequestParam Map<String, Object> params) {
+		PageUtils page = attrService.queryattrPage(catelogId, params, attrType);
+		return R.ok().put("page", page);
+	}
 
 
-    /**
-     * 信息
-     */
-    @RequestMapping("/info/{attrId}")
-    // @RequiresPermissions("product:attr:info")
-    public R info(@PathVariable("attrId") Long attrId){
-		AttrEntity attr = attrService.getById(attrId);
+	/**
+	 * 信息
+	 */
+	@RequestMapping("/info/{attrId}")
+	// @RequiresPermissions("product:attr:info")
+	public R info(@PathVariable("attrId") Long attrId) {
 
-        return R.ok().put("attr", attr);
-    }
+		AttrVo attrVo = attrService.getAttrInfo(attrId);
+		return R.ok().put("attr", attrVo);
+	}
 
-    /**
-     * 保存
-     */
-    @RequestMapping("/save")
-    // @RequiresPermissions("product:attr:save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+	/**
+	 * 保存
+	 */
+	@RequestMapping("/save")
+	// @RequiresPermissions("product:attr:save")
+	public R save(@RequestBody AttrVo attrVo) {
+		boolean save = attrService.saveAttr(attrVo);
+		return save ? R.ok() : R.error();
+	}
 
-        return R.ok();
-    }
+	/**
+	 * 修改
+	 */
+	@RequestMapping("/update")
+	// @RequiresPermissions("product:attr:update")
+	public R update(@RequestBody AttrVo attrVo) {
+		boolean b = attrService.updateAttr(attrVo);
 
-    /**
-     * 修改
-     */
-    @RequestMapping("/update")
-    // @RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+		return R.ok();
+	}
 
-        return R.ok();
-    }
+	/**
+	 * 删除
+	 */
+	@RequestMapping("/delete")
+	// @RequiresPermissions("product:attr:delete")
+	public R delete(@RequestBody Long[] attrIds) {
+//		attrService.removeByIds(Arrays.asList(attrIds));
+		attrService.removeAttr(Arrays.asList(attrIds));
 
-    /**
-     * 删除
-     */
-    @RequestMapping("/delete")
-    // @RequiresPermissions("product:attr:delete")
-    public R delete(@RequestBody Long[] attrIds){
-		attrService.removeByIds(Arrays.asList(attrIds));
-
-        return R.ok();
-    }
+		return R.ok();
+	}
 
 }

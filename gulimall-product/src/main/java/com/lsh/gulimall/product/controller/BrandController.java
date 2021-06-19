@@ -78,7 +78,7 @@ public class BrandController {
 	/**
 	 * 修改状态
 	 */
-	@RequestMapping("/update/show-status")
+	@RequestMapping("/update/status")
 	// @RequiresPermissions("product:brand:update")
 	public R updateStatus(@Validated(updateStatusGroup.class) @RequestBody BrandEntity brand) {
 		/**/

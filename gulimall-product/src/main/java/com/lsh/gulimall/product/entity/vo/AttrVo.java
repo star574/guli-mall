@@ -1,31 +1,13 @@
-package com.lsh.gulimall.product.entity;
+package com.lsh.gulimall.product.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.util.Date;
 
 import lombok.Data;
 
-/**
- * 商品属性
- *
- * @author codestar
- * @email shihengluo574@gmail.com
- * @date 2021-05-31 22:31:07
- */
 @Data
-@TableName("pms_attr")
-public class AttrEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class AttrVo {
 	/**
 	 * 属性id
 	 */
-	@TableId(type = IdType.AUTO)
 	private Long attrId;
 	/**
 	 * 属性名
@@ -60,8 +42,8 @@ public class AttrEntity implements Serializable {
 	 */
 	private Integer showDesc;
 
-	/*value_type*/
-	@TableField(exist = false)
-	private Integer valueType;
+	private Long attrGroupId;
 
+	/*value_type*/
+	private Integer valueType;
 }

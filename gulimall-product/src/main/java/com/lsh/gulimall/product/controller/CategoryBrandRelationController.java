@@ -9,11 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lsh.gulimall.common.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lsh.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.lsh.gulimall.product.service.CategoryBrandRelationService;
@@ -45,6 +41,21 @@ public class CategoryBrandRelationController {
 		return R.ok().put("page", page);
 	}
 
+	/**
+	 * 获取分类关联的品牌
+	 */
+	@GetMapping("/{type}/list")
+	// @RequiresPermissions("product:categorybrandrelation:list")
+	public R brandlist(@PathVariable String type, @RequestParam Long id) {
+		QueryWrapper<CategoryBrandRelationEntity> wrapper = new QueryWrapper<>();
+		if (type.equals("brands")) {
+			wrapper = new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", id);
+		} else {
+			wrapper = new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id", id);
+		}
+
+		return R.ok().put("data", categoryBrandRelationService.list(wrapper));
+	}
 
 	/**
 	 * //TODO
@@ -100,7 +111,6 @@ public class CategoryBrandRelationController {
 	// @RequiresPermissions("product:categorybrandrelation:delete")
 	public R delete(@RequestBody Long[] ids) {
 		categoryBrandRelationService.removeByIds(Arrays.asList(ids));
-
 		return R.ok();
 	}
 

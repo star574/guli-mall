@@ -26,7 +26,7 @@ public class AttrGroupEntity implements Serializable {
 	/**
 	 * 分组id
 	 */
-	@TableId
+	@TableId(type = IdType.AUTO)
 	private Long attrGroupId;
 	/**
 	 * 组名

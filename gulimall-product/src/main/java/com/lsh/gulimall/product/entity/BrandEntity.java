@@ -1,5 +1,6 @@
 package com.lsh.gulimall.product.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -30,7 +31,7 @@ public class BrandEntity implements Serializable {
 	 * 品牌id
 	 * 分组校验
 	 */
-	@TableId
+	@TableId(type = IdType.AUTO)
 	@Null(message = "新增不能指定id", groups = AddGroup.class)
 	@NotNull(message = "修改必须指定id", groups = {updateStatusGroup.class, UpdateGroup.class})
 	private Long brandId;
