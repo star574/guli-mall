@@ -48,22 +48,6 @@ public class AttrGroupController {
 		return R.ok().put("page", page);
 	}
 
-	/*获取关联分组列表*/
-	@GetMapping("{attrgroupId}/attr/relation")
-	public R getRelation(@PathVariable Long attrgroupId) {
-		List<AttrEntity> attrVoList = attrGroupService.getRelation(attrgroupId);
-		return R.ok().put("data", attrVoList);
-	}
-
-
-	/*获取所有关联分组列表*/
-	@GetMapping("{attrgroupId}/noattr/relation")
-	public R getAllRelation(@PathVariable Long attrgroupId, @RequestParam Map<String, Object> params) {
-		PageUtils page = attrGroupService.getAllRelation(attrgroupId, params);
-		return R.ok().put("page", page);
-	}
-
-
 	/**
 	 * 信息
 	 */
@@ -131,5 +115,20 @@ public class AttrGroupController {
 		return R.ok().put("data", attrGroupService.getGroupWithAttr(catelogId));
 	}
 
+
+	/*获取关联分组列表*/
+	@GetMapping("{attrgroupId}/attr/relation")
+	public R getRelation(@PathVariable Long attrgroupId) {
+		List<AttrEntity> attrVoList = attrGroupService.getRelation(attrgroupId);
+		return R.ok().put("data", attrVoList);
+	}
+
+
+	/*获取所有关联分组列表*/
+	@GetMapping("{attrgroupId}/noattr/relation")
+	public R getAllRelation(@PathVariable Long attrgroupId, @RequestParam Map<String, Object> params) {
+		PageUtils page = attrGroupService.getAllRelation(attrgroupId, params);
+		return R.ok().put("page", page);
+	}
 
 }
