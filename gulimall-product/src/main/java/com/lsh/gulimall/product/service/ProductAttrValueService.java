@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.product.entity.ProductAttrValueEntity;
+import com.lsh.gulimall.product.entity.vo.BaseAttrs;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,5 +19,7 @@ import java.util.Map;
 public interface ProductAttrValueService extends IService<ProductAttrValueEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	boolean saveBaseAttrs(Long infoEntityId, List<BaseAttrs> baseAttrs);
 }
 

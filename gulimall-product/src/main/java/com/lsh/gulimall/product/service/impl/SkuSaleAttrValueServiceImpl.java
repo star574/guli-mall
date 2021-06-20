@@ -1,8 +1,15 @@
 package com.lsh.gulimall.product.service.impl;
 
 import com.lsh.gulimall.common.utils.PageUtils;
+import com.lsh.gulimall.product.entity.ProductAttrValueEntity;
+import com.lsh.gulimall.product.entity.vo.BaseAttrs;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

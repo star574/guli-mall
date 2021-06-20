@@ -3,8 +3,11 @@ package com.lsh.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
+import com.lsh.gulimall.product.entity.SpuInfoDescEntity;
 import com.lsh.gulimall.product.entity.SpuInfoEntity;
+import com.lsh.gulimall.product.entity.vo.SpuSaveVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,5 +20,10 @@ import java.util.Map;
 public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    boolean saveSpuVo(SpuSaveVo spuSaveVo);
+
+    boolean saveBaseSpuInfo(SpuInfoEntity spuInfoEntity);
+
 }
 

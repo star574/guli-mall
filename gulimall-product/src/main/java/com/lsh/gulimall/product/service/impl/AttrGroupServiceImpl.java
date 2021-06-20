@@ -79,12 +79,20 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 		return new PageUtils(page);
 	}
 
+	/**
+	 * //TODO
+	 * @param attrgroupId
+	 * @return List<AttrEntity>
+	 * @throws
+	 * @date 2021/6/20 下午8:59
+	 * @Description 获取分类下多所有分组及分组关联的属性
+	 */
 	@Override
 	public List<AttrEntity> getRelation(Long attrgroupId) {
 
 		List<AttrAttrgroupRelationEntity> list = attrAttrgroupRelationService.list(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id", attrgroupId).select("attr_id"));
 
-		List<Long> ids = list.stream().map(attrAttrgroupRelationEntity -> attrAttrgroupRelationEntity.getAttrId()).collect(Collectors.toList());
+		List<Long> ids = list.stream().map(AttrAttrgroupRelationEntity::getAttrId).collect(Collectors.toList());
 
 		if (ids.size() != 0) {
 			return (List<AttrEntity>) attrService.listByIds(ids);
@@ -129,11 +137,8 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 		QueryWrapper<AttrEntity> wrapper = new QueryWrapper<>();
 		if (!StringUtils.isEmpty(key)) {
 			wrapper = wrapper.like("attr_name", key);
-		}
-		if ("desc".equals(order) && !StringUtils.isEmpty(sidx)) {
-			wrapper = wrapper.orderByDesc(sidx);
-		} else if (!StringUtils.isEmpty(sidx)) {
-			wrapper = wrapper.orderByAsc(sidx);
+
+
 		}
 
 		if (ids.size() != 0) {
@@ -144,6 +149,12 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 			wrapper = wrapper.in("attr_id", attrIds);
 		} else {
 			return new PageUtils(new Page<AttrEntity>());
+		}
+
+		if ("desc".equals(order) && !StringUtils.isEmpty(sidx)) {
+			wrapper = wrapper.orderByDesc(sidx);
+		} else if (!StringUtils.isEmpty(sidx)) {
+			wrapper = wrapper.orderByAsc(sidx);
 		}
 
 		IPage<AttrEntity> page = attrService.page(

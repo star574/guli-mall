@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.product.entity.AttrEntity;
+import com.lsh.gulimall.product.entity.ProductAttrValueEntity;
 import com.lsh.gulimall.product.entity.vo.AttrGroupRelationVo;
 import com.lsh.gulimall.product.entity.vo.AttrVo;
 
@@ -31,5 +32,8 @@ public interface AttrService extends IService<AttrEntity> {
 
 	boolean updateAttr(AttrVo attrVo);
 
+	List<ProductAttrValueEntity> getSpuInfo(Long spuId);
+
+	boolean updateSpuInfo(Long spuId, List<ProductAttrValueEntity> productAttrValueEntityList);
 }
 

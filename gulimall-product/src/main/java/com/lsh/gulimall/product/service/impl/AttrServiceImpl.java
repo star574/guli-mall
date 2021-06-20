@@ -1,26 +1,21 @@
 package com.lsh.gulimall.product.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lsh.gulimall.common.constant.ProductConstant;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.lsh.gulimall.product.entity.AttrGroupEntity;
-import com.lsh.gulimall.product.entity.vo.AttrGroupRelationVo;
+import com.lsh.gulimall.product.entity.ProductAttrValueEntity;
 import com.lsh.gulimall.product.entity.vo.AttrRespVo;
 import com.lsh.gulimall.product.entity.vo.AttrVo;
-import com.lsh.gulimall.product.service.AttrAttrgroupRelationService;
-import com.lsh.gulimall.product.service.AttrGroupService;
-import com.lsh.gulimall.product.service.CategoryService;
+import com.lsh.gulimall.product.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -29,7 +24,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.lsh.gulimall.product.dao.AttrDao;
 import com.lsh.gulimall.product.entity.AttrEntity;
-import com.lsh.gulimall.product.service.AttrService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -46,6 +40,10 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
 	@Autowired
 	private CategoryService categoryService;
+
+
+	@Autowired
+	private ProductAttrValueService productAttrValueService;
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -198,6 +196,31 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public List<ProductAttrValueEntity> getSpuInfo(Long spuId) {
+
+		return productAttrValueService.list(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
+	}
+
+	@Transactional
+	@Override
+	public boolean updateSpuInfo(Long spuId, List<ProductAttrValueEntity> productAttrValueEntityList) {
+
+		List<ProductAttrValueEntity> productAttrValueEntities = new ArrayList<>();
+		for (ProductAttrValueEntity productAttrValueEntity : productAttrValueEntityList) {
+			Long attrId = productAttrValueEntity.getAttrId();
+//			productAttrValueService.update(productAttrValueEntity,new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId).and(wapper->
+//					wapper.eq("attr_id", attrId)));
+			ProductAttrValueEntity productAttrValueVo = productAttrValueService.getOne(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId).and(wapper ->
+					wapper.eq("attr_id", attrId)));
+			if(productAttrValueVo!=null){
+				BeanUtils.copyProperties(productAttrValueEntity, productAttrValueVo);
+				productAttrValueEntities.add(productAttrValueVo);
+			}
+		}
+		return productAttrValueService.updateBatchById(productAttrValueEntities);
 	}
 
 }

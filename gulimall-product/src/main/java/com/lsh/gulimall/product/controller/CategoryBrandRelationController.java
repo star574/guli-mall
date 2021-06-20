@@ -46,12 +46,12 @@ public class CategoryBrandRelationController {
 	 */
 	@GetMapping("/{type}/list")
 	// @RequiresPermissions("product:categorybrandrelation:list")
-	public R brandlist(@PathVariable String type, @RequestParam Long id) {
+	public R brandlist(@PathVariable String type, @RequestParam(value = "catId",required = false) Long catId,@RequestParam(value = "brandId",required = false) Long barandId) {
 		QueryWrapper<CategoryBrandRelationEntity> wrapper = new QueryWrapper<>();
 		if (type.equals("brands")) {
-			wrapper = new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", id);
+			wrapper = wrapper.eq("catelog_id", catId);
 		} else {
-			wrapper = new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id", id);
+			wrapper = wrapper.eq("brand_id", barandId);
 		}
 
 		return R.ok().put("data", categoryBrandRelationService.list(wrapper));

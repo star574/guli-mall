@@ -2,25 +2,17 @@ package com.lsh.gulimall.product.controller;
 
 import java.util.*;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lsh.gulimall.common.utils.PageUtils;
-import com.lsh.gulimall.common.utils.Query;
 
 import com.lsh.gulimall.common.utils.R;
-import com.lsh.gulimall.product.entity.AttrAttrgroupRelationEntity;
-import com.lsh.gulimall.product.entity.vo.AttrGroupRelationVo;
-import com.lsh.gulimall.product.entity.vo.AttrRespVo;
+import com.lsh.gulimall.product.entity.ProductAttrValueEntity;
 import com.lsh.gulimall.product.entity.vo.AttrVo;
 import com.lsh.gulimall.product.service.AttrAttrgroupRelationService;
 import com.lsh.gulimall.product.service.AttrGroupService;
 import com.lsh.gulimall.product.service.CategoryService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import com.lsh.gulimall.product.entity.AttrEntity;
 import com.lsh.gulimall.product.service.AttrService;
 
 
@@ -106,9 +98,34 @@ public class AttrController {
 	// @RequiresPermissions("product:attr:delete")
 	public R delete(@RequestBody Long[] attrIds) {
 //		attrService.removeByIds(Arrays.asList(attrIds));
-		attrService.removeAttr(Arrays.asList(attrIds));
 
-		return R.ok();
+
+		return attrService.removeAttr(Arrays.asList(attrIds))?R.ok():R.error();
 	}
+
+
+
+	/**
+	 * 信息
+	 */
+	@RequestMapping("base/listforspu/{spuId}")
+	// @RequiresPermissions("product:attr:info")
+	public R spuBaseInfo(@PathVariable("spuId") Long spuId) {
+
+		List<ProductAttrValueEntity> spuBaseInfoVos=attrService.getSpuInfo(spuId);
+
+		return R.ok().put("data", spuBaseInfoVos);
+	}
+
+	/**
+	 * 信息
+	 */
+	@PostMapping("update/{spuId}")
+	// @RequiresPermissions("product:attr:info")
+	public R spuInfoUpdate(@PathVariable("spuId") Long spuId,@RequestBody List<ProductAttrValueEntity> productAttrValueEntityList) {
+
+		return attrService.updateSpuInfo(spuId,productAttrValueEntityList)?R.ok():R.error();
+	}
+
 
 }
