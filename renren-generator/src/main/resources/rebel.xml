@@ -9,7 +9,7 @@
 	<id>renren-generator</id>
 
 	<classpath>
-		<dir name="/home/codestar/workspace/java/guli-mall/renren-generator/target/classes">
+		<dir name="E:/workplace/java/guli-mall/renren-generator/target/classes">
 		</dir>
 	</classpath>
 

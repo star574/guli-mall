@@ -1,24 +1,15 @@
 package com.lsh.gulimall.coupon.controller;
+
+import com.lsh.gulimall.common.to.SkuReductionTo;
+import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.coupon.entity.SkuFullReductionEntity;
+import com.lsh.gulimall.coupon.service.SkuFullReductionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Map;
-
-
-import com.lsh.gulimall.common.utils.R;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.lsh.gulimall.coupon.entity.SkuFullReductionEntity;
-import com.lsh.gulimall.coupon.service.SkuFullReductionService;
-import com.lsh.gulimall.common.utils.PageUtils;
-import com.lsh.gulimall.common.utils.Query;
-import com.lsh.gulimall.common.utils.Query;
-
 
 
 /**
@@ -34,9 +25,20 @@ public class SkuFullReductionController {
 	@Autowired
 	private SkuFullReductionService skuFullReductionService;
 
+
 	/**
-     * 列表
-     */
+	 * 远程调用保存Reduction
+	 */
+	@RequestMapping("/save/reduction")
+	// // @RequiresPermissions("coupon:skufullreduction:list")
+	public R saveReduction(@RequestBody SkuReductionTo skuReductionTo) {
+		return skuFullReductionService.saveReduction(skuReductionTo)?R.ok():R.error("保存失败");
+	}
+
+
+	/**
+	 * 列表
+	 */
 	@RequestMapping("/list")
 	// // @RequiresPermissions("coupon:skufullreduction:list")
 	public R list(@RequestParam Map<String, Object> params) {
@@ -47,45 +49,45 @@ public class SkuFullReductionController {
 
 
 	/**
-     * 信息
-     */
+	 * 信息
+	 */
 	@RequestMapping("/info/{id}")
 	// // @RequiresPermissions("coupon:skufullreduction:info")
 	public R info(@PathVariable("id") Long id) {
-            SkuFullReductionEntity skuFullReduction = skuFullReductionService.getById(id);
+		SkuFullReductionEntity skuFullReduction = skuFullReductionService.getById(id);
 
 		return R.ok().put("skuFullReduction", skuFullReduction);
 	}
 
 	/**
-     * 保存
-     */
+	 * 保存
+	 */
 	@RequestMapping("/save")
 	// // @RequiresPermissions("coupon:skufullreduction:save")
 	public R save(@RequestBody SkuFullReductionEntity skuFullReduction) {
-            skuFullReductionService.save(skuFullReduction);
+		skuFullReductionService.save(skuFullReduction);
 
 		return R.ok();
 	}
 
 	/**
-     * 修改
-     */
+	 * 修改
+	 */
 	@RequestMapping("/update")
 	// // @RequiresPermissions("coupon:skufullreduction:update")
 	public R update(@RequestBody SkuFullReductionEntity skuFullReduction) {
-            skuFullReductionService.updateById(skuFullReduction);
+		skuFullReductionService.updateById(skuFullReduction);
 
 		return R.ok();
 	}
 
 	/**
-     * 删除
-     */
+	 * 删除
+	 */
 	@RequestMapping("/delete")
 	// // @RequiresPermissions("coupon:skufullreduction:delete")
 	public R delete(@RequestBody Long[] ids) {
-            skuFullReductionService.removeByIds(Arrays.asList(ids));
+		skuFullReductionService.removeByIds(Arrays.asList(ids));
 
 		return R.ok();
 	}

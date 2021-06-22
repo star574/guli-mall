@@ -2,8 +2,6 @@ package com.lsh.gulimall.coupon.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.utils.PageUtils;
-import com.lsh.gulimall.common.utils.Query;
-import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.coupon.entity.SpuBoundsEntity;
 
 import java.util.Map;
@@ -18,5 +16,7 @@ import java.util.Map;
 public interface SpuBoundsService extends IService<SpuBoundsEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	boolean saveSpuBounds(SpuBoundsEntity spuBoundsEntity);
 }
 
