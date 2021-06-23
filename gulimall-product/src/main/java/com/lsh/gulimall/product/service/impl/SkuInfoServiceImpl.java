@@ -33,12 +33,19 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 		String maxStr = (String) params.get("max");
 		double max = 0;
 		double min = 0;
-		if (!StringUtils.isEmpty(maxStr)) {
-			max = Double.parseDouble(maxStr);
+
+
+		try {
+			if (!StringUtils.isEmpty(maxStr)) {
+				max = Double.parseDouble(maxStr);
+			}
+			if (!StringUtils.isEmpty(minStr)) {
+				min = Double.parseDouble(minStr);
+			}
+		} catch (Exception ignored) {
+
 		}
-		if (!StringUtils.isEmpty(minStr)) {
-			min = Double.parseDouble(minStr);
-		}
+
 		QueryWrapper<SkuInfoEntity> wrapper = new QueryWrapper<>();
 		if (!StringUtils.isEmpty(key)) {
 			wrapper.and(queryWrapper -> {
@@ -53,21 +60,20 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 		String catelogId = (String) params.get("catelogId");
 		String brandId = (String) params.get("brandId");
 		String status = (String) params.get("status");
-		if (!StringUtils.isEmpty(catelogId) && Integer.parseInt(catelogId) != 0) {
-			wrapper.eq("catalog_id", Long.parseLong(catelogId));
+		if (!StringUtils.isEmpty(catelogId) && !"0".equalsIgnoreCase(catelogId)) {
+			wrapper.eq("catalog_id", catelogId);
 		}
-		if (!StringUtils.isEmpty(brandId) && Integer.parseInt(brandId) != 0) {
-			wrapper.eq("brand_id", Long.parseLong(brandId));
+		if (!StringUtils.isEmpty(brandId) && !"0".equalsIgnoreCase(brandId)) {
+			wrapper.eq("brand_id", brandId);
 		}
 		if (!StringUtils.isEmpty(status)) {
-			wrapper.eq("status", Long.parseLong(status));
+			wrapper.eq("status", status);
 		}
 
-		if (min != 0 && max != 0) {
-			wrapper.between("price", min, max);
-		} else if (min != 0) {
+		if (min != 0) {
 			wrapper.ge("price", min);
-		} else if (max != 0) {
+		}
+		if (max != 0) {
 			wrapper.le("price", max);
 		}
 

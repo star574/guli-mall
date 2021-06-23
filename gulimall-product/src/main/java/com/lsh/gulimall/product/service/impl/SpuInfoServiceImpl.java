@@ -93,14 +93,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity>
 		String status = (String) params.get("status");
 
 
-		if (!StringUtils.isEmpty(catelogId) && Integer.parseInt(catelogId) != 0) {
-			wrapper.eq("catalog_id", Long.parseLong(catelogId));
+		if (!StringUtils.isEmpty(catelogId) && !"0".equalsIgnoreCase(catelogId)) {
+			wrapper.eq("catalog_id", catelogId);
 		}
-		if (!StringUtils.isEmpty(brandId) && Integer.parseInt(brandId) != 0) {
-			wrapper.eq("brand_id", Long.parseLong(brandId));
+		if (!StringUtils.isEmpty(brandId) && !"0".equalsIgnoreCase(brandId)) {
+			wrapper.eq("brand_id", brandId);
 		}
 		if (!StringUtils.isEmpty(status)) {
-			wrapper.eq("publish_status", Long.parseLong(status));
+			wrapper.eq("publish_status", status);
 		}
 
 		if ("desc".equals(order) && !StringUtils.isEmpty(sidx)) {

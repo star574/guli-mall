@@ -1,18 +1,13 @@
-package com.lsh.gulimall.product.config;
+package com.lsh.gulimall.common.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import org.apache.ibatis.plugin.Intercepts;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author codestar
  */
 @Configuration
-@EnableTransactionManagement
-@MapperScan(basePackages = "com.lsh.gulimall.product.dao")
 public class MybatisConfig {
 
 
