@@ -1,4 +1,4 @@
-package com.lsh.gulimall.common.config;
+package com.lsh.gulimall.ware.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.springframework.context.annotation.Bean;

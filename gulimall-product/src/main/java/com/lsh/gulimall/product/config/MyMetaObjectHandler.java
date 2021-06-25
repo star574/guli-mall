@@ -1,10 +1,11 @@
-package com.lsh.gulimall.common.config;
+package com.lsh.gulimall.product.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 	@Override

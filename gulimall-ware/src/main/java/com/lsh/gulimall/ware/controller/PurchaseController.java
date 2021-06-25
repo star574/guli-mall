@@ -4,9 +4,11 @@ import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.ware.entity.PurchaseEntity;
 import com.lsh.gulimall.ware.entity.vo.MergeVo;
+import com.lsh.gulimall.ware.entity.vo.PurchaseDoneVo;
 import com.lsh.gulimall.ware.service.PurchaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -30,6 +32,15 @@ public class PurchaseController {
 	@Autowired
 	private PurchaseService purchaseService;
 
+
+	/**
+	 * 完成采购
+	 */
+	@PostMapping("/done")
+	// @RequiresPermissions("ware:purchase:list")
+	public R done(@Validated @RequestBody PurchaseDoneVo PurchaseDoneVo) {
+		return purchaseService.done(PurchaseDoneVo) ? R.ok() : R.error("采购失败!");
+	}
 
 	/**
 	 * 列表

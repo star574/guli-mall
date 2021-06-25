@@ -1,19 +1,16 @@
 package com.lsh.gulimall.product.controller;
 
-import java.util.*;
-
 import com.lsh.gulimall.common.utils.PageUtils;
-
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.product.entity.ProductAttrValueEntity;
 import com.lsh.gulimall.product.entity.vo.AttrVo;
-import com.lsh.gulimall.product.service.AttrAttrgroupRelationService;
-import com.lsh.gulimall.product.service.AttrGroupService;
-import com.lsh.gulimall.product.service.CategoryService;
+import com.lsh.gulimall.product.service.AttrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.lsh.gulimall.product.service.AttrService;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,15 +25,6 @@ import com.lsh.gulimall.product.service.AttrService;
 public class AttrController {
 	@Autowired
 	private AttrService attrService;
-
-	@Autowired
-	private CategoryService categoryService;
-
-	@Autowired
-	private AttrAttrgroupRelationService attrAttrgroupRelationService;
-
-	@Autowired
-	private AttrGroupService attrGroupService;
 
 	/**
 	 * 列表
@@ -100,19 +88,18 @@ public class AttrController {
 //		attrService.removeByIds(Arrays.asList(attrIds));
 
 
-		return attrService.removeAttr(Arrays.asList(attrIds))?R.ok():R.error();
+		return attrService.removeAttr(Arrays.asList(attrIds)) ? R.ok() : R.error();
 	}
 
 
-
 	/**
-	 * 信息
+	 * 获取sku规格
 	 */
 	@RequestMapping("base/listforspu/{spuId}")
 	// @RequiresPermissions("product:attr:info")
 	public R spuBaseInfo(@PathVariable("spuId") Long spuId) {
 
-		List<ProductAttrValueEntity> spuBaseInfoVos=attrService.getSpuInfo(spuId);
+		List<ProductAttrValueEntity> spuBaseInfoVos = attrService.getSpuInfo(spuId);
 
 		return R.ok().put("data", spuBaseInfoVos);
 	}
@@ -122,9 +109,9 @@ public class AttrController {
 	 */
 	@PostMapping("update/{spuId}")
 	// @RequiresPermissions("product:attr:info")
-	public R spuInfoUpdate(@PathVariable("spuId") Long spuId,@RequestBody List<ProductAttrValueEntity> productAttrValueEntityList) {
+	public R spuInfoUpdate(@PathVariable("spuId") Long spuId, @RequestBody List<ProductAttrValueEntity> productAttrValueEntityList) {
 
-		return attrService.updateSpuInfo(spuId,productAttrValueEntityList)?R.ok():R.error();
+		return attrService.updateSpuInfo(spuId, productAttrValueEntityList) ? R.ok() : R.error();
 	}
 
 

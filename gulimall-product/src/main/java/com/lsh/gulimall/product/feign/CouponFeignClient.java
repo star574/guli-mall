@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 // @Primary  解决 idea中 fallback 实现类 FeignClient 重复问题 : Could not autowire. There is more than one bean
 @Primary
-@FeignClient(name = "gulimall-coupon", fallback = CouponFeignClientImpl.class)
+@FeignClient(name = "gulimall-gateway", fallback = CouponFeignClientImpl.class)
 public interface CouponFeignClient {
 
-	@PostMapping("coupon/spubounds/saveSpuBounds")
+	@PostMapping("/api/coupon/spubounds/saveSpuBounds")
 	R saveSpuBounds(SpuBoundTo spuBoundTo);
 
-	@PostMapping("coupon/skufullreduction/save/reduction")
+	@PostMapping("/api/coupon/skufullreduction/save/reduction")
 	R saveSkuRedution(SkuReductionTo skuReductionTo);
 }
