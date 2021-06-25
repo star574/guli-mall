@@ -137,10 +137,8 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 		/*改变采采购项状态*/
 		List<PurchaseItemDoneVo> items = purchaseDoneVo.getItem();
 		for (PurchaseItemDoneVo item : items) {
-			PurchaseDetailEntity purchaseEntity = new PurchaseDetailEntity();{
-			return import com.lsh.gulimall.common.utils.Query;
-
-				purchaseEntity.setId(item.getItemId());
+			PurchaseDetailEntity purchaseEntity = new PurchaseDetailEntity();
+			purchaseEntity.setId(item.getItemId());
 			if (item.getStatus() == WareConstant.PruchaseStatus.HASERROR.getCode()) {
 				flag = false;
 				purchaseEntity.setStatus(WareConstant.PruchaseDetailStatus.HASERROR.getCode());
