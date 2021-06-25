@@ -63,8 +63,6 @@ public class PurchaseController {
 
 		return R.ok().put("page", page);
 	}
-
-
 	/**
 	 * 状态为新建的采购单列表
 	 * /ware/purchase/unreceive/list
