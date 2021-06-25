@@ -2,7 +2,6 @@ package com.lsh.gulimall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.utils.PageUtils;
-import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.product.entity.SpuImagesEntity;
 
 import java.util.List;
