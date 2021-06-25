@@ -41,7 +41,7 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 	public PageUtils queryPage(Map<String, Object> params) {
 		IPage<PurchaseEntity> page = this.page(
 				new Query<PurchaseEntity>().getPage(params),
-				new QueryWrapper<PurchaseEntity>()
+				new QueryWrapper<>()
 		);
 
 		return new PageUtils(page);
@@ -88,9 +88,7 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 		}
 		List<Long> items = mergeVo.getItems();
 		Long finalPurchaseId = purchaseId;
-		items.forEach(id -> {
-			purchaseDetailService.update(null, new UpdateWrapper<PurchaseDetailEntity>().eq("id", id).set("purchase_id", finalPurchaseId).set("status", WareConstant.PruchaseDetailStatus.ASSIGNED.getCode()));
-		});
+		items.forEach(id -> purchaseDetailService.update(null, new UpdateWrapper<PurchaseDetailEntity>().eq("id", id).set("purchase_id", finalPurchaseId).set("status", WareConstant.PruchaseDetailStatus.ASSIGNED.getCode())));
 		return true;
 	}
 
@@ -101,9 +99,8 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 		List<PurchaseEntity> collect = purchaseIdList.stream().map(id -> {
 			PurchaseEntity byId = this.getById(id);
 			return byId;
-		}).filter(item -> {
-			return item.getStatus() == WareConstant.PruchaseStatus.CREATE.getCode() || item.getStatus() == WareConstant.PruchaseStatus.ASSIGNED.getCode();
-		}).map(item -> {
+		}).filter(item -> item.getStatus() == WareConstant.PruchaseStatus.CREATE.getCode() || item.getStatus() == WareConstant.PruchaseStatus.ASSIGNED.getCode()
+		).map(item -> {
 			item.setStatus(WareConstant.PruchaseStatus.EWCEIVE.getCode());
 			item.setUpdateTime(new Date());
 			return item;
@@ -140,8 +137,10 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 		/*改变采采购项状态*/
 		List<PurchaseItemDoneVo> items = purchaseDoneVo.getItem();
 		for (PurchaseItemDoneVo item : items) {
-			PurchaseDetailEntity purchaseEntity = new PurchaseDetailEntity();
-			purchaseEntity.setId(item.getItemId());
+			PurchaseDetailEntity purchaseEntity = new PurchaseDetailEntity();{
+			return import com.lsh.gulimall.common.utils.Query;
+
+				purchaseEntity.setId(item.getItemId());
 			if (item.getStatus() == WareConstant.PruchaseStatus.HASERROR.getCode()) {
 				flag = false;
 				purchaseEntity.setStatus(WareConstant.PruchaseDetailStatus.HASERROR.getCode());
