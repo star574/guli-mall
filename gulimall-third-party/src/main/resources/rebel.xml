@@ -11,7 +11,7 @@
 	<id>gulimall-third-party</id>
 
 	<classpath>
-		<dir name="E:/workplace/java/guli-mall/gulimall-third-party/target/classes">
+		<dir name="/home/codestar/workspace/java/guli-mall/gulimall-third-party/target/classes">
 		</dir>
 	</classpath>
 
