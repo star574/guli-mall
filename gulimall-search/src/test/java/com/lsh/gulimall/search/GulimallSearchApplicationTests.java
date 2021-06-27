@@ -2,7 +2,6 @@ package com.lsh.gulimall.search;
 
 import com.alibaba.fastjson.JSON;
 import com.lsh.gulimall.search.config.ESConfig;
-import lombok.extern.java.Log;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -13,11 +12,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.aggregations.Aggregation;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -25,7 +21,6 @@ import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilde
 import org.elasticsearch.search.aggregations.metrics.Avg;
 import org.elasticsearch.search.aggregations.metrics.AvgAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +32,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -162,7 +156,7 @@ public class GulimallSearchApplicationTests {
 			Terms agg1 = aggregations.get("ageAgg");
 			List<? extends Terms.Bucket> buckets = agg1.getBuckets();
 			for (Terms.Bucket bucket : buckets) {
-				System.out.println("年龄分布 : " + bucket.getKey() +"人数" + bucket.getDocCount());
+				System.out.println("年龄分布 : " + bucket.getKey() + "人数" + bucket.getDocCount());
 			}
 			Avg agg2 = aggregations.get("balanceAgg");
 			System.out.println("平均薪资 = " + agg2.getValue());
