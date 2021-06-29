@@ -37,8 +37,10 @@ public class WareSkuController {
 	@PostMapping("/haStock")
 	public R haStock(@RequestBody List<Long> skuId) {
 		List<SkuHasStockTo> skuHasStockVoList = wareSkuService.hasStock(skuId);
-		log.warn("库存服务调用成功! {} ",skuHasStockVoList);
-		return R.ok().data(skuHasStockVoList);
+		log.warn("库存服务调用成功! {} ", skuHasStockVoList);
+		R r = R.ok();
+		r.data(skuHasStockVoList);
+		return r;
 	}
 
 

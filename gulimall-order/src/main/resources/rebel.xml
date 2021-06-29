@@ -9,7 +9,7 @@
 	<id>gulimall-order</id>
 
 	<classpath>
-		<dir name="/home/codestar/workspace/java/guli-mall/gulimall-order/target/classes">
+		<dir name="E:/workplace/java/guli-mall/gulimall-order/target/classes">
 		</dir>
 	</classpath>
 

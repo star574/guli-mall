@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+
+/**
+ * @author shihe
+ */
 @Primary
-@FeignClient(name = "gulimall-ware" ,fallback = WareFeignClientImpl.class)
+@FeignClient(name = "gulimall-ware", fallback = WareFeignClientImpl.class)
 public interface WareFeignClient {
 
 	@PostMapping("/ware/waresku/haStock")
