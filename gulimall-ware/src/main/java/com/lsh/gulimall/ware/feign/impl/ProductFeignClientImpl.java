@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductFeignClientImpl implements ProductFeignClient {
 
-
 	@Override
 	public R info(Long skuId) {
 		return R.error("服务调用失败");

@@ -30,12 +30,26 @@ public class SpuInfoController {
 	CouponFeignClient couponFeignClient;
 
 	/**
-	 * 列表
+	 * //TODO
+	 *
+	 * @param spuId
+	 * @return
+	 * @throws
+	 * @date 2021/6/28 下午11:25
+	 * @Description  商品上架
+	 */
+	@PostMapping("/{spuId}/up")
+	public R spuUp(@PathVariable Long spuId) {
+		return spuInfoService.up(spuId)?R.ok():R.error("上架失败!");
+	}
+
+
+	/**
+	 * info
 	 */
 	@RequestMapping("/info")
 	// @RequiresPermissions("product:spuinfo:list")
 	public R info() {
-
 		return couponFeignClient.saveSpuBounds(new SpuBoundTo());
 	}
 

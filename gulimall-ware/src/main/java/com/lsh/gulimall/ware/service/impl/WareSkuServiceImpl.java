@@ -3,6 +3,7 @@ package com.lsh.gulimall.ware.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lsh.gulimall.common.to.SkuHasStockTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.common.utils.R;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("wareSkuService")
@@ -89,6 +92,25 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 			baseMapper.addStock(skuId, wareId, skuNum);
 		}
 		return true;
+	}
+
+	@Override
+	public List<SkuHasStockTo> hasStock(List<Long> skuIds) {
+		List<WareSkuEntity> skuEntityList = this.list(new QueryWrapper<WareSkuEntity>().in("sku_id", skuIds));
+
+		List<SkuHasStockTo> skuHasStockVoList = skuEntityList.stream().map(wareSkuEntity -> {
+			SkuHasStockTo skuHasStockVo = new SkuHasStockTo();
+			skuHasStockVo.setSkuId(wareSkuEntity.getSkuId());
+			/*有库存: 库存减去锁定库存大于0*/
+			if (wareSkuEntity.getSkuId() != null && wareSkuEntity.getStock() != null && wareSkuEntity.getStockLocked() != null) {
+				skuHasStockVo.setHasStock(wareSkuEntity.getStock() - wareSkuEntity.getStockLocked() > 0);
+			} else {
+				skuHasStockVo.setHasStock(false);
+			}
+			return skuHasStockVo;
+		}).collect(Collectors.toList());
+
+		return skuHasStockVoList;
 	}
 
 }

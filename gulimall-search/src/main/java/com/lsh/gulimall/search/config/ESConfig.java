@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ESConfig {
 
-
 	public static final RequestOptions COMMON_OPTIONS;
 
 	static {

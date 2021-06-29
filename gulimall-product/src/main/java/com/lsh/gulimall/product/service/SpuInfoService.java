@@ -22,5 +22,6 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     boolean saveBaseSpuInfo(SpuInfoEntity spuInfoEntity);
 
+	boolean up(Long spuId);
 }
 

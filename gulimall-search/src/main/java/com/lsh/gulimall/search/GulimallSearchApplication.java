@@ -11,8 +11,5 @@ public class GulimallSearchApplication {
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext run = SpringApplication.run(GulimallSearchApplication.class, args);
-		RestHighLevelClient esRestClient = run.getBean("esRestClient", RestHighLevelClient.class);
-		System.out.println(esRestClient);
 	}
-
 }
