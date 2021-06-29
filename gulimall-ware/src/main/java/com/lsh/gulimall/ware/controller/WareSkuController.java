@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
