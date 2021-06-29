@@ -5,7 +5,6 @@ import com.lsh.gulimall.product.feign.impl.WareFeignClientImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 
 import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
