@@ -1,10 +1,16 @@
 package com.lsh.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.product.entity.vo.frontvo.Catelog2Vo;
 import com.lsh.gulimall.product.service.CategoryBrandRelationService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.util.privilegedactions.GetClassLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,6 +40,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	@Autowired
 	CategoryBrandRelationService categoryBrandRelationService;
 
+	//	@Autowired
+//	RedisTemplate<Object, Object> redisTemplate;
+	@Autowired
+	StringRedisTemplate stringRedisTemplate;
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -114,6 +124,31 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 		return this.list(new QueryWrapper<CategoryEntity>().eq("cat_level", 1));
 	}
 
+	@Override
+	public Map<String, List<Catelog2Vo>> getCatalogJson() {
+
+		/*解决堆外内存移除
+		* 1.升级lettuce
+		* 2.切换使用jedis *
+		* */
+
+
+		Map<String, List<Catelog2Vo>> map = null;
+		/*先查询redis*/
+		String categorysOfRedis = stringRedisTemplate.opsForValue().get("categorys");
+		/*redis中不存在 categorys*/
+		if (StringUtils.isEmpty(categorysOfRedis)) {
+			/*mysql查询*/
+			map = getCatalogjsonFromDb();
+			/*转为json存入redis*/
+			stringRedisTemplate.opsForValue().set("categorys", JSON.toJSONString(map));
+		} else {
+			/********************* 解析redis数据 json转复杂类型 : TypeReference */
+			map = JSON.parseObject(categorysOfRedis, new TypeReference<Map<String, List<Catelog2Vo>>>(){});
+		}
+		return map;
+	}
+
 	/**
 	 * //TODO
 	 *
@@ -125,26 +160,58 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	 */
 	@Transactional
 	@Override
-	public Map<String, List<Catelog2Vo>> getCatalogJson() {
-		/*获取一级分类*/
-		List<CategoryEntity> oneLevelCategorys = getOneLevelCategorys();
+	public Map<String, List<Catelog2Vo>> getCatalogjsonFromDb() {
+		Map<String, List<Catelog2Vo>> map = null;
+		/*
+		优化1:一次查询再处理
+		*/
+		List<CategoryEntity> categorys = this.list();
+		if (categorys != null) {
+			List<CategoryEntity> oneLevelCategorys = getParent_cid(categorys, 0L);
+			//key:k.getCatId() value: catelog2VoList
+			map = oneLevelCategorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(),
+					categoryEntity1 -> {
+						//获取一级分类下的二级分类列表
+						List<CategoryEntity> categoryEntities = getParent_cid(categorys, categoryEntity1.getCatId());
+						//获取二级下三级分类列表
+						//处理二级分类
+						if (categoryEntities != null) {
+							List<Catelog2Vo> catelog2VoList = categoryEntities.stream().map(categoryEntity2 -> {
+								List<CategoryEntity> categoryEntityList = getParent_cid(categorys, categoryEntity2.getCatId());
+								//处理三级分类
+								if (categoryEntityList != null) {
+									List<Catelog2Vo.Catelog3Vo> catelog3VoList = categoryEntityList.stream().map(categoryEntity3 -> {
+										Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(categoryEntity2.getCatId().toString(), categoryEntity3.getCatId().toString(), categoryEntity3.getName());
+										return catelog3Vo;
+									}).collect(Collectors.toList());
+									Catelog2Vo catelog2Vo = new Catelog2Vo(categoryEntity1.getCatId().toString(), catelog3VoList, categoryEntity2.getCatId().toString(), categoryEntity2.getName());
+									return catelog2Vo;
+								}
+								return null;
+							}).collect(Collectors.toList());
+							return catelog2VoList;
+						}
+						return null;
+					}));
+		}
+		return map;
+// ===================================================================================================
+		//	获取一级分类
+/*		List<CategoryEntity> oneLevelCategorys = getOneLevelCategorys();
 		if (oneLevelCategorys != null) {
-			/*key:k.getCatId() value: catelog2VoList*/
+			//	key:k.getCatId() value: catelog2VoList
 			Map<String, List<Catelog2Vo>> map = oneLevelCategorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(),
 					categoryEntity1 -> {
-						/*获取一级分类下的二级分类列表*/
+						//	获取一级分类下的二级分类列表
 						List<CategoryEntity> categoryEntities = this.list(new QueryWrapper<CategoryEntity>().eq("parent_cid", categoryEntity1.getCatId()));
-						/*获取二级下三级分类列表*/
-						/*处理二级分类*/
+						//	获取二级下三级分类列表
+						// 处理二级分类
 						if (categoryEntities != null) {
 							List<Catelog2Vo> catelog2VoList = categoryEntities.stream().map(categoryEntity2 -> {
 								List<CategoryEntity> categoryEntityList = this.list(new QueryWrapper<CategoryEntity>().eq("parent_cid", categoryEntity2.getCatId()));
-								/*处理三级分类*/
+								//	处理三级分类
 								if (categoryEntityList != null) {
 									List<Catelog2Vo.Catelog3Vo> catelog3VoList = categoryEntityList.stream().map(categoryEntity3 -> {
-										if (categoryEntity3.getName().equals("米粉/菜粉")) {
-											log.warn(categoryEntity3.toString());
-										}
 										Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(categoryEntity2.getCatId().toString(), categoryEntity3.getCatId().toString(), categoryEntity3.getName());
 										return catelog3Vo;
 									}).collect(Collectors.toList());
@@ -159,8 +226,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 					}));
 			return map;
 		}
-		return null;
+		return null;*/
 	}
+
+	/*获取对应parentCid的分类信息*/
+	private List<CategoryEntity> getParent_cid(List<CategoryEntity> categoryEntityList, long parentCid) {
+		return categoryEntityList.stream().filter(categoryEntity -> categoryEntity.getParentCid().equals(parentCid)).collect(Collectors.toList());
+	}
+
 
 	private List<Long> findParentPath(Long catelogId, List<Long> longs) {
 		longs.add(catelogId);

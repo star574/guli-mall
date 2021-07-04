@@ -22,11 +22,11 @@
 			<artifactId>gulimall-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.aliyun.oss</groupId>-->
-<!--			<artifactId>aliyun-java-sdk-oss</artifactId>-->
-<!--			<version>3.5.0</version>-->
-<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>com.aliyun.oss</groupId>-->
+		<!--			<artifactId>aliyun-java-sdk-oss</artifactId>-->
+		<!--			<version>3.5.0</version>-->
+		<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -34,6 +34,22 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<!--redis-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>lucene-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!--替换lettuce为jedis-->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
 		</dependency>
 
 		<dependency>

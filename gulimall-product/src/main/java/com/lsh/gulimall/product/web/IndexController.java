@@ -9,9 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +26,7 @@ public class IndexController {
 	String indexPage(Model model) {
 		/*1.查询所有的一级分类*/
 		List<CategoryEntity> categoryEntityList = categoryService.getOneLevelCategorys();
-		log.info("访问首页!");
+//		log.info("访问首页!");
 		model.addAttribute("categorys", categoryEntityList);
 		return "index";
 	}
@@ -49,5 +47,19 @@ public class IndexController {
 	Map<String, List<Catelog2Vo>> getCatalogJson() {
 		Map<String, List<Catelog2Vo>> map = categoryService.getCatalogJson();
 		return map;
+	}
+	/**
+	 * //TODO
+	 *
+	 * @param
+	 * @return
+	 * @throws
+	 * @date 2021/6/30 22:50
+	 * @Description 测试服务
+	 */
+	@RequestMapping("/hello")
+	@ResponseBody
+	String hello() {
+		return "hello";
 	}
 }
