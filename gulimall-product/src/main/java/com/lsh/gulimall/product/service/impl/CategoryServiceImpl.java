@@ -6,6 +6,8 @@ import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.product.entity.vo.frontvo.Catelog2Vo;
 import com.lsh.gulimall.product.service.CategoryBrandRelationService;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -43,6 +45,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 //	RedisTemplate<Object, Object> redisTemplate;
 	@Autowired
 	StringRedisTemplate stringRedisTemplate;
+
+	@Autowired
+	RedissonClient redissonClient;
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -139,7 +144,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 		/*redis中不存在 categorys*/
 		if (StringUtils.isEmpty(categorysOfRedis)) {
 			/*mysql查询*/
-			map = getCatalogjsonFromDb();
+			map = getCatalogjsonRedisson();
 		} else {
 			/********************* 解析redis数据 json转复杂类型 : TypeReference */
 			map = JSON.parseObject(categorysOfRedis, new TypeReference<Map<String, List<Catelog2Vo>>>() {
@@ -148,6 +153,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 		return map;
 	}
 
+
 	/**
 	 * //TODO
 	 *
@@ -155,7 +161,44 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	 * @return
 	 * @throws
 	 * @date 2021/6/30 22:48
-	 * @Description 获取前端全部分类数据
+	 * @Description 获取前端全部分类数据 redsion  缓存数据和数据库保持一直 数据一致性 双写模式(同时修改)  失效模式(缓存失效,重新存入缓存)
+	 */
+	@Transactional
+	@Override
+	public Map<String, List<Catelog2Vo>> getCatalogjsonRedisson() {
+		/*redission获取分布式锁*/
+		/*锁的粒度.越细越快  */
+		RLock catelogLock = redissonClient.getLock("categorys-lock");
+		catelogLock.lock();
+		Map<String, List<Catelog2Vo>> categorysFromDb = null;
+		try {
+			/*先查询redis*/
+			String categorysOfRedis = stringRedisTemplate.opsForValue().get("categorys");
+			/*redis中不存在 categorys*/
+			if (!StringUtils.isEmpty(categorysOfRedis)) {
+				/********************* 解析redis数据 json转复杂类型 : TypeReference */
+				return JSON.parseObject(categorysOfRedis, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+				});
+			}
+			categorysFromDb = getCategorysFromDb();
+			return categorysFromDb;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			catelogLock.unlock();
+		}
+		return categorysFromDb;
+	}
+
+
+	/**
+	 * //TODO
+	 *
+	 * @param
+	 * @return
+	 * @throws
+	 * @date 2021/6/30 22:48
+	 * @Description 获取前端全部分类数据 redsion
 	 */
 	@Transactional
 	@Override
@@ -226,14 +269,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	 * @Description 从数据库获取数据
 	 */
 	private Map<String, List<Catelog2Vo>> getCategorysFromDb() {
-//      自旋的时候开启
-//		String categorysOfRedis = stringRedisTemplate.opsForValue().get("categorys");
-//		if (!StringUtils.isEmpty(categorysOfRedis)) {
-//			log.warn("从redis中获取数据成功");
-//			/********************* 解析redis数据 json转复杂类型 : TypeReference */
-//			return JSON.parseObject(categorysOfRedis, new TypeReference<Map<String, List<Catelog2Vo>>>() {
-//			});
-//		}
 		log.warn("categorys :查询数据库!");
 		Map<String, List<Catelog2Vo>> map = null;
 		List<CategoryEntity> categorys = this.list();

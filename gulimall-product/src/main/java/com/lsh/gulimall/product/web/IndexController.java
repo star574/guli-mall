@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RLock;
+import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,7 +63,7 @@ public class IndexController {
 	 * @return
 	 * @throws
 	 * @date 2021/6/30 22:50
-	 * @Description 测试服务
+	 * @Description 测试服务   redisson里的锁都是分布式锁 底层都是lua脚本保证原子性 看门狗机制解决死锁问题
 	 */
 	@RequestMapping("/hello")
 	@ResponseBody
@@ -104,5 +105,35 @@ public class IndexController {
 		return id + "结束";
 	}
 
+	/**
+	 * //TODO
+	 *
+	 * @param
+	 * @return
+	 * @throws
+	 * @date 2021/7/5 下午10:52
+	 * @Description 信号量
+	 */
+	@GetMapping("/park")
+	@ResponseBody
+	public String park() throws InterruptedException {
+		/*获取信号量*/
+		RSemaphore park = redisson.getSemaphore("park");
+		park.acquire(); // 获取信号量 获取一个值 占一个车位 park=3-1 阻塞式等待
+		boolean b = park.tryAcquire();// 非阻塞式 返回结果
+		if (!b) {
+			return "车位满了";
+		}
+		return "ok";
+	}
+
+	@GetMapping("/go")
+	@ResponseBody
+	public String unlock() throws InterruptedException {
+		/*获取信号量 */
+		RSemaphore park = redisson.getSemaphore("park");
+		park.release();/*释放一个车位*/
+		return "go";
+	}
 
 }
