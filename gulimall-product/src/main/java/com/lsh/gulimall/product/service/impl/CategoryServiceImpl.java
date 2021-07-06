@@ -37,8 +37,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	@Autowired
 	CategoryBrandRelationService categoryBrandRelationService;
 
-	//	@Autowired
-//	RedisTemplate<Object, Object> redisTemplate;
 	@Autowired
 	StringRedisTemplate stringRedisTemplate;
 
@@ -61,10 +59,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 			log.info("查询 " + info);
 		}
 		List<CategoryEntity> list = StringUtils.isEmpty(info) ? this.list() : this.list(new QueryWrapper<CategoryEntity>().like("name", info));
-		List<CategoryEntity> collect = list.stream().filter(categoryEntity -> categoryEntity.getParentCid().equals(0L)).map(categoryEntity -> {
-			categoryEntity.setChildren(getChildren(categoryEntity, list));
-			return categoryEntity;
-		}).sorted(Comparator.comparingInt(CategoryEntity::getSort)).collect(Collectors.toList());
+		/*map -- peek*/
+		List<CategoryEntity> collect = list.stream().filter(categoryEntity -> categoryEntity.getParentCid().equals(0L)).peek(categoryEntity -> categoryEntity.setChildren(getChildren(categoryEntity, list))).sorted(Comparator.comparingInt(CategoryEntity::getSort)).collect(Collectors.toList());
 		return collect;
 	}
 
@@ -134,7 +130,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 		/*空结果缓存 : 解决缓存穿透*/
 		/*设置过期时间 : 解决缓存雪崩*/
 		/*加锁 : 解决缓存击穿*/
-		Map<String, List<Catelog2Vo>> map = null;
+		Map<String, List<Catelog2Vo>> map;
 		/*先查询redis*/
 		String categorysOfRedis = stringRedisTemplate.opsForValue().get("categorys");
 		/*redis中不存在 categorys*/
@@ -157,7 +153,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 	 * @return
 	 * @throws
 	 * @date 2021/6/30 22:48
-	 * @Description 获取前端全部分类数据 redsion  缓存数据和数据库保持一直 数据一致性 双写模式(同时修改)  失效模式(缓存失效,重新存入缓存)
+	 * @Description 获取前端全部分类数据 redssion  缓存数据和数据库保持一直 数据一致性 双写模式(同时修改)  失效模式(缓存失效,重新存入缓存)
 	 */
 	@Transactional
 	@Override
@@ -231,7 +227,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 			l++;
 		}
 		log.warn("获取分布锁成功!");
-		Map<String, List<Catelog2Vo>> categorysFromDb = null;
+		Map<String, List<Catelog2Vo>> categorysFromDb;
 		try {
 			/*设置过期时间,防止死锁*/
 //		stringRedisTemplate.expire("lock", 30, TimeUnit.SECONDS);
@@ -382,10 +378,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
 	public List<CategoryEntity> getChildren(CategoryEntity current, List<CategoryEntity> list) {
 
-		List<CategoryEntity> collect = list.stream().filter(categoryEntity -> categoryEntity.getParentCid().equals(current.getCatId())).map(categoryEntity -> {
-			categoryEntity.setChildren(getChildren(categoryEntity, list));
-			return categoryEntity;
-		}).sorted(Comparator.comparingInt(CategoryEntity::getSort)).collect(Collectors.toList());
+		List<CategoryEntity> collect = list.stream().filter(categoryEntity -> categoryEntity.getParentCid().equals(current.getCatId())).peek(categoryEntity -> categoryEntity.setChildren(getChildren(categoryEntity, list))).sorted(Comparator.comparingInt(CategoryEntity::getSort)).collect(Collectors.toList());
 
 		return collect;
 	}
