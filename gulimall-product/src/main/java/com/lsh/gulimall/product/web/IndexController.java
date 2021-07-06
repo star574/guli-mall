@@ -4,7 +4,6 @@ import com.lsh.gulimall.product.entity.CategoryEntity;
 import com.lsh.gulimall.product.entity.vo.frontvo.Catelog2Vo;
 import com.lsh.gulimall.product.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.Redisson;
 import org.redisson.api.RCountDownLatch;
 import org.redisson.api.RLock;
 import org.redisson.api.RSemaphore;
@@ -12,7 +11,10 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -44,16 +46,13 @@ public class IndexController {
 	 * //TODO
 	 *
 	 * @param
-	 * @return
-	 * @throws
 	 * @date 2021/6/30 22:50
 	 * @Description 获取前端所有分类
 	 */
 	@RequestMapping("index/catalog.json")
 	@ResponseBody
 	Map<String, List<Catelog2Vo>> getCatalogJson() {
-		Map<String, List<Catelog2Vo>> map = categoryService.getCatalogJson();
-		return map;
+		return categoryService.getCatalogJson();
 	}
 
 	/**

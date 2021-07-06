@@ -8,11 +8,10 @@
              xmlns="http://www.zeroturnaround.com"
              xsi:schemaLocation="http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_3.xsd">
 
-	<id>gulimall-third-party</id>
+	<id>renren-generator</id>
 
 	<classpath>
-		<dir name="/home/codestar/workspace/java/guli-mall/gulimall-third-party/target/classes">
-		</dir>
+		<dir name="E:/workplace/java/guli-mall/renren-generator/target/classes"/>
 	</classpath>
 
 </application>

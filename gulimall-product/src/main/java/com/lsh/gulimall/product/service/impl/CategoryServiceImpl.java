@@ -2,9 +2,16 @@ package com.lsh.gulimall.product.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.utils.PageUtils;
+import com.lsh.gulimall.common.utils.Query;
+import com.lsh.gulimall.product.dao.CategoryDao;
+import com.lsh.gulimall.product.entity.CategoryEntity;
 import com.lsh.gulimall.product.entity.vo.frontvo.Catelog2Vo;
 import com.lsh.gulimall.product.service.CategoryBrandRelationService;
+import com.lsh.gulimall.product.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -12,23 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-
-import com.lsh.gulimall.product.dao.CategoryDao;
-import com.lsh.gulimall.product.entity.CategoryEntity;
-import com.lsh.gulimall.product.service.CategoryService;
-
-import com.lsh.gulimall.common.utils.Query;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 /**
  * @author codestar

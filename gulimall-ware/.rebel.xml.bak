@@ -6,10 +6,10 @@
 -->
 <application generated-by="intellij" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_3.xsd">
 
-	<id>gulimall-product</id>
+	<id>gulimall-ware</id>
 
 	<classpath>
-		<dir name="/home/codestar/workspace/java/guli-mall/gulimall-product/target/classes">
+		<dir name="E:/workplace/java/guli-mall/gulimall-ware/target/classes">
 		</dir>
 	</classpath>
 
