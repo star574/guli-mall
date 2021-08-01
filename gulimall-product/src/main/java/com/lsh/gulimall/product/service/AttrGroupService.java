@@ -2,12 +2,11 @@ package com.lsh.gulimall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.utils.PageUtils;
-import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.product.entity.AttrEntity;
 import com.lsh.gulimall.product.entity.AttrGroupEntity;
 import com.lsh.gulimall.product.entity.vo.AttrGroupRelationVo;
-import com.lsh.gulimall.product.entity.vo.AttrVo;
 import com.lsh.gulimall.product.entity.vo.CatelogAttrGroupVo;
+import com.lsh.gulimall.product.entity.vo.frontvo.SpuItemAttrsGroupVo;
 
 import java.util.List;
 import java.util.Map;
@@ -34,5 +33,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
 	boolean saveRelation(List<AttrGroupRelationVo> attrGroupRelationVoList);
 
 	List<CatelogAttrGroupVo> getGroupWithAttr(String catelogId);
+
+	List<SpuItemAttrsGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId);
 }
 

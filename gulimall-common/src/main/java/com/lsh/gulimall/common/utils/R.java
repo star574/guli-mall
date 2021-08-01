@@ -25,12 +25,13 @@ public class R extends HashMap<String, Object> {
 
 
 	public R data(Object data) {
-		this.put("data",data);
+		this.put("data", data);
 		return this;
 	}
-	public <T> T getData(TypeReference<T> typeReference) {
-		String string = JSON.toJSONString(this.get("data"));
-		return JSON.parseObject(string,typeReference);
+
+	public <T> T getData(String msg, TypeReference<T> typeReference) {
+		String string = JSON.toJSONString(this.get(msg));
+		return JSON.parseObject(string, typeReference);
 	}
 
 	public R() {

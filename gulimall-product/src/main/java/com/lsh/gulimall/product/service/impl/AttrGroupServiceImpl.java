@@ -1,35 +1,33 @@
 package com.lsh.gulimall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.utils.PageUtils;
+import com.lsh.gulimall.common.utils.Query;
+import com.lsh.gulimall.product.dao.AttrGroupDao;
 import com.lsh.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.lsh.gulimall.product.entity.AttrEntity;
+import com.lsh.gulimall.product.entity.AttrGroupEntity;
 import com.lsh.gulimall.product.entity.vo.AttrGroupRelationVo;
 import com.lsh.gulimall.product.entity.vo.AttrVo;
 import com.lsh.gulimall.product.entity.vo.CatelogAttrGroupVo;
+import com.lsh.gulimall.product.entity.vo.frontvo.SpuItemAttrsGroupVo;
 import com.lsh.gulimall.product.service.AttrAttrgroupRelationService;
+import com.lsh.gulimall.product.service.AttrGroupService;
 import com.lsh.gulimall.product.service.AttrService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-
-import com.lsh.gulimall.product.dao.AttrGroupDao;
-import com.lsh.gulimall.product.entity.AttrGroupEntity;
-import com.lsh.gulimall.product.service.AttrGroupService;
-import com.lsh.gulimall.common.utils.Query;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 
 /**
@@ -81,6 +79,7 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
 	/**
 	 * //TODO
+	 *
 	 * @param attrgroupId
 	 * @return List<AttrEntity>
 	 * @throws
@@ -210,4 +209,34 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 		return catelogAttrGroupVoList;
 	}
 
+
+	@Override
+	public List<SpuItemAttrsGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId) {
+
+		/*查出当前spu对应的所有属性分组信息以及当前分组下的所有属性值*/
+
+		/*1 根据3级分类id 当前spu有多少对应的属性分组*/
+
+		/*
+		*
+		* SELECT
+				pav.spu_id,
+				ag.attr_group_id,
+				ag.attr_group_name,
+				aar.attr_id,
+				a.attr_name,
+				pav.attr_value
+		FROM
+				pms_attr_group ag
+				LEFT JOIN pms_attr_attrgroup_relation aar ON ag.attr_group_id = aar.attr_group_id
+				LEFT JOIN pms_attr a ON a.attr_id = aar.attr_id
+				LEFT JOIN pms_product_attr_value pav ON pav.attr_id = aar.attr_id
+		WHERE
+				ag.catelog_id = 225
+				AND pav.spu_id = 10
+		* */
+		List<SpuItemAttrsGroupVo> attrsGroupVos = baseMapper.getAttrGroupWithAttrsBySpuId(spuId, catalogId);
+
+		return attrsGroupVos;
+	}
 }

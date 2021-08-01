@@ -16,6 +16,7 @@ import com.lsh.gulimall.product.entity.vo.AttrVo;
 import com.lsh.gulimall.product.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -143,6 +144,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 		return true;
 	}
 
+	@Cacheable(value = "attr",key = "'attrinfo:'+#root.args[0]")
 	@Override
 	public AttrVo getAttrInfo(Long attrId) {
 		AttrEntity attr = this.getById(attrId);

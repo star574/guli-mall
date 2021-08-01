@@ -55,6 +55,9 @@ public class IndexController {
 		return categoryService.getCatalogJson();
 	}
 
+
+
+
 	/**
 	 * //TODO
 	 *

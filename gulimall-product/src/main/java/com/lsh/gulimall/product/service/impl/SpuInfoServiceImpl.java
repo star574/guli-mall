@@ -2,7 +2,6 @@ package com.lsh.gulimall.product.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.constant.ProductConstant;
@@ -284,16 +283,16 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 			R r = wareFeignClient.haStock(skuIds);
 			if (r.getCode() != 0) {
 				log.error("库存服务查询异常!");
-			}else{
+			} else {
 				log.warn("库存查询成功!");
 			}
 
 			/*类型转换*/
-			List<SkuHasStockTo> skuHasStockToList = r.getData(new TypeReference<List<SkuHasStockTo>>() {
+			List<SkuHasStockTo> skuHasStockToList = r.getData("msg", new TypeReference<List<SkuHasStockTo>>() {
 			});
 			Map<Long, Boolean> hasStockMap = null;
 			if (skuHasStockToList != null && skuHasStockToList.size() != 0) {
-				log.warn("库存信息: {}",skuHasStockToList);
+				log.warn("库存信息: {}", skuHasStockToList);
 				hasStockMap = skuHasStockToList.stream().collect(Collectors.toMap(SkuHasStockTo::getSkuId, SkuHasStockTo::isHasStock));
 			}
 			Map<Long, Boolean> finalHasStockMap = hasStockMap;
@@ -338,7 +337,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 				// TODO 重复调用问题 接口幂等性 重试机制
 				return false;
 			}
-		}else {
+		} else {
 			return false;
 		}
 		return true;

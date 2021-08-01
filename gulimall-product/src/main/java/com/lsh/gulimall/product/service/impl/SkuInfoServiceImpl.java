@@ -6,19 +6,47 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.product.dao.SkuInfoDao;
+import com.lsh.gulimall.product.entity.SkuImagesEntity;
 import com.lsh.gulimall.product.entity.SkuInfoEntity;
-import com.lsh.gulimall.product.service.SkuInfoService;
+import com.lsh.gulimall.product.entity.SpuInfoDescEntity;
+import com.lsh.gulimall.product.entity.vo.frontvo.ItemSaleAttrsVo;
+import com.lsh.gulimall.product.entity.vo.frontvo.SkuItemVo;
+import com.lsh.gulimall.product.entity.vo.frontvo.SpuItemAttrsGroupVo;
+import com.lsh.gulimall.product.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author codestar
  */
 @Service("skuInfoService")
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> implements SkuInfoService {
+
+
+	@Autowired
+	private SkuImagesService skuImagesService;
+
+	@Autowired
+	private SpuInfoDescService spuInfoDescService;
+
+	@Autowired
+	private AttrGroupService attrGroupService;
+
+	@Autowired
+	private SkuSaleAttrValueService skuSaleAttrValueService;
+
+
+	/*线程池*/
+	@Autowired
+	private ThreadPoolExecutor threadPoolExecutor;
+
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -95,6 +123,69 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 	@Override
 	public List<SkuInfoEntity> getSkusBySpuId(Long spuId) {
 		return this.list(new QueryWrapper<SkuInfoEntity>().eq("spu_id", spuId));
+	}
+
+	@Transactional
+	@Override
+	public SkuItemVo item(Long skuId) {
+
+		SkuItemVo skuItemVo = new SkuItemVo();
+		/*异步编排*/
+
+		/*1.基本信息 pms_sku_info */
+		CompletableFuture<SkuInfoEntity> infoCompletableFuture = CompletableFuture.supplyAsync(() -> {
+			SkuInfoEntity skuInfoEntity = this.getById(skuId);
+			skuItemVo.setInfo(skuInfoEntity);
+			return skuInfoEntity;
+		}, threadPoolExecutor);
+
+		/*2.图片信息 pms_sku_images */
+		CompletableFuture<Void> imagesFuture = CompletableFuture.runAsync(() -> {
+			List<SkuImagesEntity> skuImagesEntityList = skuImagesService.getImagesBySkuId(skuId);
+			skuItemVo.setImages(skuImagesEntityList);
+		}, threadPoolExecutor);
+
+
+		CompletableFuture<Void> saleAttrFuture = infoCompletableFuture.thenAcceptAsync(skuInfoEntity -> {
+			/*3.spu中的所有sku(销售属性组合)  */
+			if (skuInfoEntity != null && skuInfoEntity.getSpuId() != null) {
+				List<ItemSaleAttrsVo> itemSaleAttrsVos = skuSaleAttrValueService.getSaleAttrsBySpuId(skuInfoEntity.getSpuId());
+				skuItemVo.setSaleAttr(itemSaleAttrsVos);
+			}
+
+		}, threadPoolExecutor);
+
+
+		/*4.spu介绍 */
+		CompletableFuture<Void> descFuture = infoCompletableFuture.thenAcceptAsync(skuInfoEntity -> {
+
+			if (skuInfoEntity != null && skuInfoEntity.getSpuId() != null) {
+				SpuInfoDescEntity spuInfoDescEntity = spuInfoDescService.getById(skuInfoEntity.getSpuId());
+				skuItemVo.setDesp(spuInfoDescEntity);
+			}
+
+		}, threadPoolExecutor);
+
+
+		/*5.规格参数信息 */
+		CompletableFuture<Void> attrsGroupFuture = infoCompletableFuture.thenAcceptAsync(skuInfoEntity -> {
+
+			if (skuInfoEntity != null && skuInfoEntity.getSpuId() != null) {
+				List<SpuItemAttrsGroupVo> attrsGroupVos = attrGroupService.getAttrGroupWithAttrsBySpuId(skuInfoEntity.getSpuId(), skuInfoEntity.getCatalogId());
+				skuItemVo.setGroupAttrs(attrsGroupVos);
+			}
+
+		}, threadPoolExecutor);
+
+
+		/*等待所有任务完成*/
+		try {
+			CompletableFuture.allOf(imagesFuture, saleAttrFuture, descFuture, attrsGroupFuture).get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return skuItemVo;
 	}
 
 }

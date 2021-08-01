@@ -1,7 +1,6 @@
 package com.lsh.gulimall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.to.es.SkuEsModel;
 import com.lsh.gulimall.search.config.ESConfig;
 import com.lsh.gulimall.search.constant.EsConstant;
@@ -11,14 +10,12 @@ import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
 		BulkRequest bulkRequest = new BulkRequest();
 		for (SkuEsModel skuEsModel : skuEsModelList) {
 			/*指定索引*/
-			IndexRequest indexRequest = new IndexRequest(EsConstant.PRODUCTINDEX);
+			IndexRequest indexRequest = new IndexRequest(EsConstant.PRODUCT_INDEX);
 			/*指定id*/
 			indexRequest.id(skuEsModel.getSkuId().toString());
 			String string = JSON.toJSONString(skuEsModel);
