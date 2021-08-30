@@ -11,6 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * //TODO
+ *
+ * @Author: codestar
+ * @Date 2021/8/31 2:35
+ * @Description: 购物车
+ **/
 @Controller
 @Slf4j
 public class CartController {
@@ -18,16 +25,76 @@ public class CartController {
 	@Autowired
 	CartService cartService;
 
+
+	/**
+	 * //TODO
+	 *
+	 * @param
+	 * @return
+	 * @throws
+	 * @date 2021/8/29 21:47
+	 * @Description 删除购物项
+	 */
+	@GetMapping("/deleteItem")
+	public String deleteItem(@RequestParam("skuId") Long skuId) {
+
+		cartService.deleteItem(skuId);
+
+		return "redirect:http://cart.gulimall.com/cart.html";
+	}
+
+
+	@GetMapping("/countItem")
+	/**
+	 * @param skuId
+	 * @param num
+	 * @return: String
+	 * @Description: 更新购物项数量
+	 */
+	public String countItem(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num) {
+
+		cartService.updateNumItem(skuId, num);
+
+		return "redirect:http://cart.gulimall.com/cart.html";
+	}
+
+
+	@GetMapping("/checkItem")
+	/**
+	 * @param skuId
+	 * @param checked
+	 * @return: String
+	 * @Description: 更新购物项选中状态
+	 */
+	public String checkItem(@RequestParam("skuId") Long skuId, @RequestParam("checked") Integer checked) {
+
+		cartService.checkItem(skuId, checked);
+
+		return "redirect:http://cart.gulimall.com/cart.html";
+	}
+
+
+	/**
+	 * @param model
+	 * @return: String
+	 * @Description: 购物车列表页
+	 */
 	@GetMapping("/cart.html")
 	String cartListPage(Model model) {
-		System.out.println("======================");
-		Cart cart=cartService.getCartList();
-		model.addAttribute("cart",cart);
+		Cart cart = cartService.getCartList();
+		model.addAttribute("cart", cart);
 		System.out.println(cart);
 		return "cartList";
 	}
 
-	/*添加商品到购物车*/
+
+	/**
+	 * @param skuId
+	 * @param num
+	 * @param redirectAttributes
+	 * @return: String
+	 * @Description: 添加到购物车
+	 */
 	@GetMapping("/addToCart")
 	String addToCart(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num, RedirectAttributes redirectAttributes) {
 		CartItem cartItem = cartService.addToCart(skuId, num);
@@ -38,12 +105,19 @@ public class CartController {
 		return "redirect:http://cart.gulimall.com/addToCartSuccessPage.html";
 	}
 
+
 	@GetMapping("/addToCartSuccessPage.html")
+	/**
+	 * @param skuId
+	 * @param model
+	 * @return: String
+	 * @Description: 购物车添加成功页面
+	 */
 	public String addToCartSuccessPage(@RequestParam Long skuId, Model model) {
 
 		/*重定向到成功页面*/
 		CartItem cartItem = cartService.getCartItem(skuId);
-		log.info("正在查询购物项 skuId="+skuId);
+		log.info("正在查询购物项 skuId=" + skuId);
 		model.addAttribute("item", cartItem);
 		log.info("购物项查询成功!" + cartItem);
 		return "success";

@@ -122,18 +122,18 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 			/*未注册*/
 			MemberEntity memberEntity = new MemberEntity();
 			try {
-			HashMap<String, String> query = new HashMap<>();
-			query.put("access_token", socialUser.getAccess_token());
-			query.put("uid", socialUser.getUid());
-			/*查询社交账号信息*/
-				HttpResponse response = HttpUtils.doGet("https://api.weibo.com", "/2/users/show.json", "get",new HashMap<String,String>(),query);
-				if(response.getStatusLine().getStatusCode()==200){
+				HashMap<String, String> query = new HashMap<>();
+				query.put("access_token", socialUser.getAccess_token());
+				query.put("uid", socialUser.getUid());
+				/*查询社交账号信息*/
+				HttpResponse response = HttpUtils.doGet("https://api.weibo.com", "/2/users/show.json", "get", new HashMap<String, String>(), query);
+				if (response.getStatusLine().getStatusCode() == 200) {
 					JSONObject jsonObject = JSON.parseObject(EntityUtils.toString(response.getEntity()));
 					String name = jsonObject.getString("name");
 					String gender = jsonObject.getString("gender");
 					memberEntity.setNickname(name);
 					memberEntity.setUsername(name);
-					Integer g= StringUtils.equalsIgnoreCase("m",gender)?1:0;
+					Integer g = StringUtils.equalsIgnoreCase("m", gender) ? 1 : 0;
 					memberEntity.setGender(g);
 					memberEntity.setSocialUid(uid);
 					memberEntity.setAccessToken(socialUser.getAccess_token());

@@ -769,6 +769,7 @@
         $(this).children("p").children("img").attr("src", "img/one_mian_gwc1.png")
     });
 
+    /*修改选中状态*/
     $(".itemChecked").click(function () {
         const skuId = $(this).attr("skuId");
         const checked = $(this).prop("checked");
@@ -776,6 +777,7 @@
     });
 
 
+    /*修改数量*/
     $(".countOpsBtn").click(function () {
         const skuId = $(this).parent().attr("skuId");
         const num = $(this).parent().find(".countOpsNum").text();
