@@ -67,9 +67,7 @@ public class CartController {
 	 * @Description: 更新购物项选中状态
 	 */
 	public String checkItem(@RequestParam("skuId") Long skuId, @RequestParam("checked") Integer checked) {
-
 		cartService.checkItem(skuId, checked);
-
 		return "redirect:http://cart.gulimall.com/cart.html";
 	}
 
