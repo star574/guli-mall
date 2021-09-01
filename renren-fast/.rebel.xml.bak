@@ -9,7 +9,7 @@
 	<id>renren-fast</id>
 
 	<classpath>
-		<dir name="E:/workplace/java/guli-mall/renren-fast/target/classes">
+		<dir name="${rebel.projectpath.renren-fast}/target/classes">
 		</dir>
 	</classpath>
 

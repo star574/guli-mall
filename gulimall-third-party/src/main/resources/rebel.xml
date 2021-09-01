@@ -9,7 +9,7 @@
 	<id>gulimall-third-party</id>
 
 	<classpath>
-		<dir name="${rebel.projectpath.gulimall-third-party}/target\classes">
+		<dir name="${rebel.projectpath.gulimall-third-party}/target/classes">
 		</dir>
 	</classpath>
 

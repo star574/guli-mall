@@ -7,6 +7,13 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 
+/**
+ * //TODO
+ *
+ * @Author: codestar
+ * @Date 9/1/21 12:01 AM
+ * @Description: 购物车模块
+ **/
 @EnableDiscoveryClient
 @EnableFeignClients
 @SpringBootApplication

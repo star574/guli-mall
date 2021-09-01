@@ -9,7 +9,7 @@
 	<id>gulimall-cart</id>
 
 	<classpath>
-		<dir name="E:/workplace/java/guli-mall/gulimall-cart/target/classes">
+		<dir name="${rebel.projectpath.gulimall-cart}/target/classes">
 		</dir>
 	</classpath>
 

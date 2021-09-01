@@ -9,7 +9,7 @@
 	<id>gulimall-order</id>
 
 	<classpath>
-		<dir name="${rebel.projectpath.gulimall-order}/target\classes">
+		<dir name="${rebel.projectpath.gulimall-order}/target/classes">
 		</dir>
 	</classpath>
 

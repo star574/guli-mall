@@ -9,7 +9,7 @@
 	<id>gulimall-auth-server</id>
 
 	<classpath>
-		<dir name="E:/workplace/java/guli-mall/gulimall-auth-server/target/classes">
+		<dir name="${rebel.projectpath.gulimall-auth-server}/target/classes">
 		</dir>
 	</classpath>
 
