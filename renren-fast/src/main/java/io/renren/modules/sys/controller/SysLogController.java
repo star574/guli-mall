@@ -8,8 +8,8 @@
 
 package io.renren.modules.sys.controller;
 
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.R;
+import com.lsh.gulimall.common.utils.PageUtils;
+import com.lsh.gulimall.common.utils.R;
 import io.renren.modules.sys.service.SysLogService;
 
 import org.springframework.beans.factory.annotation.Autowired;

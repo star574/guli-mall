@@ -10,10 +10,10 @@ package io.renren.modules.oss.controller;
 
 import com.google.gson.Gson;
 import io.renren.common.exception.RRException;
-import io.renren.common.utils.ConfigConstant;
-import io.renren.common.utils.Constant;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.R;
+import com.lsh.gulimall.common.utils.ConfigConstant;
+import com.lsh.gulimall.common.utils.Constant;
+import com.lsh.gulimall.common.utils.PageUtils;
+import com.lsh.gulimall.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
 import io.renren.common.validator.group.AliyunGroup;
 import io.renren.common.validator.group.QcloudGroup;

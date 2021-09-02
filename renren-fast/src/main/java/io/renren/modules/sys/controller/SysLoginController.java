@@ -8,7 +8,7 @@
 
 package io.renren.modules.sys.controller;
 
-import io.renren.common.utils.R;
+import com.lsh.gulimall.common.utils.R;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.form.SysLoginForm;
 import io.renren.modules.sys.service.SysCaptchaService;

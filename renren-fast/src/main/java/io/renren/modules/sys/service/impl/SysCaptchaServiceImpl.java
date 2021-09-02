@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.code.kaptcha.Producer;
 import io.renren.common.exception.RRException;
-import io.renren.common.utils.DateUtils;
+import com.lsh.gulimall.common.utils.DateUtils;
 import io.renren.modules.sys.dao.SysCaptchaDao;
 import io.renren.modules.sys.entity.SysCaptchaEntity;
 import io.renren.modules.sys.service.SysCaptchaService;
