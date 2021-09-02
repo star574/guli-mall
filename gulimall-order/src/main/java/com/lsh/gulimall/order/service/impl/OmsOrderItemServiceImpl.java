@@ -46,6 +46,7 @@ public class OmsOrderItemServiceImpl extends ServiceImpl<OmsOrderItemDao, OmsOrd
 		MessageProperties messageProperties = message.getMessageProperties(); //消息头
 
 
+		/*接受消息直接传入参数就行*/
 		log.info("接受到原生消息....." + message + "    类型:" + message.getClass());
 
 //		接受到指定类型消息.....{是否毕业=false, 姓名=张三, 年龄=18}    类型:class java.util.HashMap
