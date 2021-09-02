@@ -28,7 +28,6 @@ public class OmsOrderItemServiceImpl extends ServiceImpl<OmsOrderItemDao, OmsOrd
 				new Query<OmsOrderItemEntity>().getPage(params),
 				new QueryWrapper<OmsOrderItemEntity>()
 		);
-
 		return new PageUtils(page);
 	}
 
@@ -45,6 +44,8 @@ public class OmsOrderItemServiceImpl extends ServiceImpl<OmsOrderItemDao, OmsOrd
 		/*接受到消息.....(Body:'{"是否毕业":false,"姓名":"张三","年龄":18}' MessageProperties [headers={__ContentTypeId__=java.lang.Object, __KeyTypeId__=java.lang.Object, __TypeId__=java.util.HashMap}, contentType=application/json, contentEncoding=UTF-8, contentLength=0, receivedDeliveryMode=PERSISTENT, priority=0, redelivered=false, receivedExchange=hello.java.exchange, receivedRoutingKey=atguiguTest, deliveryTag=1, consumerTag=amq.ctag-TkbCdCfxqt2S0luR9QTfvw, consumerQueue=atguiguTest]) */
 		byte[] body = message.getBody(); //消息体
 		MessageProperties messageProperties = message.getMessageProperties(); //消息头
+
+
 		log.info("接受到原生消息....." + message + "    类型:" + message.getClass());
 
 //		接受到指定类型消息.....{是否毕业=false, 姓名=张三, 年龄=18}    类型:class java.util.HashMap
