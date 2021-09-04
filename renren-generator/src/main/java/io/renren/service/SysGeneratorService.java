@@ -30,7 +30,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * 代码生成器
  *
- * @author Mark shihengluo574@gmail.com
+ * @author Mark sunlightcs@gmail.com
  */
 @Service
 public class SysGeneratorService {
