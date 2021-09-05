@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -186,6 +187,12 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 		}
 
 		return skuItemVo;
+	}
+
+	@Override
+	public BigDecimal getPrice(Long skuId) {
+
+		return this.getById(skuId).getPrice();
 	}
 
 }

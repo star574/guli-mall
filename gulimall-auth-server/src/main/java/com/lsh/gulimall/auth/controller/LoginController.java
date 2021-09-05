@@ -7,17 +7,25 @@ import com.lsh.gulimall.auth.feign.ThirdPartFeignClient;
 import com.lsh.gulimall.auth.vo.UserLoginVo;
 import com.lsh.gulimall.auth.vo.UserRegisterVo;
 import com.lsh.gulimall.common.constant.AuthServerConstant;
+import com.lsh.gulimall.common.constant.CartConstant;
 import com.lsh.gulimall.common.exception.BizCodeEnume;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.common.vo.MemberRespVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -28,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Controller
+@Slf4j
 public class LoginController {
 
 
@@ -142,12 +151,20 @@ public class LoginController {
 
 
 	@PostMapping("/login")
-	String login(UserLoginVo userLoginVo, RedirectAttributes redirectAttributes, HttpSession httpSession) {
+	String login(UserLoginVo userLoginVo, RedirectAttributes redirectAttributes, HttpSession httpSession, HttpServletResponse response) {
 		R login = memberFeignClient.login(userLoginVo);
 		if (login.getCode() == 0) {
 			MemberRespVo data = login.getData("data", new TypeReference<MemberRespVo>() {
 			});
 			httpSession.setAttribute(AuthServerConstant.LOGIN_USER, data);
+			if (httpSession.getAttribute("url") != null) {
+				System.out.println("redirect:" + httpSession.getAttribute("url"));
+				Cookie cookie = new Cookie(CartConstant.TEMP_USER_COOKIE_NAME, data.getId().toString());
+				cookie.setDomain("gulimall.com");
+				cookie.setMaxAge(CartConstant.TEMP_USER_COOKIE_TIMEOUT);
+				response.addCookie(cookie);
+				return "redirect:" + httpSession.getAttribute("url");
+			}
 			return "redirect:http://gulimall.com";
 		}
 		System.out.println("登录失败: " + login.getData("msg", new TypeReference<String>() {
@@ -163,13 +180,31 @@ public class LoginController {
 
 
 	@GetMapping("/login.html")
-	public String login(HttpSession httpSession) {
+	public String login(HttpSession httpSession, HttpServletRequest request) {
 		Object attribute = httpSession.getAttribute(AuthServerConstant.LOGIN_USER);
+		String url = request.getParameter("url");
+		if (url != null) {
+			httpSession.setAttribute("url", url);
+		}
 		if (attribute != null) {
 			return "redirect:http://gulimall.com";
 		}
+
 		return "login";
 	}
 
+	/**
+	 * @param null
+	 * @return: null
+	 * @Description: 退出登陆
+	 */
+	@GetMapping("logout")
+	public String logout(HttpSession httpSession) {
+		Object attribute = httpSession.getAttribute(AuthServerConstant.LOGIN_USER);
+		if (attribute != null) {
+			httpSession.removeAttribute(AuthServerConstant.LOGIN_USER);
+		}
+		return "redirect:http://gulimall.com";
+	}
 
 }

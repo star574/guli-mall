@@ -3,6 +3,8 @@ package com.lsh.cart.service;
 import com.lsh.cart.vo.Cart;
 import com.lsh.cart.vo.CartItem;
 
+import java.util.List;
+
 public interface CartService {
 	CartItem addToCart(Long skuId, Integer num);
 
@@ -17,4 +19,6 @@ public interface CartService {
 	void updateNumItem(Long skuId, Integer num);
 
 	void deleteItem(Long skuId);
+
+	List<CartItem> getOrderItems(Long memberId);
 }

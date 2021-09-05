@@ -94,7 +94,7 @@ public class CartInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 		UserInfoTo userInfoTo = toThreadLocal.get();
 		if (!StringUtils.isEmpty(userInfoTo.getUserKey())) {
-			Cookie cookie = new Cookie(CartConstant.TEMP_USER_COOKIE_NAME, toThreadLocal.get().getUserKey());
+			Cookie	cookie = new Cookie(CartConstant.TEMP_USER_COOKIE_NAME, toThreadLocal.get().getUserKey());
 			cookie.setDomain("gulimall.com");
 			cookie.setMaxAge(CartConstant.TEMP_USER_COOKIE_TIMEOUT);
 			response.addCookie(cookie);

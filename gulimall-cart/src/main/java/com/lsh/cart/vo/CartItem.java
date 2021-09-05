@@ -1,5 +1,9 @@
 package com.lsh.cart.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -10,6 +14,9 @@ import java.util.List;
  * @Date 0:59 2021/8/9
  * @Description 购物项
  **/
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartItem {
 	/*id*/
 	private Long skuId;
@@ -96,4 +103,6 @@ public class CartItem {
 	public void setTotalPrice(BigDecimal totalPrice) {
 		this.totalPrice = totalPrice;
 	}
+
+
 }

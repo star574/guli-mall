@@ -1,5 +1,6 @@
 package com.lsh.cart.controller;
 
+import com.lsh.cart.feign.ProductFeignService;
 import com.lsh.cart.service.CartService;
 import com.lsh.cart.vo.Cart;
 import com.lsh.cart.vo.CartItem;
@@ -8,8 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 /**
  * //TODO
@@ -24,6 +29,26 @@ public class CartController {
 
 	@Autowired
 	CartService cartService;
+
+	@Autowired
+	ProductFeignService productFeignService;
+
+
+
+	/**
+	 * //TODO
+	 *
+	 * @param
+	 * @return
+	 * @throws
+	 * @date 2021/8/29 21:47
+	 * @Description 获取订单确认也的购物项
+	 */
+	@PostMapping("/orderItems")
+	@ResponseBody
+	public List<CartItem> orderCartItemList(@RequestParam("memberId") Long memberId) {
+		return cartService.getOrderItems(memberId);
+	}
 
 
 	/**
@@ -44,13 +69,13 @@ public class CartController {
 	}
 
 
-	@GetMapping("/countItem")
 	/**
 	 * @param skuId
 	 * @param num
 	 * @return: String
 	 * @Description: 更新购物项数量
 	 */
+	@GetMapping("/countItem")
 	public String countItem(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num) {
 
 		cartService.updateNumItem(skuId, num);

@@ -3,7 +3,9 @@ package com.lsh.gulimall.order.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.order.entity.OmsOrderEntity;
+import com.lsh.gulimall.order.vo.OrderConfirmVo;
 
+import java.rmi.ServerException;
 import java.util.Map;
 
 /**
@@ -16,5 +18,9 @@ import java.util.Map;
 public interface OmsOrderService extends IService<OmsOrderEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	OrderConfirmVo confirmOrder() throws ServerException;
+
+
 }
 

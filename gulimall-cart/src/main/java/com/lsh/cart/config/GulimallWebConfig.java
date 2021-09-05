@@ -10,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class GulimallWebConfig implements WebMvcConfigurer {
 
 
-
 	/*添加拦截器 拦截所有请求*/
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

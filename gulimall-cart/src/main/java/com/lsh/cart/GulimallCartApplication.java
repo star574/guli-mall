@@ -15,7 +15,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  * @Description: 购物车模块
  **/
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients("com.lsh.cart.feign")
 @SpringBootApplication
 @EnableRedisHttpSession
 public class GulimallCartApplication {
