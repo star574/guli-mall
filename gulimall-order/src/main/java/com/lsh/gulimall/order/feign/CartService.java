@@ -10,19 +10,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-@FeignClient(name = "gulimall-cart", fallback = CartServiceImpl.class)
+@FeignClient(name = "gulimall-cart")
 @Primary
 public interface CartService {
 	/**
 	 * //TODO
 	 *
 	 * @param
-	 * @return
-	 * @throws
-	 * @date 2021/8/29 21:47
-	 * @Description 获取订单确认也的购物项
+	 * @return: List<OrderItemVo>
+	 * @Description:
 	 */
 	@PostMapping("/orderItems")
 	@ResponseBody
-	public List<OrderItemVo> orderCartItemList(@RequestParam("memberId") Long memberId);
+	public List<OrderItemVo> orderCartItemList();
+
 }

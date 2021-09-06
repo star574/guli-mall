@@ -73,7 +73,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 
 		/*购物车里的购物项*/
 //		memberRespVo
-		List<OrderItemVo> orderItemVos = cartService.orderCartItemList(memberId);
+		List<OrderItemVo> orderItemVos = cartService.orderCartItemList();
 		if (orderItemVos != null && orderItemVos.size() > 0) {
 			confirmVo.setItems(orderItemVos);
 		}

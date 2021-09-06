@@ -37,7 +37,6 @@ public class CartServiceImpl implements CartService {
 	@Autowired
 	ProductFeignService productFeignService;
 
-
 	@Autowired
 	ThreadPoolExecutor threadPoolExecutor;
 
@@ -133,7 +132,7 @@ public class CartServiceImpl implements CartService {
 	 */
 	@Override
 	public Cart getCartList() {
-		UserInfoTo userInfoTo = CartInterceptor.toThreadLocal.get();
+		UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
 		//		2 判断是否登录
 		Cart cart = new Cart();
 		String cartKey = "";
@@ -180,8 +179,8 @@ public class CartServiceImpl implements CartService {
 	 * @Description 获取要操作的购物车
 	 */
 	private BoundHashOperations<String, Object, Object> getCart() {
-		// 1.通过拦截器的toThreadLocal获取用户信息
-		UserInfoTo userInfoTo = CartInterceptor.toThreadLocal.get();
+		// 1.通过拦截器的threadLocal获取用户信息
+		UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
 
 //		2 判断是否登录
 		String cartKey = "";
@@ -250,20 +249,27 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public List<CartItem> getOrderItems(Long memberId) {
-
-		List<CartItem> cartItem = getCartItem(CART_PREFIX + memberId.toString());
+	public List<CartItem> getOrderItems() {
+		UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
+		if (userInfoTo.getUserId() == null) {
+			System.out.println("无用户信息");
+			return null;
+		}
+		System.out.println(userInfoTo);
+		List<CartItem> cartItem = getCartItem(CART_PREFIX + userInfoTo.getUserId());
 		if (cartItem != null && cartItem.size() > 0) {
 			List<CartItem> collect = cartItem.stream().map(item -> {
 				/*查询最新的价格*/
 				BigDecimal price = productFeignService.getPrice(item.getSkuId());
-				if(price!=null){
+				if (price != null) {
 					item.setPrice(price);
+					System.out.println("购物车查询完成..............");
 				}
 				return item;
 			}).filter(CartItem::isCheck).collect(Collectors.toList());
 			return collect;
 		}
+		System.out.println("未查询到购物车..................");
 		return null;
 	}
 

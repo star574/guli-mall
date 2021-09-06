@@ -10,7 +10,7 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
 
 	@Override
-	public List<OrderItemVo> orderCartItemList(Long memberId) {
+	public List<OrderItemVo> orderCartItemList() {
 		return null;
 	}
 }

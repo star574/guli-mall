@@ -1,6 +1,13 @@
 package com.lsh.gulimall.order.config;
 
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * //TODO
@@ -14,26 +21,26 @@ public class GuiliFeignConfig {
 
 
 	/**
-	 * @param null
-	 * @return: null
+	 * @return: RequestInterceptor
 	 * @Description: 调用购物车时 默认拦截器会生成一个新请求 无法传递cookie里的内容 导致购物车服务认为未登录 自定义拦截器
 	 */
-//	@Bean("requestInterceptor")
-//	public RequestInterceptor requestInterceptor() {
-//		return new RequestInterceptor() {
-//			@Override
-//			public void apply(RequestTemplate template) {
-//				System.out.println("远程调用之前......");
-//				/*拿到当前所有请求属性 原理 ThreadLocal */
-//				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-//				HttpServletRequest request = requestAttributes.getRequest();
-//				/*新请求 获取老请求的cookie 同步cookie*/
-//				System.out.println(request.getHeader("Cookie"));
-//				template.header("Cookie", request.getHeader("Cookie"));
-//			}
-//		};
-//
-//	}
+	@Bean("requestInterceptor")
+	public RequestInterceptor requestInterceptor() {
+		return new RequestInterceptor() {
+			@Override
+			public void apply(RequestTemplate template) {
+				System.out.println("远程调用之前......");
+				/*拿到当前所有请求属性 原理 ThreadLocal */
+				ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+				System.out.println(requestAttributes);
+				if (requestAttributes != null) {
+					HttpServletRequest request = requestAttributes.getRequest();
+					/*新请求 获取老请求的cookie 同步cookie*/
+					System.out.println(request.getHeader("Cookie"));
+					template.header("Cookie", request.getHeader("Cookie"));
+				}
+			}
+		};
 
-
+	}
 }

@@ -46,8 +46,8 @@ public class CartController {
 	 */
 	@PostMapping("/orderItems")
 	@ResponseBody
-	public List<CartItem> orderCartItemList(@RequestParam("memberId") Long memberId) {
-		return cartService.getOrderItems(memberId);
+	public List<CartItem> orderCartItemList() {
+		return cartService.getOrderItems();
 	}
 
 

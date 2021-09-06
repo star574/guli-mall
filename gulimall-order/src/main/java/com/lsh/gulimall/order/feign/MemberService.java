@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@FeignClient(name = "gulimall-member", fallback = MemberServiceImpl.class)
+@FeignClient(name = "gulimall-member")
 @Primary
 public interface MemberService {
 	/**
