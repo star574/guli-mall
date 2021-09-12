@@ -22,6 +22,7 @@ public class OrderWebController {
 	public String toTrade(Model model) throws ServerException {
 		OrderConfirmVo confirmVo = orderService.confirmOrder();
 		model.addAttribute("orderConfirmData", confirmVo);
+		System.out.println();
 		return "confirm";
 	}
 }

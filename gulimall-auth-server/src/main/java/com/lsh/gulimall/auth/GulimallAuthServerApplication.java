@@ -7,6 +7,13 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 
+/**
+ * //TODO
+ *
+ * @Author: codestar
+ * @Date: 2021-09-09 23:57:51
+ * @Description:
+ */
 @EnableFeignClients(basePackages = {"com.lsh.gulimall.auth.feign"})
 @EnableDiscoveryClient
 @SpringBootApplication

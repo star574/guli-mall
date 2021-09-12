@@ -103,7 +103,7 @@ public class CartServiceImpl implements CartService {
 			/*转为json 放入购物车redis*/
 			String s = JSON.toJSONString(cartItem);
 			boundHashOps.put(skuId.toString(), s);
-			log.info("添加购物车成功" + cartItem.toString());
+			log.info("添加购物车成功" + cartItem);
 			return cartItem;
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
@@ -135,7 +135,7 @@ public class CartServiceImpl implements CartService {
 		UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
 		//		2 判断是否登录
 		Cart cart = new Cart();
-		String cartKey = "";
+		String cartKey;
 		log.info("user-key:" + userInfoTo.getUserKey());
 		if (userInfoTo.getUserId() != null) {
 			/*获取临时购物车*/
@@ -183,7 +183,7 @@ public class CartServiceImpl implements CartService {
 		UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
 
 //		2 判断是否登录
-		String cartKey = "";
+		String cartKey;
 		if (userInfoTo.getUserId() != null) {
 			cartKey = CART_PREFIX + userInfoTo.getUserId();
 		} else {
@@ -258,14 +258,13 @@ public class CartServiceImpl implements CartService {
 		System.out.println(userInfoTo);
 		List<CartItem> cartItem = getCartItem(CART_PREFIX + userInfoTo.getUserId());
 		if (cartItem != null && cartItem.size() > 0) {
-			List<CartItem> collect = cartItem.stream().map(item -> {
+			List<CartItem> collect = cartItem.stream().peek(item -> {
 				/*查询最新的价格*/
 				BigDecimal price = productFeignService.getPrice(item.getSkuId());
 				if (price != null) {
 					item.setPrice(price);
 					System.out.println("购物车查询完成..............");
 				}
-				return item;
 			}).filter(CartItem::isCheck).collect(Collectors.toList());
 			return collect;
 		}

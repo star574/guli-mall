@@ -23,9 +23,11 @@ public class GuiliFeignConfig {
 	/**
 	 * @return: RequestInterceptor
 	 * @Description: 调用购物车时 默认拦截器会生成一个新请求 无法传递cookie里的内容 导致购物车服务认为未登录 自定义拦截器
+	 * RequestContextHolder  原理 ThreadLocal spring抽取的一个上下文环境保持器 方便获取本次请求(toTrade)的信息 RequestAttributes
 	 */
 	@Bean("requestInterceptor")
 	public RequestInterceptor requestInterceptor() {
+
 		return new RequestInterceptor() {
 			@Override
 			public void apply(RequestTemplate template) {

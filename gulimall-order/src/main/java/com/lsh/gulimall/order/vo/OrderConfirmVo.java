@@ -43,6 +43,19 @@ public class OrderConfirmVo {
 	/*应付总额度*/
 	private BigDecimal payPrice;
 
+	/*防重令牌*/
+	String orderToken;
+
+	/*总件数*/
+	public Integer getCount() {
+		Integer i = 0;
+		if (items != null && items.size() > 0) {
+			for (OrderItemVo item : items) {
+				i += item.getCount();
+			}
+		}
+		return i;
+	}
 
 	/*获取订单总价格*/
 	public BigDecimal getTotal() {

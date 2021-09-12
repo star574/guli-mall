@@ -22,4 +22,11 @@ public class OrderItemVo {
 	/*小计*/
 	private BigDecimal totalPrice;
 
+	/*//TODO 是否有货*/
+	private boolean hasStock;
+
+	/*//TODO 商品重量*/
+	private BigDecimal weight;
+
+
 }
