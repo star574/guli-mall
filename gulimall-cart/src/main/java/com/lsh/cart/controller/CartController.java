@@ -65,7 +65,7 @@ public class CartController {
 
 		cartService.deleteItem(skuId);
 
-		return "redirect:http://cart.gulimall.com/cart.html";
+		return "redirect:http://cart.springboot.ml/cart.html";
 	}
 
 
@@ -80,7 +80,7 @@ public class CartController {
 
 		cartService.updateNumItem(skuId, num);
 
-		return "redirect:http://cart.gulimall.com/cart.html";
+		return "redirect:http://cart.springboot.ml/cart.html";
 	}
 
 
@@ -93,7 +93,7 @@ public class CartController {
 	 */
 	public String checkItem(@RequestParam("skuId") Long skuId, @RequestParam("checked") Integer checked) {
 		cartService.checkItem(skuId, checked);
-		return "redirect:http://cart.gulimall.com/cart.html";
+		return "redirect:http://cart.springboot.ml/cart.html";
 	}
 
 
@@ -125,7 +125,7 @@ public class CartController {
 		redirectAttributes.addAttribute("skuId", skuId);
 		/*addFlashAttribute 将数据放入session 只能取一次*/
 		/*addAttribute 将数据放入url */
-		return "redirect:http://cart.gulimall.com/addToCartSuccessPage.html";
+		return "redirect:http://cart.springboot.ml/addToCartSuccessPage.html";
 	}
 
 

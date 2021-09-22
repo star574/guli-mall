@@ -1,8 +1,10 @@
 package com.lsh.gulimall.order.service.impl;
 
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lsh.gulimall.common.to.SkuHasStockTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.common.utils.R;
@@ -11,6 +13,7 @@ import com.lsh.gulimall.order.dao.OmsOrderDao;
 import com.lsh.gulimall.order.entity.OmsOrderEntity;
 import com.lsh.gulimall.order.feign.CartService;
 import com.lsh.gulimall.order.feign.MemberService;
+import com.lsh.gulimall.order.feign.WareService;
 import com.lsh.gulimall.order.interceptor.LoginUserInterceptor;
 import com.lsh.gulimall.order.service.OmsOrderService;
 import com.lsh.gulimall.order.vo.MemberAddressVo;
@@ -22,11 +25,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 
 /**
@@ -44,7 +49,10 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 	private CartService cartService;
 
 	@Autowired
-	ThreadPoolExecutor threadPoolExecutor;
+	private ThreadPoolExecutor threadPoolExecutor;
+
+	@Autowired
+	private WareService wareService;
 
 
 	/**
@@ -126,6 +134,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 		}, threadPoolExecutor);
 
 
+		/*查询购物项后查询库存信息*/
 		CompletableFuture<Void> completableFuture2 = CompletableFuture.runAsync(new Runnable() {
 			@Override
 			public void run() {
@@ -136,7 +145,31 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 					confirmVo.setItems(orderItemVos);
 				}
 			}
-		}, threadPoolExecutor);
+		}, threadPoolExecutor).thenRunAsync(new Runnable() {
+			@Override
+			public void run() {
+				RequestContextHolder.setRequestAttributes(requestAttributes);
+				List<OrderItemVo> items = confirmVo.getItems();
+				/*收集所有skuId*/
+				List<Long> collect = items.stream().map(OrderItemVo::getSkuId).collect(Collectors.toList());
+				R r = wareService.haStock(collect);
+				List<SkuHasStockTo> skuHasStockList = r.getData(new TypeReference<List<SkuHasStockTo>>() {
+				});
+				System.out.println("r=========>"+r);
+				if (skuHasStockList != null && skuHasStockList.size() > 0) {
+					/*获取对应的库存map*/
+					Map<Long, Boolean> map = skuHasStockList.stream().collect(Collectors.toMap(SkuHasStockTo::getSkuId, SkuHasStockTo::isHasStock));
+
+					/*存入库存信息*/
+					confirmVo.setStocks(map);
+					log.info("库存查询成功{}", map);
+				}else {
+					confirmVo.setStocks(new HashMap<>());
+				}
+
+			}
+		});
+
 
 		/*等待异步任务执行完成*/
 		CompletableFuture<Void> completableFuture = CompletableFuture.allOf(completableFuture1, completableFuture2);
@@ -148,10 +181,13 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 			e.printStackTrace();
 		}
 
+
 		Integer integration = memberRespVo.getIntegration();
 		confirmVo.setIntegration(integration);
 
 //		TODO  为了防止订单重复提交 防重令牌
+
+
 
 		log.info(String.valueOf(confirmVo));
 		return confirmVo;

@@ -21,6 +21,8 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 public class GulimallAuthServerApplication {
 
 	public static void main(String[] args) {
+
+		System.out.println("啦啦啦啦啦啦");
 		SpringApplication.run(GulimallAuthServerApplication.class, args);
 	}
 

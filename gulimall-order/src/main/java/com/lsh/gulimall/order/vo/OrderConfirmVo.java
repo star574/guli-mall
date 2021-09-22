@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * //TODO
@@ -45,6 +46,10 @@ public class OrderConfirmVo {
 
 	/*防重令牌*/
 	String orderToken;
+
+	@Getter
+	@Setter
+	private Map<Long,Boolean> stocks;
 
 	/*总件数*/
 	public Integer getCount() {

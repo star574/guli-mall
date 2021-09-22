@@ -1,6 +1,10 @@
 package com.lsh.gulimall.search.config;
 
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -27,8 +31,13 @@ public class ESConfig {
 
 		RestClientBuilder builder = null;
 		// 可以指定多个es
-		builder = RestClient.builder(new HttpHost("192.168.2.99", 9200, "http"));
-		RestHighLevelClient client = new RestHighLevelClient(builder);
-		return client;
+		HttpHost host=new HttpHost("204.44.66.220", 9200, HttpHost.DEFAULT_SCHEME_NAME);
+		builder=RestClient.builder(host);
+		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+		credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "luoshiheng574"));
+		builder.setHttpClientConfigCallback(f -> f.setDefaultCredentialsProvider(credentialsProvider));
+		RestHighLevelClient restClient = new RestHighLevelClient( builder);
+
+		return restClient;
 	}
 }

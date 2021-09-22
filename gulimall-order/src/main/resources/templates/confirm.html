@@ -600,8 +600,8 @@
     </div>
 
     <!--地址-->
-    <div class="top-3" th:each="addr:${orderConfirmData.address}">
-        <p>[[${addr.name}]]</p><span>[[${addr.name}]]  [[${addr.province}]] [[${addr.detailAddress}]]   [[${addr.phone}]]</span>
+    <div class="top-3 addr-item" th:each="addr:${orderConfirmData.address}">
+        <p th:attr="def=${addr.defaultStatus},addrId=${addr.id}">[[${addr.name}]]</p><span>[[${addr.name}]]  [[${addr.province}]] [[${addr.detailAddress}]]   [[${addr.phone}]]</span>
     </div>
     <p class="p2">更多地址︾</p>
     <div class="hh1"></div>
@@ -675,7 +675,8 @@
                 <div class="mi">
                     <p>[[${item.title}]] <span style="color: red;"> ￥ [[${item.price}]]</span>
                         <span> x[[${item.count}]] </span>
-                        <span>[[${item.hasStock?"有货":"无货"}]]</span></p>
+                        <span th:if="${orderConfirmData.stocks[item.skuId]!=null}">[[${orderConfirmData.stocks[item.skuId]?"有货":"无货"}]]</span>
+                        <span th:if="${orderConfirmData.stocks[item.skuId]==null}">无货</span></p>
                     <p><span>0.095kg</span></p>
                     <p class="tui-1"><img src="/static/order/confirm/img/i_07.png"/>支持7天无理由退货</p>
                 </div>
@@ -724,7 +725,7 @@
             </p>
             <p class="qian_y">
                 <span>运费： </span>
-                <span class="rmb"> &nbsp ￥0.00</span>
+                <span class="rmb"> &nbsp ￥<b id="fareEle"></b></span>
             </p>
             <p class="qian_y">
                 <span>服务费： </span>
@@ -738,8 +739,9 @@
         </div>
 
         <div class="yfze">
-            <p class="yfze_a"><span class="z">应付总额：</span><span class="hq">￥[[${orderConfirmData.payPrice}]]</span></p>
-            <p class="yfze_b">寄送至： 北京 朝阳区 三环到四环之间 朝阳北路复兴国际大厦23层麦田房产 IT-中心研发二部 收货人：赵存权 188****5052</p>
+            <p class="yfze_a"><span class="z">应付总额：</span><span class="hq">￥<b id="payPriceEle">[[${orderConfirmData.payPrice}]]</b></span>
+            </p>
+            <p class="yfze_b">寄送至： <span id="receiveAddressEle"></span> 收货人：<span id="receiverEle"></span></p>
         </div>
         <button class="tijiao">提交订单</button>
     </div>
@@ -931,7 +933,7 @@
         <a href="/static/order/confirm/##">：4006561155 </a>
     </p>
     <p class="p1">
-        <a href="/static/order/confirm/##"> Copyright © 2004-2017 谷粒学院gulimall.com 版权所有</a>|
+        <a href="/static/order/confirm/##"> Copyright © 2004-2017 谷粒学院springboot.ml 版权所有</a>|
         <a href="/static/order/confirm/##"> 消费者维权热线：4006067733 经营证照</a>|
     </p>
     <p class="p1">
@@ -974,8 +976,34 @@
         }, function () {
             $('.h-r-1').css('display', 'none')
         })
+        highLight()
+        $(".addr-item p[def='1']").click()
+
     })
 
+
+    function highLight() {
+        $(".addr-item p").css({"border": "2px solid gray"})
+        $(".addr-item p[def='1']").css({"border": "2px solid red"})
+
+    }
+
+    $(".addr-item p").click(function () {
+        $(".addr-item p").attr("def", "0")
+        $(this).attr("def", "1")
+        highLight()
+        /*获取当前地址id*/
+        const addrId = $(this).attr("addrId")
+        /*发送ajax请求 获取运费信息*/
+        $.get("http://springboot.ml/api/ware/wareinfo/fare?addrId=" + addrId, function (res) {
+            $("#fareEle").text(res.data.fare)
+            let dasdadas = [[${orderConfirmData.payPrice}]] * 1.0 + res.data.fare * 1.0
+
+            $("#payPriceEle").text(dasdadas)
+            $("#receiveAddressEle").text(res.data.addressEntity.province + " " + res.data.addressEntity.detailAddress)
+            $("#receiverEle").text(res.data.addressEntity.name)
+        })
+    })
 
 </script>
 </body>

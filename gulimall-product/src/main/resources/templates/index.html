@@ -95,16 +95,16 @@
             </b>
             <ul>
                 <li>
-                    <a href="http://auth.gulimall.com/login.html"
+                    <a href="http://auth.springboot.ml/login.html"
                        th:text="${session.loginUser}==null?'你好，请登录':'欢迎: '+${session.loginUser.nickname}"></a>
-                    <a href="http://auth.gulimall.com/logout" th:if="${session.loginUser}!=null">退出</a>
+                    <a href="http://auth.springboot.ml/logout" th:if="${session.loginUser}!=null">退出</a>
                 </li>
                 <li>
-                    <a href="http://auth.gulimall.com/reg.html" class="li_2" th:if="${session.loginUser}==null">免费注册</a>
+                    <a href="http://auth.springboot.ml/reg.html" class="li_2" th:if="${session.loginUser}==null">免费注册</a>
                 </li>
                 <span>|</span>
                 <li>
-                    <a href="http://order.gulimall.com/list.html">我的订单</a>
+                    <a href="http://order.springboot.ml/list.html">我的订单</a>
                 </li>
 
             </ul>
@@ -121,7 +121,7 @@
         <div class="header_ico">
             <div class="header_gw">
                 <img src="/static/index/img/img_15.png"/>
-                <span><a href="http://cart.gulimall.com/cart.html">我的购物车</a></span>
+                <span><a href="http://cart.springboot.ml/cart.html">我的购物车</a></span>
                 <span>0</span>
             </div>
             <div class="header_ko">
@@ -672,7 +672,7 @@
 <script type="text/javascript">
     function search() {
         var keyword = $("#searchText").val()
-        window.location.href = "http://search.gulimall.com/list.html?keyword=" + keyword;
+        window.location.href = "http://search.springboot.ml/list.html?keyword=" + keyword;
     }
 
 </script>

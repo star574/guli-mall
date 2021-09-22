@@ -17,7 +17,7 @@
     <div class="header_head_box">
         <b class="header_head_p">
             <div style="overflow: hidden">
-                <a href="http://gulimall.com" class="header_head_p_a1" style="width:73px;">
+                <a href="http://springboot.ml" class="header_head_p_a1" style="width:73px;">
                     谷粒商城首页
                 </a>
                 <a href="/static/search/#" class="header_head_p_a">
@@ -64,11 +64,11 @@
         </b>
         <ul>
             <li>
-                <a href="http://auth.gulimall.com/login.html"
+                <a href="http://auth.springboot.ml/login.html"
                    th:text="${session.loginUser}==null?'你好，请登录':'欢迎: '+${session.loginUser.nickname}"></a>
             </li>
             <li>
-                <a href="http://auth.gulimall.com/reg.html" class="li_2" th:if="${session.loginUser}==null">免费注册</a>
+                <a href="http://auth.springboot.ml/reg.html" class="li_2" th:if="${session.loginUser}==null">免费注册</a>
             </li>
             <span>|</span>
             <li>
@@ -400,7 +400,7 @@
 <!--搜索导航-->
 <div class="header_sous">
     <div class="logo">
-        <a href="http://gulimall.com"><img src="/static/search/./image/logo1.jpg" alt=""></a>
+        <a href="http://springboot.ml"><img src="/static/search/./image/logo1.jpg" alt=""></a>
     </div>
     <div class="header_form">
         <input id="searchText" type="text" placeholder="手机" th:value="${param.keyword}"/>
@@ -1227,7 +1227,7 @@
                                 <a href="/static/search/#">关注</a>
                             </div>
                             <p class="da">
-                                <a th:href="|http://item.gulimall.com/${product.skuId}.html|"
+                                <a th:href="|http://item.springboot.ml/${product.skuId}.html|"
                                    title="购买AppleCare+，获得原厂2年整机保修(含电池)，和多达2次意外损坏的保修服务。购买勾选：保障服务、原厂保2年。">
                                     <img src="/static/search/img/57d0d400Nfd249af4.jpg" class="dim">
                                 </a>
@@ -1241,7 +1241,7 @@
                                 <span th:text="'¥'+${product.skuPrice}">¥5199.00</span>
                             </p>
                             <p class="tab_JE">
-                                <a th:href="|http://item.gulimall.com/${product.skuId}.html|" th:utext="${product.skuTitle}">
+                                <a th:href="|http://item.springboot.ml/${product.skuId}.html|" th:utext="${product.skuTitle}">
 
                                 </a>
                             </p>

@@ -58,10 +58,10 @@
                 </li>
             </ul>
             <ul class="header_ul_right">
-                <li style="border: 0;"><a href="http://auth.gulimall.com/login.html" class="aa"
+                <li style="border: 0;"><a href="http://auth.springboot.ml/login.html" class="aa"
                                           th:text="${session.loginUser}==null?'你好，请登录':'欢迎: '+${session.loginUser.nickname}">你好，请登录</a>
                 </li>
-                <li><a href="http://auth.gulimall.com/reg.html" class="li_2" th:if="${session.loginUser}==null">免费注册</a>
+                <li><a href="http://auth.springboot.ml/reg.html" class="li_2" th:if="${session.loginUser}==null">免费注册</a>
                     |
                 </li>
                 <li><a href="/static/item/javascript:;" class="aa">我的订单</a> |</li>
@@ -1334,7 +1334,7 @@
         console.log(skus[0][0])
 
         if (skus[0][0]) {
-            location.href = "http://item.gulimall.com/" + skus[0][0] + ".html"
+            location.href = "http://item.springboot.ml/" + skus[0][0] + ".html"
         }
 
 
@@ -1349,7 +1349,7 @@
     $("#addToCartA").click(function () {
         let num = $("#numInput").val();
         let skuId = $(this).attr("skuId");
-        location.href = "http://cart.gulimall.com/addToCart?skuId=" + skuId + "&num=" + parseInt(num)
+        location.href = "http://cart.springboot.ml/addToCart?skuId=" + skuId + "&num=" + parseInt(num)
         return false;
     })
 
