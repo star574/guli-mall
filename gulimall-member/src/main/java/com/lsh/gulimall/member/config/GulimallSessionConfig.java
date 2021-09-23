@@ -15,7 +15,7 @@ public class GulimallSessionConfig {
 	@Bean
 	public CookieSerializer cookieSerializer() {
 		DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
-		defaultCookieSerializer.setDomainName("gulimall.com");
+		defaultCookieSerializer.setDomainName("springboot.ml");
 		defaultCookieSerializer.setCookieName("GULISESSION");
 		return defaultCookieSerializer;
 	}

@@ -210,7 +210,7 @@ public class MallSearchServiceIml implements MallSearchService {
 				//6.3 设置面包屑跳转链接(当点击该链接时剔除点击属性)
 				String queryString = searchParam.get_queryString();
 				String replace = queryString.replace("&attrs=" + attr, "").replace("attrs=" + attr + "&", "").replace("attrs=" + attr, "");
-				navVo.setLink("http://search.gulimall.com/search.html" + (replace.isEmpty() ? "" : "?" + replace));
+				navVo.setLink("http://search.springboot.ml/search.html" + (replace.isEmpty() ? "" : "?" + replace));
 				return navVo;
 			}).collect(Collectors.toList());
 			searchResult.setNavs(navVos);
