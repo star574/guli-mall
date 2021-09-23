@@ -155,7 +155,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 				R r = wareService.haStock(collect);
 				List<SkuHasStockTo> skuHasStockList = r.getData(new TypeReference<List<SkuHasStockTo>>() {
 				});
-				System.out.println("r=========>"+r);
+				System.out.println("r=========>" + r);
 				if (skuHasStockList != null && skuHasStockList.size() > 0) {
 					/*获取对应的库存map*/
 					Map<Long, Boolean> map = skuHasStockList.stream().collect(Collectors.toMap(SkuHasStockTo::getSkuId, SkuHasStockTo::isHasStock));
@@ -163,7 +163,7 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 					/*存入库存信息*/
 					confirmVo.setStocks(map);
 					log.info("库存查询成功{}", map);
-				}else {
+				} else {
 					confirmVo.setStocks(new HashMap<>());
 				}
 
@@ -185,7 +185,9 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 		Integer integration = memberRespVo.getIntegration();
 		confirmVo.setIntegration(integration);
 
-//		TODO  为了防止订单重复提交 防重令牌
+//		TODO  为了防止订单重复提交 防重令牌 原子性校验 接口幂等性
+
+
 
 
 
