@@ -188,9 +188,6 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 //		TODO  为了防止订单重复提交 防重令牌 原子性校验 接口幂等性
 
 
-
-
-
 		log.info(String.valueOf(confirmVo));
 		return confirmVo;
 	}
