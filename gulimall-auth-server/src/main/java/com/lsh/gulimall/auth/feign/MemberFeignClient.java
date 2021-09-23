@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Primary
-@FeignClient(name = "gulimall-member", fallback = MemberFeignClientImpl.class)
+@FeignClient(name = "gulimall-member")
 public interface MemberFeignClient {
 
 	/**

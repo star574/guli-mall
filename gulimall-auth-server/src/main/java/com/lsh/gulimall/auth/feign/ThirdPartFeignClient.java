@@ -1,7 +1,6 @@
 package com.lsh.gulimall.auth.feign;
 
 
-import com.lsh.gulimall.auth.feign.impl.ThirdPartFeignClientImpl;
 import com.lsh.gulimall.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Primary;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Primary
 @Component
-@FeignClient(name = "gulimall-third-party", fallback = ThirdPartFeignClientImpl.class)
+@FeignClient(name = "gulimall-third-party")
 public interface ThirdPartFeignClient {
 
 
