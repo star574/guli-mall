@@ -63,7 +63,6 @@ public class MallSearchServiceIml implements MallSearchService {
 		try {
 			/*执行请求*/
 			SearchResponse response = restHighLevelClient.search(searchRequest, ESConfig.COMMON_OPTIONS);
-
 			/*封装结果*/
 			searchResult = buildSearchResult(response, searchParam);
 		} catch (IOException e) {
