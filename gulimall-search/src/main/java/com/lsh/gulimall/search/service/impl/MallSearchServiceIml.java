@@ -218,9 +218,6 @@ public class MallSearchServiceIml implements MallSearchService {
 		// TODO brand 面包屑导航
 
 
-
-
-
 		return searchResult;
 	}
 

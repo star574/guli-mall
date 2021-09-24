@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html xmlns:th="http://www.thymeleaf.org" lang="us">
 
 <head>
@@ -743,7 +744,13 @@
             </p>
             <p class="yfze_b">寄送至： <span id="receiveAddressEle"></span> 收货人：<span id="receiverEle"></span></p>
         </div>
-        <button class="tijiao">提交订单</button>
+        <form action="https://order.springboot.ml/submitOrder" method="post">
+            <input id="addrId" type="hidden" name="addrId">
+            <!--            <input type="hidden" name="payType" value="">-->
+            <input id="payPrice" type="hidden" name="payPrice" th:value="${orderConfirmData.getPayPrice()}">
+            <input type="hidden" name="orderToken" th:value="${orderConfirmData.orderToken}">
+            <button class="tijiao" type="submit">提交订单</button>
+        </form>
     </div>
 </div>
 
@@ -995,11 +1002,16 @@
         /*获取当前地址id*/
         const addrId = $(this).attr("addrId")
         /*发送ajax请求 获取运费信息*/
-        $.get("http://springboot.ml/api/ware/wareinfo/fare?addrId=" + addrId, function (res) {
+        /*提交地址id*/
+        $("#addrId").val(addrId)
+        $.get("https://springboot.ml/api/ware/wareinfo/fare?addrId=" + addrId, function (res) {
             $("#fareEle").text(res.data.fare)
             let dasdadas = [[${orderConfirmData.payPrice}]] * 1.0 + res.data.fare * 1.0
-
+            /*提交的总额信息*/
+            $("#payPrice").val(dasdadas)
+            /*总额*/
             $("#payPriceEle").text(dasdadas)
+            /*收获地址详细信息*/
             $("#receiveAddressEle").text(res.data.addressEntity.province + " " + res.data.addressEntity.detailAddress)
             $("#receiverEle").text(res.data.addressEntity.name)
         })

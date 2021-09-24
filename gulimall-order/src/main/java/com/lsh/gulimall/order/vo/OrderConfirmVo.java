@@ -45,6 +45,8 @@ public class OrderConfirmVo {
 	private BigDecimal payPrice;
 
 	/*防重令牌*/
+	@Getter
+	@Setter
 	String orderToken;
 
 	@Getter

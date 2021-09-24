@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
+import com.lsh.gulimall.common.utils.Constant;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.common.vo.MemberRespVo;
+import com.lsh.gulimall.order.constant.OrderConstant;
 import com.lsh.gulimall.order.dao.OmsOrderDao;
 import com.lsh.gulimall.order.entity.OmsOrderEntity;
 import com.lsh.gulimall.order.feign.CartService;
@@ -16,21 +18,21 @@ import com.lsh.gulimall.order.feign.MemberService;
 import com.lsh.gulimall.order.feign.WareService;
 import com.lsh.gulimall.order.interceptor.LoginUserInterceptor;
 import com.lsh.gulimall.order.service.OmsOrderService;
-import com.lsh.gulimall.order.vo.MemberAddressVo;
-import com.lsh.gulimall.order.vo.OrderConfirmVo;
-import com.lsh.gulimall.order.vo.OrderItemVo;
+import com.lsh.gulimall.order.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -53,6 +55,9 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 
 	@Autowired
 	private WareService wareService;
+
+	@Autowired
+	StringRedisTemplate redisTemplate;
 
 
 	/**
@@ -186,10 +191,65 @@ public class OmsOrderServiceImpl extends ServiceImpl<OmsOrderDao, OmsOrderEntity
 		confirmVo.setIntegration(integration);
 
 //		TODO  为了防止订单重复提交 防重令牌 原子性校验 接口幂等性
+		String orderToken = UUID.randomUUID().toString().replace("-", "");
 
+		/*页面*/
+		confirmVo.setOrderToken(orderToken);
 
+		/*服务器*/
+		redisTemplate.opsForValue().set(OrderConstant.USER_ORDER_TOEN_PREFIX + memberRespVo.getId(), orderToken, 30, TimeUnit.MINUTES);
 		log.info(String.valueOf(confirmVo));
 		return confirmVo;
 	}
+
+	/**
+	 * //TODO
+	 *
+	 * @param null
+	 * @return: null
+	 * @Description: 提交订单
+	 */
+	@Override
+	public SubmitOrderResponseVo submitOrder(OrderSubmitVo orderSubmitVo) {
+		SubmitOrderResponseVo responseVo = new SubmitOrderResponseVo();
+		/*验证令牌*/
+		// 获取用户信息
+		MemberRespVo memberRespVo = LoginUserInterceptor.threadLocal.get();
+		if (memberRespVo.getId() == null) {
+			responseVo.setCode(1);
+			return responseVo;
+		}
+		/*原子性 验证删除令牌*/
+		StringBuilder script = new StringBuilder();
+		script.append("if redis.call(\"get\",KEYS[1]) == ARGV[1] ");
+		script.append("then ");
+		script.append("    return redis.call(\"del\",KEYS[1]) ");
+		script.append("else ");
+		script.append("    return 0 "); // 0失败
+		script.append("end ");
+		String orderToken = redisTemplate.opsForValue().get(OrderConstant.USER_ORDER_TOEN_PREFIX + memberRespVo.getId());
+		/*原子验证删除*/
+		Long res = redisTemplate.execute(new DefaultRedisScript<Long>(script.toString(), Long.class), Collections.singletonList(OrderConstant.USER_ORDER_TOEN_PREFIX + memberRespVo.getId()), orderToken);
+
+		if (res == 0L) {
+			/*验证失败*/
+			responseVo.setCode(1);
+			return responseVo;
+		}
+//		if (orderToken == null || !orderToken.equals(orderSubmitVo.getOrderToken())) {
+//			responseVo.setCode(2);
+//		}
+		/*验证价格*/
+
+
+
+
+
+
+		/*锁库存*/
+
+		return responseVo;
+	}
+
 
 }
