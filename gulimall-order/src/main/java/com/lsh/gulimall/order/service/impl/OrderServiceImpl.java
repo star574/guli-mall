@@ -3,19 +3,15 @@ package com.lsh.gulimall.order.service.impl;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
-import com.lsh.gulimall.common.utils.Constant;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.common.vo.MemberRespVo;
-import com.lsh.gulimall.common.vo.SkuInfoVo;
 import com.lsh.gulimall.order.constant.OrderConstant;
 import com.lsh.gulimall.order.dao.OrderDao;
-import com.lsh.gulimall.order.dao.OrderItemDao;
 import com.lsh.gulimall.order.entity.OrderEntity;
 import com.lsh.gulimall.order.entity.OrderItemEntity;
 import com.lsh.gulimall.order.enume.OrderStatusEnum;
@@ -29,11 +25,9 @@ import com.lsh.gulimall.order.service.OrderService;
 import com.lsh.gulimall.order.to.OrderCreateTo;
 import com.lsh.gulimall.order.vo.*;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -251,7 +245,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 				"end ";
 		String orderToken = orderSubmitVo.getOrderToken();
 		/*原子验证删除*/
-		Long res = redisTemplate.execute(new DefaultRedisScript<Long>(script, Long.class), Collections.singletonList(OrderConstant.USER_ORDER_TOEN_PREFIX + memberRespVo.getId()), orderToken);
+		Long res = redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), Collections.singletonList(OrderConstant.USER_ORDER_TOEN_PREFIX + memberRespVo.getId()), orderToken);
 
 		if (res == 0L) {
 			/*验证失败*/
