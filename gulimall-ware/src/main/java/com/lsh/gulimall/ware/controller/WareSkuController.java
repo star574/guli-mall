@@ -8,6 +8,8 @@ import java.util.Map;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.ware.entity.vo.LockStockResult;
+import com.lsh.gulimall.ware.entity.vo.WareSkuLockVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,20 @@ import com.lsh.gulimall.ware.service.WareSkuService;
 public class WareSkuController {
 	@Autowired
 	private WareSkuService wareSkuService;
+
+	/**
+	 * //TODO
+	 *
+	 * @param wareSkuLockVo
+	 * @return: R
+	 * @Description: 锁定库存
+	 */
+	@PostMapping("/lock/order")
+	public R orderLockStock(@RequestBody WareSkuLockVo wareSkuLockVo) {
+		List<LockStockResult> results = wareSkuService.orderLockStock(wareSkuLockVo);
+		return R.ok().data(results);
+	}
+
 
 	/**
 	 * 列表

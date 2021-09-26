@@ -1,7 +1,7 @@
 package com.lsh.gulimall.order.web;
 
 
-import com.lsh.gulimall.order.service.OmsOrderService;
+import com.lsh.gulimall.order.service.OrderService;
 import com.lsh.gulimall.order.vo.OrderConfirmVo;
 import com.lsh.gulimall.order.vo.OrderSubmitVo;
 import com.lsh.gulimall.order.vo.SubmitOrderResponseVo;
@@ -20,7 +20,7 @@ import java.rmi.ServerException;
 public class OrderWebController {
 
 	@Autowired
-	OmsOrderService orderService;
+	OrderService orderService;
 
 	/**
 	 * //TODO
@@ -37,7 +37,6 @@ public class OrderWebController {
 	}
 
 
-	@PostMapping("/submitOrder")
 	/**
 	 * //TODO
 	 *
@@ -45,12 +44,13 @@ public class OrderWebController {
 	 * @return: String
 	 * @Description: 下单
 	 */
+	@PostMapping("/submitOrder")
 	public String submitOrder(@RequestBody OrderSubmitVo orderSubmitVo) {
 		/*创建订单*/
 		SubmitOrderResponseVo responseVo = orderService.submitOrder(orderSubmitVo);
 
 		/*下单成功 来到支付选择页*/ /*下单失败 回到确认页面 重新确认订单*/
-		if (responseVo.getCode()==0) {
+		if (responseVo.getCode() == 0) {
 			/*成功*/
 			return "pay";
 		}

@@ -3,6 +3,7 @@ package com.lsh.gulimall.product.controller;
 import com.lsh.gulimall.common.to.SpuBoundTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.product.entity.SkuInfoEntity;
 import com.lsh.gulimall.product.entity.SpuInfoEntity;
 import com.lsh.gulimall.product.entity.vo.SpuSaveVo;
 import com.lsh.gulimall.product.feign.CouponFeignClient;
@@ -29,6 +30,17 @@ public class SpuInfoController {
 	@Autowired
 	CouponFeignClient couponFeignClient;
 
+
+	/**
+	 * 信息
+	 */
+	@RequestMapping("/info/{skuId}")
+	// @RequiresPermissions("product:spuinfo:info")
+	public R getSpuInfo(@PathVariable("skuId") Long skuId) {
+		SpuInfoEntity skuInfo = spuInfoService.getSpuInfo(skuId);
+		return R.ok().data(skuInfo);
+	}
+
 	/**
 	 * //TODO
 	 *
@@ -36,11 +48,11 @@ public class SpuInfoController {
 	 * @return
 	 * @throws
 	 * @date 2021/6/28 下午11:25
-	 * @Description  商品上架
+	 * @Description 商品上架
 	 */
 	@PostMapping("/{spuId}/up")
 	public R spuUp(@PathVariable Long spuId) {
-		return spuInfoService.up(spuId)?R.ok():R.error("上架失败!");
+		return spuInfoService.up(spuId) ? R.ok() : R.error("上架失败!");
 	}
 
 

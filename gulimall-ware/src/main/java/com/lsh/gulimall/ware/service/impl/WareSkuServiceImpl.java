@@ -9,6 +9,8 @@ import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.ware.dao.WareSkuDao;
 import com.lsh.gulimall.ware.entity.WareSkuEntity;
+import com.lsh.gulimall.ware.entity.vo.LockStockResult;
+import com.lsh.gulimall.ware.entity.vo.WareSkuLockVo;
 import com.lsh.gulimall.ware.feign.ProductFeignClient;
 import com.lsh.gulimall.ware.service.WareSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +113,21 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 		}).collect(Collectors.toList());
 
 		return skuHasStockVoList;
+	}
+
+	/**
+	 * //TODO
+	 *
+	 * @param wareSkuLockVo
+	 * @return: List<LockStockResult>
+	 * @Description: 为某个订单锁定库存
+	 */
+	@Override
+	public List<LockStockResult> orderLockStock(WareSkuLockVo wareSkuLockVo) {
+
+
+
+		return null;
 	}
 
 }

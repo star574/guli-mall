@@ -1,7 +1,7 @@
 package com.lsh.gulimall.order.controller;
 
 import com.lsh.gulimall.order.entity.MqMessageEntity;
-import com.lsh.gulimall.order.entity.OmsOrderEntity;
+import com.lsh.gulimall.order.entity.OrderEntity;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ public class RabbitController {
 				rabbitTemplate.convertAndSend("hello.java.exchange","atguiguTest", mqMessageEntity,new CorrelationData(UUID.randomUUID().toString()));
 			} else {
 
-				OmsOrderEntity omsOrderEntity = new OmsOrderEntity();
-				omsOrderEntity.setId(Long.parseLong(String.valueOf(i)));
-				rabbitTemplate.convertAndSend("hello.java.exchange","atguiguTest", omsOrderEntity,new CorrelationData(UUID.randomUUID().toString()));
+				OrderEntity OrderEntity = new OrderEntity();
+				OrderEntity.setId(Long.parseLong(String.valueOf(i)));
+				rabbitTemplate.convertAndSend("hello.java.exchange","atguiguTest", OrderEntity,new CorrelationData(UUID.randomUUID().toString()));
 			}
 		}
 		return "消息发送成功!";
