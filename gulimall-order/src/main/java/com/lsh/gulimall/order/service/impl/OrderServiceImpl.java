@@ -283,6 +283,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 			// TODO 锁定库存
 			if (r.getCode() == 0) {
 				/*锁定成功*/
+
+
+
+
 			} else {
 				/*锁定失败*/
 

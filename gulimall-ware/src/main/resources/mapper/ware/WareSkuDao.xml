@@ -18,6 +18,20 @@
 		where sku_id = #{skuId}
 		  and ware_id = #{wareId};
 	</update>
-
+	<!--锁库存-->
+	<update id="lockSkuStock">
+		update wms_ware_sku
+		set stock_locked=stock_locked + #{num}
+		where sku_id = #{skuId}
+		  and ware_id = #{wareId}
+		  and stock >= (stock_locked + #{num});
+	</update>
+	<select id="listWareIdHasSkuStock" resultType="java.lang.Long">
+		/*查找有库存的仓库id*/
+		select ware_id
+		from wms_ware_sku
+		where sku_id = #{skuId}
+		  and stock > stock_locked
+	</select>
 
 </mapper>
