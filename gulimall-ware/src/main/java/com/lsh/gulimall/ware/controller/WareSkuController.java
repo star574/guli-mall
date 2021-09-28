@@ -1,21 +1,19 @@
 package com.lsh.gulimall.ware.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-
+import com.lsh.gulimall.common.exception.BizCodeEnume;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
-import com.lsh.gulimall.ware.entity.vo.LockStockResult;
+import com.lsh.gulimall.ware.entity.WareSkuEntity;
 import com.lsh.gulimall.ware.entity.vo.WareSkuLockVo;
+import com.lsh.gulimall.ware.service.WareSkuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.lsh.gulimall.ware.entity.WareSkuEntity;
-import com.lsh.gulimall.ware.service.WareSkuService;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,8 +39,13 @@ public class WareSkuController {
 	 */
 	@PostMapping("/lock/order")
 	public R orderLockStock(@RequestBody WareSkuLockVo wareSkuLockVo) {
-		List<LockStockResult> results = wareSkuService.orderLockStock(wareSkuLockVo);
-		return R.ok().data(results);
+		try {
+			wareSkuService.orderLockStock(wareSkuLockVo);
+			return R.ok();
+		} catch (Exception e) {
+			// 库存锁定失败
+			return R.error(BizCodeEnume.NO_STOCK_EXCEPTION.getCode(), BizCodeEnume.NO_STOCK_EXCEPTION.getMsg());
+		}
 	}
 
 

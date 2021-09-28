@@ -247,8 +247,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 		/*原子验证删除*/
 		Long res = redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), Collections.singletonList(OrderConstant.USER_ORDER_TOEN_PREFIX + memberRespVo.getId()), orderToken);
 
-		if (res == 0L) {
+		if (res == null || res == 0L) {
 			/*验证失败*/
+			log.warn("---tooken令牌不一致");
 			responseVo.setCode(1);
 			return responseVo;
 		}
@@ -279,24 +280,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 				return orderItemVo;
 			}).collect(Collectors.toList());
 			wareSkuLockVo.setLocks(collect);
-			R r = wareService.orderLockStock(wareSkuLockVo);
-			// TODO 锁定库存
-			if (r.getCode() == 0) {
-				/*锁定成功*/
-
-
-
-
-			} else {
+			// TODO 远程锁定库存
+			R   r = wareService.orderLockStock(wareSkuLockVo);
+			if (r.getCode() != 0) {
 				/*锁定失败*/
-
+				responseVo.setCode(3);
+				log.warn(String.valueOf(r.get("msg")));
 			}
-
+			responseVo.setOrder(order.getOrder());
 		} else {
 			responseVo.setCode(2);
+			log.warn("---价格不一致!");
 		}
-
-
 		return responseVo;
 	}
 

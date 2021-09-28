@@ -5,7 +5,6 @@ import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.ware.entity.WareInfoEntity;
 import com.lsh.gulimall.ware.entity.vo.FareVo;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -17,7 +16,7 @@ import java.util.Map;
  */
 public interface WareInfoService extends IService<WareInfoEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+	PageUtils queryPage(Map<String, Object> params);
 
 	FareVo getFare(long addrId);
 

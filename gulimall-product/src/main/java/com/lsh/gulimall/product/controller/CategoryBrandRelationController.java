@@ -1,20 +1,16 @@
 package com.lsh.gulimall.product.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lsh.gulimall.common.utils.PageUtils;
+import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.product.entity.CategoryBrandRelationEntity;
+import com.lsh.gulimall.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lsh.gulimall.common.utils.R;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
-import com.lsh.gulimall.product.entity.CategoryBrandRelationEntity;
-import com.lsh.gulimall.product.service.CategoryBrandRelationService;
-import com.lsh.gulimall.common.utils.PageUtils;
-import com.lsh.gulimall.common.utils.Query;
 
 
 /**
@@ -27,6 +23,7 @@ import com.lsh.gulimall.common.utils.Query;
 @RestController
 @RequestMapping("product/categorybrandrelation")
 public class CategoryBrandRelationController {
+
 	@Autowired
 	private CategoryBrandRelationService categoryBrandRelationService;
 
@@ -46,7 +43,7 @@ public class CategoryBrandRelationController {
 	 */
 	@GetMapping("/{type}/list")
 	// @RequiresPermissions("product:categorybrandrelation:list")
-	public R brandlist(@PathVariable String type, @RequestParam(value = "catId",required = false) Long catId,@RequestParam(value = "brandId",required = false) Long barandId) {
+	public R brandlist(@PathVariable String type, @RequestParam(value = "catId", required = false) Long catId, @RequestParam(value = "brandId", required = false) Long barandId) {
 		QueryWrapper<CategoryBrandRelationEntity> wrapper = new QueryWrapper<>();
 		if (type.equals("brands")) {
 			wrapper = wrapper.eq("catelog_id", catId);

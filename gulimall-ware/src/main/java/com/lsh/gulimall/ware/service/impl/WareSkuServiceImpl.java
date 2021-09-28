@@ -9,7 +9,6 @@ import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.ware.dao.WareSkuDao;
 import com.lsh.gulimall.ware.entity.WareSkuEntity;
-import com.lsh.gulimall.ware.entity.vo.LockStockResult;
 import com.lsh.gulimall.ware.entity.vo.OrderItemVo;
 import com.lsh.gulimall.ware.entity.vo.WareSkuLockVo;
 import com.lsh.gulimall.ware.exception.NoStockException;
@@ -124,12 +123,14 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 	/**
 	 * //TODO
 	 *
-	 * @param wareSkuLockVo
+	 * @param vo
 	 * @return: List<LockStockResult>
 	 * @Description: 为某个订单锁定库存
+	 * Transactional(rollbackFor = NoStockException.class) 默认只要是运行时异常都会回滚
 	 */
 	@Override
-	public List<LockStockResult> orderLockStock(WareSkuLockVo vo) {
+	@Transactional(rollbackFor = NoStockException.class)
+	public Boolean orderLockStock(WareSkuLockVo vo) {
 		// 1、按照收获地址 找到就近仓库 锁定库存
 
 		/*找到每个商品在哪个仓库都有库存*/
@@ -146,8 +147,11 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 			}
 			return skuWareHasStock;
 		}).collect(Collectors.toList());
-
+		Boolean allLock = true;
 		for (SkuWareHasStock skuWareHasStock : wareHasStockList) {
+
+			Boolean skuStocked = false;
+
 			Long skuId = skuWareHasStock.getSkuId();
 			List<Long> wareId = skuWareHasStock.getWareId();
 			/*无库存*/
@@ -156,15 +160,21 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 			}
 			for (Long id : wareId) {
 				Long count = wareSkuDao.lockSkuStock(skuId, id, skuWareHasStock.getNum());
-				if (count == 0L) {
-					/*未更新数据库 无库存/库存不足*/
-					throw new NoStockException(skuId);
+				if (count != 0L) {
+					/*锁库存成功*/
+					skuStocked = true;
+					break;
 				}
+
+			}
+			/*未锁成功*/
+			if (!skuStocked) {
+				throw new NoStockException(skuId);
 			}
 		}
 
-
-		return null;
+		// 全部锁定成功
+		return true;
 	}
 
 	@Data
