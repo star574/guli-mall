@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lsh.gulimall.common.exception.NoStockException;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
@@ -229,6 +230,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 	@Transactional
 	public SubmitOrderResponseVo submitOrder(OrderSubmitVo orderSubmitVo) {
 		SubmitOrderResponseVo responseVo = new SubmitOrderResponseVo();
+		responseVo.setCode(0);
 		/*验证令牌*/
 		// 获取用户信息
 		MemberRespVo memberRespVo = LoginUserInterceptor.threadLocal.get();
@@ -281,11 +283,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 			}).collect(Collectors.toList());
 			wareSkuLockVo.setLocks(collect);
 			// TODO 远程锁定库存
-			R   r = wareService.orderLockStock(wareSkuLockVo);
+			R r = wareService.orderLockStock(wareSkuLockVo);
 			if (r.getCode() != 0) {
-				/*锁定失败*/
+				/*锁定失败 */
 				responseVo.setCode(3);
 				log.warn(String.valueOf(r.get("msg")));
+				/*抛出异常回滚*/
+				throw new NoStockException(order.getItems().get(0).getSkuId());
 			}
 			responseVo.setOrder(order.getOrder());
 		} else {
@@ -319,7 +323,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 	private OrderCreateTo createOrder() {
 
 		OrderCreateTo orderCreateTo = new OrderCreateTo();
-		/*1.订单号*/
+		/*1.雪花算法生成订单号*/
 		String orderSn = IdWorker.getTimeId();
 		/*构建订单*/
 		OrderEntity OrderEntity = buildOrder(orderSn);

@@ -44,6 +44,7 @@ public class WareSkuController {
 			return R.ok();
 		} catch (Exception e) {
 			// 库存锁定失败
+			e.printStackTrace();
 			return R.error(BizCodeEnume.NO_STOCK_EXCEPTION.getCode(), BizCodeEnume.NO_STOCK_EXCEPTION.getMsg());
 		}
 	}

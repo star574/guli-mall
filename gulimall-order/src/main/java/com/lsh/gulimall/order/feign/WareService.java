@@ -30,8 +30,8 @@ public interface WareService {
 	 * @return: R
 	 * @Description: 根据用户收获地址计算运费
 	 */
-	@GetMapping("ware/waresku/fare")
-	R getFare(@RequestParam("addrId") long addrId);
+	@GetMapping("ware/wareinfo/fare")
+	R getFare(@RequestParam("addrId") Long addrId);
 
 
 	/**

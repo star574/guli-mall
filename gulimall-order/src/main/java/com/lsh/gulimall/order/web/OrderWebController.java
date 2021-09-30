@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.rmi.ServerException;
 
@@ -45,7 +47,7 @@ public class OrderWebController {
 	 * @Description: 下单
 	 */
 	@PostMapping("/submitOrder")
-	public String submitOrder(@RequestBody OrderSubmitVo orderSubmitVo, Model model) {
+	public String submitOrder(OrderSubmitVo orderSubmitVo, Model model, RedirectAttributes redirectAttributes) {
 		/*创建订单*/
 		SubmitOrderResponseVo responseVo = orderService.submitOrder(orderSubmitVo);
 
@@ -56,6 +58,21 @@ public class OrderWebController {
 			return "pay";
 		}
 		/*失败*/
-		return "redirect:https://order:springboot.ml/toTrade";
+		StringBuilder msg = new StringBuilder("下单失败! ");
+		switch (responseVo.getCode()) {
+			case 1:
+				msg.append("token令牌校验失败,订单信息过期,请再次提交!");
+				break;
+			case 2:
+				msg.append("订单商品价格发生变化!");
+				break;
+			case 3:
+				msg.append("商品库存不足!");
+				break;
+			default:
+				msg.append("未知错误!");
+		}
+		redirectAttributes.addFlashAttribute("msg", msg);
+		return "redirect:https://order.springboot.ml/toTrade";
 	}
 }

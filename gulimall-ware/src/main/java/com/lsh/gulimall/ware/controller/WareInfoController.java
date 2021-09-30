@@ -37,7 +37,7 @@ public class WareInfoController {
 	 * @Description: 根据用户收获地址计算运费
 	 */
 	@GetMapping("/fare")
-	public R getFare(@RequestParam("addrId") long addrId) {
+	public R getFare(@RequestParam("addrId") Long addrId) {
 		FareVo fare = wareInfoService.getFare(addrId);
 		return R.ok().data(fare);
 	}

@@ -1,4 +1,4 @@
-package com.lsh.gulimall.ware.exception;
+package com.lsh.gulimall.common.exception;
 
 
 public class NoStockException extends RuntimeException {

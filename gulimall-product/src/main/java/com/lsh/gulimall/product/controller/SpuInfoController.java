@@ -34,7 +34,7 @@ public class SpuInfoController {
 	/**
 	 * 信息
 	 */
-	@RequestMapping("/info/{skuId}")
+	@PostMapping("/info/{skuId}")
 	// @RequiresPermissions("product:spuinfo:info")
 	public R getSpuInfo(@PathVariable("skuId") Long skuId) {
 		SpuInfoEntity skuInfo = spuInfoService.getSpuInfo(skuId);

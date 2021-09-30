@@ -11,7 +11,7 @@ import com.lsh.gulimall.ware.dao.WareSkuDao;
 import com.lsh.gulimall.ware.entity.WareSkuEntity;
 import com.lsh.gulimall.ware.entity.vo.OrderItemVo;
 import com.lsh.gulimall.ware.entity.vo.WareSkuLockVo;
-import com.lsh.gulimall.ware.exception.NoStockException;
+import com.lsh.gulimall.common.exception.NoStockException;
 import com.lsh.gulimall.ware.feign.ProductFeignClient;
 import com.lsh.gulimall.ware.service.WareSkuService;
 import lombok.Data;
