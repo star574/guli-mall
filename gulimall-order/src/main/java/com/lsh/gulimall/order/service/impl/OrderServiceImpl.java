@@ -283,6 +283,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 			}).collect(Collectors.toList());
 			wareSkuLockVo.setLocks(collect);
 			// TODO 远程锁定库存
+			// 为了保证高并发，库存服务自己回滚，--》发消息给库存服务
+			// 库存服务本身也可以使用自动解锁 --》消息队列  延迟队列 
 			R r = wareService.orderLockStock(wareSkuLockVo);
 			if (r.getCode() != 0) {
 				/*锁定失败 */

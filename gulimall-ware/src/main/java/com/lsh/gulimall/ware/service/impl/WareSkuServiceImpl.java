@@ -169,6 +169,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 			}
 			/*未锁成功*/
 			if (!skuStocked) {
+
 				throw new NoStockException(skuId);
 			}
 		}
