@@ -26,7 +26,7 @@ import com.lsh.gulimall.common.utils.R;
  * @date 2021-09-02 02:55:05
  */
 @RestController
-@RequestMapping("generator/orderitem")
+@RequestMapping("order/orderitem")
 public class OrderItemController {
     @Autowired
     private OrderItemService OrderItemService;

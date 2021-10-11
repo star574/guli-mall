@@ -291,7 +291,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 				responseVo.setCode(3);
 				log.warn(String.valueOf(r.get("msg")));
 				/*抛出异常回滚*/
-				throw new NoStockException(order.getItems().get(0).getSkuId());
+//				throw new NoStockException(order.getItems().get(0).getSkuId());
 			}
 			responseVo.setOrder(order.getOrder());
 		} else {
@@ -475,5 +475,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
 
 		return OrderEntity;
+	}
+
+	/**
+	 * //TODO
+	 *
+	 * @param null
+	 * @return: null
+	 * @Description: 获取订单状态 根据订单号获取订单
+	 */
+	@Override
+	public OrderEntity getOrderByOrderSn(String orderSn) {
+
+		return this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
 	}
 }

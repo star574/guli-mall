@@ -5,17 +5,12 @@ import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lsh.gulimall.order.entity.OrderEntity;
 import com.lsh.gulimall.order.service.OrderService;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.R;
-
 
 
 /**
@@ -26,65 +21,69 @@ import com.lsh.gulimall.common.utils.R;
  * @date 2021-09-02 02:55:05
  */
 @RestController
-@RequestMapping("generator/order")
+@RequestMapping("order/order")
 public class OrderController {
-    @Autowired
-    private OrderService OrderService;
+	@Autowired
+	private OrderService OrderService;
 
-    /**
-     * 列表
-     */
-    @RequestMapping("/list")
-    @RequiresPermissions("generator:order:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = OrderService.queryPage(params);
+	/**
+	 * 订单详细信息
+	 */
+	@GetMapping("/status/{orderSn}")
+	public R orderStatus(@PathVariable("orderSn") String orderSn) {
+		OrderEntity status = OrderService.getOrderByOrderSn(orderSn);
+		return R.ok().data(status);
+	}
 
-        return R.ok().put("page", page);
-    }
+	/**
+	 * 列表
+	 */
+	@RequestMapping("/list")
+	public R list(@RequestParam Map<String, Object> params) {
+		PageUtils page = OrderService.queryPage(params);
+
+		return R.ok().put("page", page);
+	}
 
 
-    /**
-     * 信息
-     */
-    @RequestMapping("/info/{id}")
-    @RequiresPermissions("generator:order:info")
-    public R info(@PathVariable("id") Long id){
+	/**
+	 * 信息
+	 */
+	@RequestMapping("/info/{id}")
+	public R info(@PathVariable("id") Long id) {
 		OrderEntity Order = OrderService.getById(id);
 
-        return R.ok().put("Order", Order);
-    }
+		return R.ok().put("Order", Order);
+	}
 
-    /**
-     * 保存
-     */
-    @RequestMapping("/save")
-    @RequiresPermissions("generator:order:save")
-    public R save(@RequestBody OrderEntity Order){
+	/**
+	 * 保存
+	 */
+	@RequestMapping("/save")
+	public R save(@RequestBody OrderEntity Order) {
 		OrderService.save(Order);
 
-        return R.ok();
-    }
+		return R.ok();
+	}
 
-    /**
-     * 修改
-     */
-    @RequestMapping("/update")
-    @RequiresPermissions("generator:order:update")
-    public R update(@RequestBody OrderEntity Order){
+	/**
+	 * 修改
+	 */
+	@RequestMapping("/update")
+	public R update(@RequestBody OrderEntity Order) {
 		OrderService.updateById(Order);
 
-        return R.ok();
-    }
+		return R.ok();
+	}
 
-    /**
-     * 删除
-     */
-    @RequestMapping("/delete")
-    @RequiresPermissions("generator:order:delete")
-    public R delete(@RequestBody Long[] ids){
+	/**
+	 * 删除
+	 */
+	@RequestMapping("/delete")
+	public R delete(@RequestBody Long[] ids) {
 		OrderService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
-    }
+		return R.ok();
+	}
 
 }

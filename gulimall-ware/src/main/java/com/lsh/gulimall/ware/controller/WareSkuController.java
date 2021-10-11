@@ -36,6 +36,7 @@ public class WareSkuController {
 	 * @param wareSkuLockVo
 	 * @return: R
 	 * @Description: 锁定库存
+	 *
 	 */
 	@PostMapping("/lock/order")
 	public R orderLockStock(@RequestBody WareSkuLockVo wareSkuLockVo) {

@@ -5,6 +5,7 @@ import com.lsh.gulimall.common.constant.AuthServerConstant;
 import com.lsh.gulimall.common.vo.MemberRespVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +20,13 @@ public class LoginUserInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+		// 匹配路径 放行feign客户端调用
+		boolean match = new AntPathMatcher().match("/order/order/status/**", request.getRequestURI());
+		if (match) {
+			return true;
+		}
+
 		/*判断用户是否登陆*/
 		MemberRespVo loginUser = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
 		String requestURI = request.getRequestURI();

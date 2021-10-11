@@ -33,7 +33,7 @@ public class MyRabbitConfig {
 	/**
 	 * @param
 	 * @return: void
-	 * @Description: PostConstruct MyRabbitConfig构造器创建完对象后调用方法
+	 * @Description: PostConstruct MyRabbitConfig 构造器创建完对象后调用方法
 	 * <p>
 	 */
 	@PostConstruct

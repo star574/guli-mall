@@ -18,7 +18,7 @@ import java.util.Map;
  * @date 2021-09-02 02:55:05
  */
 @RestController
-@RequestMapping("generator/mqmessage")
+@RequestMapping("order/mqmessage")
 public class MqMessageController {
 	@Autowired
 	private MqMessageService mqMessageService;
