@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
+import com.lsh.gulimall.common.to.mq.OrderTo;
 import com.lsh.gulimall.common.to.mq.StockDetailTo;
 import com.lsh.gulimall.common.to.mq.StockLockedTo;
 import com.lsh.gulimall.common.utils.PageUtils;
@@ -23,13 +24,8 @@ import com.lsh.gulimall.ware.feign.ProductFeignClient;
 import com.lsh.gulimall.ware.service.WareOrderTaskDetailService;
 import com.lsh.gulimall.ware.service.WareOrderTaskService;
 import com.lsh.gulimall.ware.service.WareSkuService;
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +36,7 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -97,6 +94,23 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 				throw new RuntimeException("远程服务调用失败");
 			}
 		}
+	}
+
+	@Override
+	@Transactional
+	public void unlockStock(OrderTo order) {
+		WareOrderTaskEntity wareOrderTask = wareOrderTaskService.getOrderTaskByOrderSn(order.getOrderSn());
+		// 找到未解锁的库存
+		List<WareOrderTaskDetailEntity> wareOrderTaskDetailEntityList = wareOrderTaskDetailService.getlockOrderTaskDetailByOrderTaskId(wareOrderTask.getId());
+		List<WareOrderTaskDetailEntity> collect = wareOrderTaskDetailEntityList.stream().peek(wareOrderTaskDetailEntity -> {
+					// 解锁
+					wareSkuDao.unlockStock(wareOrderTaskDetailEntity.getSkuId(), wareOrderTaskDetailEntity.getWareId(), wareOrderTaskDetailEntity.getSkuNum());
+					wareOrderTaskDetailEntity.setLockStatus(2);
+				}
+		).collect(Collectors.toList());
+
+		// 修改库存锁定详情单锁定状态
+		wareOrderTaskDetailService.updateBatchById(collect);
 	}
 
 	public void unLockStock(long skuId, Long wareId, Integer num, long taskDetailId) {

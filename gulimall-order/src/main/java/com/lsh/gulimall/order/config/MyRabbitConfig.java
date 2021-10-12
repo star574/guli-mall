@@ -60,6 +60,7 @@ public class MyRabbitConfig {
 					ack = true  抵达Broker代理 rabbit服务器确认收到
 					cause = null
 				* */
+
 				System.out.println("correlationData = " + correlationData);
 				System.out.println("ack = " + ack);
 				System.out.println("cause = " + cause);
@@ -92,6 +93,9 @@ public class MyRabbitConfig {
 				System.out.println("replyText = " + replyText);
 				System.out.println("exchange = " + exchange);
 				System.out.println("routingKey = " + routingKey);
+
+				// 修改数据库消息错误状态
+
 			}
 		});
 

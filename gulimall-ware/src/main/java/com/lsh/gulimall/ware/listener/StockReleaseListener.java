@@ -1,9 +1,13 @@
 package com.lsh.gulimall.ware.listener;
 
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lsh.gulimall.common.to.mq.OrderTo;
 import com.lsh.gulimall.common.to.mq.StockDetailTo;
 import com.lsh.gulimall.common.to.mq.StockLockedTo;
 import com.lsh.gulimall.common.utils.R;
+import com.lsh.gulimall.ware.dao.WareSkuDao;
+import com.lsh.gulimall.ware.entity.WareOrderTaskDetailEntity;
 import com.lsh.gulimall.ware.entity.WareOrderTaskEntity;
 import com.lsh.gulimall.ware.entity.vo.OrderVo;
 import com.lsh.gulimall.ware.feign.OrderFeignClient;
@@ -20,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 @RabbitListener(queues = {"stock.release.stock.queue"})
@@ -29,6 +35,15 @@ public class StockReleaseListener {
 
 	@Autowired
 	WareSkuService wareSkuService;
+
+	@Autowired
+	WareOrderTaskService wareOrderTaskService;
+
+	@Autowired
+	WareOrderTaskDetailService wareOrderTaskDetailService;
+
+	@Autowired
+	WareSkuDao wareSkuDao;
 
 	/**
 	 * //TODO
@@ -43,7 +58,7 @@ public class StockReleaseListener {
 	 */
 	@RabbitHandler
 	public void handleStockLockedRelease(StockLockedTo lockedTo, Message message, Channel channel) throws IOException {
-		log.warn("收到解锁库存的信息-->{}", lockedTo);
+		log.warn("下单超时 收到解锁库存的信息-->{}", lockedTo);
 		/*解锁库存*/
 		try {
 			wareSkuService.unlockStock(lockedTo);
@@ -56,4 +71,24 @@ public class StockReleaseListener {
 
 	}
 
+	/**
+	 * //TODO
+	 *
+	 * @param null
+	 * @return: null
+	 * @Description: 订单关闭 手动解锁库存
+	 */
+	@RabbitHandler
+	public void handleOrderCloseRelease(OrderTo order, Message message, Channel channel) throws IOException {
+		try {
+			log.warn("订单已经关闭 收到解锁库存的信息-->{}", order);
+			wareSkuService.unlockStock(order);
+			/*手动确认消息*/
+			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+		} catch (Exception e) {
+			e.printStackTrace();
+			/*解锁失败 重新放入消息队列 等待下次解锁*/
+			channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
+		}
+	}
 }

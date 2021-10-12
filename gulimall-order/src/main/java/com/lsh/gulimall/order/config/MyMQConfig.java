@@ -81,19 +81,32 @@ public class MyMQConfig {
 		return new Binding("order.release.queue", Binding.DestinationType.QUEUE, "order-event-exchange", "order.release.order", null);
 	}
 
-	@RabbitListener(queues = {"order.release.queue"})
-	public void listener(OrderEntity orderEntity, Channel channel, Message message) {
-		System.out.println("收到过期订单信息 准备关闭订单");
-		System.out.println(orderEntity);
-
-		/*确认收到消息*/
-		try {
-			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+	/**
+	 * //TODO
+	 *
+	 * @param null
+	 * @return: null
+	 * @Description: 订单释放交换机
+	 */
+	@Bean
+	public Binding orderReleaseOtherBingding() {
+		return new Binding("stock.release.stock.queue", Binding.DestinationType.QUEUE, "order-event-exchange", "order.release.other.#", null);
 	}
+
+
+//	@RabbitListener(queues = {"order.release.queue"})
+//	public void listener(OrderEntity orderEntity, Channel channel, Message message) {
+//		System.out.println("收到过期订单信息 准备关闭订单");
+//		System.out.println(orderEntity);
+//
+//		/*确认收到消息*/
+//		try {
+//			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 
 }

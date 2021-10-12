@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lsh.gulimall.common.exception.NoStockException;
 import com.lsh.gulimall.common.to.SkuHasStockTo;
+import com.lsh.gulimall.common.to.mq.OrderTo;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
 import com.lsh.gulimall.common.utils.R;
@@ -26,6 +26,8 @@ import com.lsh.gulimall.order.service.OrderService;
 import com.lsh.gulimall.order.to.OrderCreateTo;
 import com.lsh.gulimall.order.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -57,6 +59,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
 	private MemberService memberService;
 	private CartService cartService;
+
+	@Autowired
+	RabbitTemplate rabbitTemplate;
 
 	@Autowired
 	private ThreadPoolExecutor threadPoolExecutor;
@@ -294,6 +299,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 //				throw new NoStockException(order.getItems().get(0).getSkuId());
 			}
 			responseVo.setOrder(order.getOrder());
+
+			// 订单创建成功 发送消息到mq
+			rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
+
 		} else {
 			responseVo.setCode(2);
 			log.warn("---价格不一致!");
@@ -488,5 +497,40 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 	public OrderEntity getOrderByOrderSn(String orderSn) {
 
 		return this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+	}
+
+	/**
+	 * //TODO
+	 *
+	 * @param orderEntity
+	 * @return: null
+	 * @Description: 关闭订单
+	 */
+	@Override
+	public void closeOrder(OrderEntity orderEntity) {
+		// 查询当前订单状态
+		OrderEntity order = this.getById(orderEntity.getId());
+		// 如果是待付款 那么订单付款超时了 关闭
+		if (order.getStatus().equals(OrderStatusEnum.CREATE_NEW.getCode())) {
+			OrderEntity order1 = new OrderEntity();
+			order1.setId(order.getId());
+			order1.setStatus(OrderStatusEnum.CANCLED.getCode());
+			/*修改订单状态为已关闭 订单解锁成功*/
+			this.updateById(order1);
+			// 手动解锁库存 防止网络延迟造成订单与库存时间差（晚收到订单消息 未解锁库存）  库存未解锁
+			OrderTo orderTo = new OrderTo();
+			BeanUtils.copyProperties(orderEntity, orderTo);
+			try {
+				// 保证消息百分百发送出去 确定消息到达队列
+				rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other", orderTo);
+				// 做好数据库日志记录
+				// 1、定期扫描数据库 将未发送的重新发送
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				// TODO 将没发送成功发送的消息重试发送
+
+			}
+		}
 	}
 }

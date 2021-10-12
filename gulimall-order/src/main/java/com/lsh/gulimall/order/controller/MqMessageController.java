@@ -27,7 +27,6 @@ public class MqMessageController {
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("generator:mqmessage:list")
 	public R list(@RequestParam Map<String, Object> params) {
 		PageUtils page = mqMessageService.queryPage(params);
 
@@ -39,7 +38,6 @@ public class MqMessageController {
 	 * 信息
 	 */
 	@RequestMapping("/info/{messageId}")
-	@RequiresPermissions("generator:mqmessage:info")
 	public R info(@PathVariable("messageId") String messageId) {
 		MqMessageEntity mqMessage = mqMessageService.getById(messageId);
 
@@ -50,7 +48,6 @@ public class MqMessageController {
 	 * 保存
 	 */
 	@RequestMapping("/save")
-	@RequiresPermissions("generator:mqmessage:save")
 	public R save(@RequestBody MqMessageEntity mqMessage) {
 		mqMessageService.save(mqMessage);
 
@@ -61,10 +58,8 @@ public class MqMessageController {
 	 * 修改
 	 */
 	@RequestMapping("/update")
-	@RequiresPermissions("generator:mqmessage:update")
 	public R update(@RequestBody MqMessageEntity mqMessage) {
 		mqMessageService.updateById(mqMessage);
-
 		return R.ok();
 	}
 
@@ -72,10 +67,8 @@ public class MqMessageController {
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("generator:mqmessage:delete")
 	public R delete(@RequestBody String[] messageIds) {
 		mqMessageService.removeByIds(Arrays.asList(messageIds));
-
 		return R.ok();
 	}
 
