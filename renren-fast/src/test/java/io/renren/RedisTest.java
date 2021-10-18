@@ -1,6 +1,7 @@
 package io.renren;
 
-import com.lsh.gulimall.common.utils.RedisUtils;
+
+import io.renren.common.utils.RedisUtils;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Test;

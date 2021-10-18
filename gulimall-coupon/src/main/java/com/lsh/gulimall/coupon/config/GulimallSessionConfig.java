@@ -11,14 +11,14 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 public class GulimallSessionConfig {
 
 
-//	/*自定义session作用域*/
-//	@Bean
-//	public CookieSerializer cookieSerializer() {
-//		DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
-//		defaultCookieSerializer.setDomainName("springboot.ml");
-//		defaultCookieSerializer.setCookieName("GULISESSION");
-//		return defaultCookieSerializer;
-//	}
+	/*自定义session作用域*/
+	@Bean
+	public CookieSerializer cookieSerializer() {
+		DefaultCookieSerializer defaultCookieSerializer = new DefaultCookieSerializer();
+		defaultCookieSerializer.setDomainName("springboot.ml");
+		defaultCookieSerializer.setCookieName("GULISESSION");
+		return defaultCookieSerializer;
+	}
 
 	/*自定义redis序列化器*/
 	@Bean

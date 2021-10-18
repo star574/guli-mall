@@ -16,36 +16,39 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class LoginUserInterceptor implements HandlerInterceptor {
 
-	public static ThreadLocal<MemberRespVo> threadLocal = new ThreadLocal<>();
+    public static ThreadLocal<MemberRespVo> threadLocal = new ThreadLocal<>();
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-		// 匹配路径 放行feign客户端调用
-		boolean match = new AntPathMatcher().match("/order/order/status/**", request.getRequestURI());
-		if (match) {
-			return true;
-		}
+        System.out.println("url--------------------------->" + request.getRequestURI());
+        // 匹配路径 放行feign客户端调用
+        boolean match = new AntPathMatcher().match("/order/order/status/**", request.getRequestURI());
+        if (match) {
+            return true;
+        }
+        if (new AntPathMatcher().match("/order/pay/alipay/success", request.getRequestURI())) {
+            return true;
+        }
+        /*判断用户是否登陆*/
+        MemberRespVo loginUser = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
+        String requestURI = request.getRequestURI();
+        if (loginUser == null) {
+            request.getSession().setAttribute("msg", "请先进行登陆!");
+            response.sendRedirect("http://auth.springboot.ml/login.html?url=" + "http://order.springboot.ml" + requestURI);
+            return false;
+        }
+        threadLocal.set(loginUser);
+        return true;
+    }
 
-		/*判断用户是否登陆*/
-		MemberRespVo loginUser = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
-		String requestURI = request.getRequestURI();
-		if (loginUser == null) {
-			request.getSession().setAttribute("msg", "请先进行登陆!");
-			response.sendRedirect("http://auth.springboot.ml/login.html?url=" + "http://order.springboot.ml" + requestURI);
-			return false;
-		}
-		threadLocal.set(loginUser);
-		return true;
-	}
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
+    }
 
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
-	}
-
-	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
-	}
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
 }

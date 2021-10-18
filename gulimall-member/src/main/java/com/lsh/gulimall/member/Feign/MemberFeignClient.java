@@ -1,7 +1,6 @@
 package com.lsh.gulimall.member.Feign;
 
 import com.lsh.gulimall.common.utils.R;
-import com.lsh.gulimall.member.Feign.Impl.FeignClientImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,10 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * @author codestar
  */
-@FeignClient(name = "gulimall-coupon", fallback = FeignClientImpl.class)
+@FeignClient(name = "gulimall-coupon")
 @Component
 public interface MemberFeignClient {
-
 	/**
 	 * //TODO
 	 *
