@@ -29,7 +29,6 @@ import java.util.Date;
  *
  * @author Mark shihengluo574@gmail.com
  */
-@DependsOn("springContextUtil")
 public class ScheduleJob extends QuartzJobBean {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 

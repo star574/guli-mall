@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
  * @author Mark shihengluo574@gmail.com
  */
 @Component
-@DependsOn("applicationContext")
 public class SpringContextUtils implements ApplicationContextAware {
 	public static ApplicationContext applicationContext; 
 
