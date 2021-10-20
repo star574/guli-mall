@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class SeckillServiceImpl implements SeckillService {
@@ -21,9 +23,9 @@ public class SeckillServiceImpl implements SeckillService {
         // 1、扫描需要秒杀的服务 远程调用coupon服务
         R r = couponFeignClient.getLatest3DaySession();
         if (r.getCode() == 0) {
-            SeckillSessionWithSkus seckillSessionWithSkus = r.getData(new TypeReference<SeckillSessionWithSkus>() {
+            List<SeckillSessionWithSkus> skuHasStockList = r.getData(new TypeReference<List<SeckillSessionWithSkus>>() {
             });
-            log.warn("需要上架的活动及其商品{}", seckillSessionWithSkus);
+            log.warn("需要上架的活动及其商品{}", skuHasStockList);
         }
     }
 }

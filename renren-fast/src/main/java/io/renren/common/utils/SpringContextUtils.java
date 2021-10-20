@@ -1,4 +1,4 @@
-/**
+package io.renren.common.utils; /**
  * Copyright (c) 2016-2019 人人开源 All rights reserved.
  *
  * https://www.renren.io
@@ -6,11 +6,11 @@
  * 版权所有，侵权必究！
  */
 
-package com.lsh.gulimall.common.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
  * @author Mark shihengluo574@gmail.com
  */
 @Component
+@DependsOn("applicationContext")
 public class SpringContextUtils implements ApplicationContextAware {
 	public static ApplicationContext applicationContext; 
 

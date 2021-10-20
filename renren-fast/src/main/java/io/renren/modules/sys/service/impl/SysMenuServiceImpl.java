@@ -10,8 +10,8 @@ package io.renren.modules.sys.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lsh.gulimall.common.utils.Constant;
-import com.lsh.gulimall.common.utils.MapUtils;
+import io.renren.common.utils.Constant;
+import io.renren.common.utils.MapUtils;
 import io.renren.modules.sys.dao.SysMenuDao;
 import io.renren.modules.sys.entity.SysMenuEntity;
 import io.renren.modules.sys.service.SysMenuService;

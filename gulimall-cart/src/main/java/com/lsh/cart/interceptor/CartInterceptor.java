@@ -4,7 +4,6 @@ import com.lsh.cart.vo.UserInfoTo;
 import com.lsh.gulimall.common.constant.AuthServerConstant;
 import com.lsh.gulimall.common.constant.CartConstant;
 import com.lsh.gulimall.common.vo.MemberRespVo;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public class CartInterceptor implements HandlerInterceptor {

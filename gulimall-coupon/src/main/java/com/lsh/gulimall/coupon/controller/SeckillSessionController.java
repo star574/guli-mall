@@ -49,7 +49,6 @@ public class SeckillSessionController {
         return R.ok().data(seckillSession);
     }
 
-
     /**
      * 信息
      */

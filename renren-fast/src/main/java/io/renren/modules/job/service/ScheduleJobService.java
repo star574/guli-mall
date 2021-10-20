@@ -9,7 +9,7 @@
 package io.renren.modules.job.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lsh.gulimall.common.utils.PageUtils;
+import io.renren.common.utils.PageUtils;
 import io.renren.modules.job.entity.ScheduleJobEntity;
 
 import java.util.Map;

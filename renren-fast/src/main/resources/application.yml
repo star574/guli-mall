@@ -24,7 +24,7 @@ spring:
       enabled: true
   redis:
     open: false  # 是否开启redis缓存  true开启   false关闭
-    database: 0
+    database: 1
     host: 47.101.55.148
     port: 6379
     password: luoshiheng574   # 密码（默认为空）
@@ -37,9 +37,10 @@ spring:
         min-idle: 5       # 连接池中的最小空闲连接
   mvc:
     throw-exception-if-no-handler-found: true
+  cache:
+    type: none
 #  resources:
 #    add-mappings: false
-
 
 #mybatis
 mybatis-plus:

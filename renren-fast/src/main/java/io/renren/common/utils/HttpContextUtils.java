@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.lsh.gulimall.common.utils;
+package io.renren.common.utils;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
