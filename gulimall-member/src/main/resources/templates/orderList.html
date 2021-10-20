@@ -20,7 +20,7 @@
 
         <div class="myjd">
             <h3>我的谷粒商城</h3>
-            <button onclick="location.href='http://gulimall.com'">返回谷粒商城首页</button>
+            <button onclick="location.href='http://springboot.ml'">返回谷粒商城首页</button>
         </div>
         <ul class="nav_ul">
             <li>首页</li>
@@ -222,8 +222,10 @@
                         <div style="margin-left:15px;">[[${item.skuQuantity}]]</div>
                         <div style="clear:both"></div>
                     </td>
-                    <td th:if="${itemStat.index==0}" th:rowspan="${itemStat.size}">[[${order.receiverName}]]<i><i class="table_i1"></i></i></td>
-                    <td style="padding-left:10px;color:#AAAAB1;" th:if="${itemStat.index==0}" th:rowspan="${itemStat.size}" >
+                    <td th:if="${itemStat.index==0}" th:rowspan="${itemStat.size}">[[${order.receiverName}]]<i><i
+                            class="table_i1"></i></i></td>
+                    <td style="padding-left:10px;color:#AAAAB1;" th:if="${itemStat.index==0}"
+                        th:rowspan="${itemStat.size}">
                         <p style="margin-bottom:5px;">总额 ￥[[${order.payAmount}]]</p>
                         <hr style="width:90%;">
                         <p>在线支付</p>

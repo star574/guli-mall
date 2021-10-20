@@ -46,7 +46,7 @@ public class OAuth2Controller {
 		bodys.put("client_id", "3612579682");
 		bodys.put("client_secret", "dc36f872cfb8434544f6c0ee54af35d6");
 		bodys.put("grant_type", "authorization_code");
-		bodys.put("redirect_uri", "http://auth.gulimall.com/oauth2.0/weibo/success");
+		bodys.put("redirect_uri", "http://auth.springboot.ml/oauth2.0/weibo/success");
 		bodys.put("code", code);
 		try {
 
@@ -62,10 +62,10 @@ public class OAuth2Controller {
 					MemberRespVo data1 = r.getData("data", new TypeReference<MemberRespVo>() {
 					});
 					session.setAttribute(AuthServerConstant.LOGIN_USER, data1);
-					return "redirect:http://gulimall.com";
+					return "redirect:http://springboot.ml";
 
 				} else {
-					return "redirect:http://auth.gulimall.com/login.html";
+					return "redirect:http://auth.springboot.ml/login.html";
 				}
 
 			}
@@ -73,6 +73,6 @@ public class OAuth2Controller {
 			e.printStackTrace();
 		}
 
-		return "redirect:http://auth.gulimall.com/login.html";
+		return "redirect:http://auth.springboot.ml/login.html";
 	}
 }
