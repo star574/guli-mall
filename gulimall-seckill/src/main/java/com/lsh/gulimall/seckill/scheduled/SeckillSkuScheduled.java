@@ -19,20 +19,20 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SeckillSkuScheduled {
 
-    @Autowired
-    SeckillService seckillService;
+	@Autowired
+	SeckillService seckillService;
 
-    /**
-     * //TODO
-     *
-     * @param
-     * @return: void
-     * @Description: 每天晚上3点上架
-     */
-    @Scheduled(cron = "10 * * * * ?")
-    public void uploadSeckillSkuLatet3Days() {
-        //1、重复上架无需处理
-        seckillService.uploadSeckillSkuLatet3Days();
-    }
+	/**
+	 * //TODO
+	 *
+	 * @param
+	 * @return: void
+	 * @Description: 每天晚上3点上架
+	 */
+	@Scheduled(cron = "10 * * * * ?")
+	public void uploadSeckillSkuLatest3Days() {
+		//1、重复上架无需处理
+		seckillService.uploadSeckillSkuLatest3Days();
+	}
 
 }

@@ -1,4 +1,4 @@
-package com.lsh.gulimall.product.config;
+package com.lsh.gulimall.seckill.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -7,15 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * //TODO
- *
- * @Author codestar
- * @Date 上午1:03 2021/7/5
- * @Description redisson配置
- **/
 @Configuration
-public class RedissonConfig {
+public class MyRedissonConfig {
+
 	@Value("${spring.redis.host}")
 	private String ipAddr;
 

@@ -1,16 +1,12 @@
-package com.lsh.gulimall.seckill.vo;
+package com.lsh.gulimall.seckill.to;
 
-import lombok.AllArgsConstructor;
+import com.lsh.gulimall.seckill.vo.SkuInfoVo;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class SeckillSkuVo {
-
+public class SeckillSkuRedisTo {
 	private Long id;
 	/**
 	 * 活动id
@@ -41,4 +37,12 @@ public class SeckillSkuVo {
 	 */
 	private Integer seckillSort;
 
+	private SkuInfoVo skuInfoVo;
+
+	private Long startTime;
+
+	private Long endTime;
+
+	// 秒杀随机码
+	private String randomCode;
 }
