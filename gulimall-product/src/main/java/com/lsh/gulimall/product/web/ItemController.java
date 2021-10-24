@@ -1,6 +1,5 @@
 package com.lsh.gulimall.product.web;
 
-import com.alibaba.fastjson.JSON;
 import com.lsh.gulimall.product.entity.vo.frontvo.SkuItemVo;
 import com.lsh.gulimall.product.service.SkuInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,7 @@ public class ItemController {
 	@GetMapping("/{skuId}.html")
 	String skuItem(@PathVariable("skuId") Long skuId, Model model) {
 		SkuItemVo vo = skuInfoService.item(skuId);
-		System.out.println("JSON.toJSON(vo) = " + JSON.toJSON(vo));
-		model.addAttribute("item",vo);
+		model.addAttribute("item", vo);
 		return "item";
 	}
 

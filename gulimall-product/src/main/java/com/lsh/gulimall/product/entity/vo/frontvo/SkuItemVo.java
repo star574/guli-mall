@@ -3,6 +3,7 @@ package com.lsh.gulimall.product.entity.vo.frontvo;
 import com.lsh.gulimall.product.entity.SkuImagesEntity;
 import com.lsh.gulimall.product.entity.SkuInfoEntity;
 import com.lsh.gulimall.product.entity.SpuInfoDescEntity;
+import com.lsh.gulimall.product.to.SeckillSkuRedisTo;
 import lombok.Data;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class SkuItemVo {
 
 	/*2.图片信息 pms_sku_images */
 
-	private boolean hasStock=true;
+	private boolean hasStock = true;
 
 	private List<SkuImagesEntity> images;
 
@@ -28,6 +29,9 @@ public class SkuItemVo {
 	/*5.规格参数信息 */
 
 	private List<SpuItemAttrsGroupVo> groupAttrs;
+
+	// 商品秒杀优惠信息
+	private SeckillSkuRedisTo seckillInfo;
 
 
 }

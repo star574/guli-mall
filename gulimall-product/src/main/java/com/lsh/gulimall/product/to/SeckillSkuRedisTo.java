@@ -1,6 +1,7 @@
-package com.lsh.gulimall.seckill.to;
+package com.lsh.gulimall.product.to;
 
-import com.lsh.gulimall.seckill.vo.SkuInfoVo;
+
+import com.lsh.gulimall.product.entity.vo.SkuInfoVo;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -37,6 +38,7 @@ public class SeckillSkuRedisTo {
 	 */
 	private Integer seckillSort;
 
+	private SkuInfoVo skuInfoVo;
 
 	private Long startTime;
 
@@ -44,5 +46,4 @@ public class SeckillSkuRedisTo {
 
 	// 秒杀随机码
 	private String randomCode;
-	private SkuInfoVo skuInfoVo;
 }

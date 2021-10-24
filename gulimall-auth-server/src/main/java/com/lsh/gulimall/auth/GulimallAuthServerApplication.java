@@ -1,10 +1,13 @@
 package com.lsh.gulimall.auth;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+
+import javax.annotation.PostConstruct;
 
 
 /**
@@ -18,12 +21,15 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableRedisHttpSession // 开启spring session
+@Slf4j
 public class GulimallAuthServerApplication {
 
 	public static void main(String[] args) {
-
-		System.out.println("啦啦啦啦啦啦");
 		SpringApplication.run(GulimallAuthServerApplication.class, args);
 	}
 
+	@PostConstruct
+	public void start() {
+		log.warn("购物车服务启动完成!");
+	}
 }

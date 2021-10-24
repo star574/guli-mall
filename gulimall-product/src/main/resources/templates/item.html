@@ -15,7 +15,7 @@
         <!--品牌官方网站-->
         <div class="min">
             <ul class="header_ul_left">
-                <li class="glyphicon glyphicon-home"><a href="/static/item/shouye.html" class="aa">京东首页</a></li>
+                <li class="glyphicon glyphicon-home"><a href="https://springboot.ml" class="aa"> 首页</a></li>
                 <li class="glyphicon glyphicon-map-marker"><a href="/static/item/javascript:;">北京</a>
                     <ol id="beijing">
                         <li style="background: red;"><a href="/static/item/javascript:;" style="color: white;">北京</a>
@@ -61,7 +61,8 @@
                 <li style="border: 0;"><a href="http://auth.springboot.ml/login.html" class="aa"
                                           th:text="${session.loginUser}==null?'你好，请登录':'欢迎: '+${session.loginUser.nickname}">你好，请登录</a>
                 </li>
-                <li><a href="http://auth.springboot.ml/reg.html" class="li_2" th:if="${session.loginUser}==null">免费注册</a>
+                <li><a href="http://auth.springboot.ml/reg.html" class="li_2"
+                       th:if="${session.loginUser}==null">免费注册</a>
                     |
                 </li>
                 <li><a href="/static/item/javascript:;" class="aa">我的订单</a> |</li>
@@ -260,7 +261,7 @@
     <nav>
         <div class="nav_min">
             <div class="nav_top">
-                <div class="nav_top_one"><a href="/static/item/#"><img src="/static/item/img/111.png"/></a></div>
+                <div class="nav_top_one"><a href="https://springboot.ml"><img src="/static/item/img/111.png"/></a></div>
                 <div class="nav_top_two"><input type="text"/>
                     <button>搜索</button>
                 </div>
@@ -520,8 +521,14 @@
                             <span>￥</span>
                             <span th:text="${#numbers.formatDecimal(item.info.price,-1,2)}">4499.00</span>
                         </li>
-                        <li>
-                            预约享资格
+                        <li style="color: red" th:if="${item.seckillInfo!=null}">
+                            <span th:if="${#dates.createNow().getTime()<item.seckillInfo.startTime}">
+                                商品将会在[[${#dates.format(new java.util.Date(item.seckillInfo.startTime),"yyyy-MM-dd HH:mm:ss")}]]进行秒杀
+                            </span>
+                            <span th:if="${#dates.createNow().getTime()>=item.seckillInfo.startTime && #dates.createNow().getTime()<=item.seckillInfo.endTime}">
+                                秒杀价[[${#numbers.formatDecimal(item.seckillInfo.seckillPrice,-1,2)}]]
+                            </span>
+                            <!--                            <span th:if="${#dates.createNow().getTime()>item.seckillInfo.endTime}"></span>-->
                         </li>
                         <li>
                             <a href="/static/item/">
@@ -644,7 +651,14 @@
                         </div>
                     </div>
                     <div class="box-btns-two">
-                        <a id="addToCartA" th:attr="skuId=${item.info.skuId}">
+                        <a id="secKillA"
+                           th:if="${item.seckillInfo!=null &&  (#dates.createNow().getTime()>=item.seckillInfo.startTime && #dates.createNow().getTime()<=item.seckillInfo.endTime)}"
+                           th:attr="skuId=${item.info.skuId},sessionId=${item.seckillInfo.promotionSessionId},code=${item.seckillInfo.randomCode}">
+                            立即抢购
+                        </a>
+                        <a id="addToCartA"
+                           th:if="${item.seckillInfo==null || (#dates.createNow().getTime()<item.seckillInfo.startTime || #dates.createNow().getTime()>item.seckillInfo.endTime)}"
+                           th:attr="skuId=${item.info.skuId}">
                             加入购物车
                         </a>
                     </div>
@@ -1353,6 +1367,20 @@
         return false;
     })
 
+    // 抢购秒杀
+    $("#secKillA").click(function () {
+        let isLogin = [[${session.loginUser!=null}]]
+        if (!isLogin) {
+            alert("请先登陆!")
+            location.href = `http://auth.springboot.ml/login.html`
+        } else {
+            let killId = $(this).attr("sessionid") + "_" + $(this).attr("skuid")
+            let key = $(this).attr("code")
+            let num = $("#numInput").val()
+            location.href = `http://seckill.springboot.ml/kill?killId=${killId}&key=${key}&num=${num}`
+        }
+        return false
+    })
 
 </script>
 

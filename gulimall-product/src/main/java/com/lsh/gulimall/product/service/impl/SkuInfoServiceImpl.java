@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lsh.gulimall.common.utils.PageUtils;
 import com.lsh.gulimall.common.utils.Query;
+import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.product.dao.SkuInfoDao;
 import com.lsh.gulimall.product.entity.SkuImagesEntity;
 import com.lsh.gulimall.product.entity.SkuInfoEntity;
@@ -12,7 +13,9 @@ import com.lsh.gulimall.product.entity.SpuInfoDescEntity;
 import com.lsh.gulimall.product.entity.vo.frontvo.ItemSaleAttrsVo;
 import com.lsh.gulimall.product.entity.vo.frontvo.SkuItemVo;
 import com.lsh.gulimall.product.entity.vo.frontvo.SpuItemAttrsGroupVo;
+import com.lsh.gulimall.product.feign.SeckillFeignClient;
 import com.lsh.gulimall.product.service.*;
+import com.lsh.gulimall.product.to.SeckillSkuRedisTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +50,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 	/*线程池*/
 	@Autowired
 	private ThreadPoolExecutor threadPoolExecutor;
+
+	@Autowired
+	private SeckillFeignClient seckillFeignClient;
 
 
 	@Override
@@ -170,7 +176,6 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
 		/*5.规格参数信息 */
 		CompletableFuture<Void> attrsGroupFuture = infoCompletableFuture.thenAcceptAsync(skuInfoEntity -> {
-
 			if (skuInfoEntity != null && skuInfoEntity.getSpuId() != null) {
 				List<SpuItemAttrsGroupVo> attrsGroupVos = attrGroupService.getAttrGroupWithAttrsBySpuId(skuInfoEntity.getSpuId(), skuInfoEntity.getCatalogId());
 				skuItemVo.setGroupAttrs(attrsGroupVos);
@@ -178,10 +183,22 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
 		}, threadPoolExecutor);
 
+		// 查询当前sku是否参与秒杀
+		CompletableFuture<Void> seckillGroupFuture = infoCompletableFuture.thenAcceptAsync(skuInfoEntity -> {
+			Long skuId1 = skuInfoEntity.getSkuId();
+			R r = seckillFeignClient.getSkuSeckillInfo(skuId1);
+			if (r.getCode() == 0) {
+				if (r.getData(SeckillSkuRedisTo.class) != null) {
+					skuItemVo.setSeckillInfo(r.getData(SeckillSkuRedisTo.class));
+				}
+			}
+		}, threadPoolExecutor);
+
+
 
 		/*等待所有任务完成*/
 		try {
-			CompletableFuture.allOf(imagesFuture, saleAttrFuture, descFuture, attrsGroupFuture).get();
+			CompletableFuture.allOf(imagesFuture, saleAttrFuture, descFuture, attrsGroupFuture, seckillGroupFuture).get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

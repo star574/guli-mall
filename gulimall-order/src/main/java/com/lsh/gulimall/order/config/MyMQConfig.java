@@ -1,14 +1,12 @@
 package com.lsh.gulimall.order.config;
 
-import com.lsh.gulimall.order.entity.OrderEntity;
-import com.rabbitmq.client.Channel;
-import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,6 +90,18 @@ public class MyMQConfig {
 	public Binding orderReleaseOtherBingding() {
 		return new Binding("stock.release.stock.queue", Binding.DestinationType.QUEUE, "order-event-exchange", "order.release.other.#", null);
 	}
+
+	@Bean
+	public Queue orderSeckillOrderQueue(){
+		return  new Queue("order.seckill.order.queue", true, false, false);
+	}
+
+
+	@Bean
+	public Binding orderSeckillOrderBingding() {
+		return new Binding("order.seckill.order.queue", Binding.DestinationType.QUEUE, "order-event-exchange", "order.seckill.order", null);
+	}
+
 
 
 //	@RabbitListener(queues = {"order.release.queue"})
