@@ -2,23 +2,30 @@ package com.lsh.gulimall.order.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.PostConstruct;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 @Slf4j
 public class MyRabbitConfig {
 
+	private  RabbitTemplate rabbitTemplate;
 
-	@Autowired
-	RabbitTemplate rabbitTemplate;
+	@Primary
+	@Bean
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+		rabbitTemplate.setMessageConverter(getMessageConverter());
+		this.rabbitTemplate = rabbitTemplate;
+		setConfirmCallback();
+		return rabbitTemplate;
+	}
 
 	/**
 	 * @return: MessageConverter
@@ -36,7 +43,6 @@ public class MyRabbitConfig {
 	 * @Description: PostConstruct MyRabbitConfig 构造器创建完对象后调用方法
 	 * <p>
 	 */
-	@PostConstruct
 	public void setConfirmCallback() {
 		/*1.设置确认回调 消息发送者->交换机*/
 		/*

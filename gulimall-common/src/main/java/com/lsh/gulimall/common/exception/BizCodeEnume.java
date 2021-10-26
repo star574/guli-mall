@@ -6,6 +6,7 @@ package com.lsh.gulimall.common.exception;
 
 public enum BizCodeEnume {
 	VALID_EXCEPTION(10001, "参数格式校验失败"),
+	TOO_MANY_REQUEST(10002, "请求流量过大"),
 	PRODUCT_UP_EXCEPTION(11000, "商品上架异常"),
 	UNKNOW_EXCEPTION(10000, "未知异常"),
 	SMS_CODE_EXCEPTION(10002, "短信验证码频率过高"),

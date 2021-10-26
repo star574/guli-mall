@@ -3,6 +3,7 @@ package com.lsh.gulimall.seckill.controller;
 import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.seckill.service.SeckillService;
 import com.lsh.gulimall.seckill.to.SeckillSkuRedisTo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class SeckillController {
 
@@ -30,6 +32,7 @@ public class SeckillController {
 	@GetMapping("/currentSeckillSkus")
 	@ResponseBody
 	public R getCurrentSeckillSkus() {
+		log.warn("正在获取最新秒杀数据...");
 		List<SeckillSkuRedisTo> list = seckillService.getCurrentSeckillSkus();
 		return R.ok().data(list);
 	}

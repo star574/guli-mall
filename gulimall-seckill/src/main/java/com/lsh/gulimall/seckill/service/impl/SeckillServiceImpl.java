@@ -1,5 +1,9 @@
 package com.lsh.gulimall.seckill.service.impl;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -91,23 +95,25 @@ public class SeckillServiceImpl implements SeckillService {
 	 * redisTemplatel.opsForList().leftPushAll(key, skuIds) 从左至右存放一个list
 	 */
 	private void saveSessionInfos(List<SeckillSessionWithSkus> skuHasStockList) {
-		skuHasStockList.forEach(session -> {
-			// 获取时间戳
-			Long startTime = session.getStartTime().getTime();
-			Long endTime = session.getEndTime().getTime();
-			String key = SESSION_CACHE_PREFIX + session.getId().toString() + "_" + startTime + "_" + endTime;
+		if (skuHasStockList != null) {
+			skuHasStockList.forEach(session -> {
+				// 获取时间戳
+				Long startTime = session.getStartTime().getTime();
+				Long endTime = session.getEndTime().getTime();
+				String key = SESSION_CACHE_PREFIX + session.getId().toString() + "_" + startTime + "_" + endTime;
 
-			// 幂等性 redis是否已经存在活动信息
-			if (!redisTemplatel.hasKey(key)) {
-				//收集商品skuid
-				// s.getPromotionSessionId()+"_"+s.getSkuId() 避免场次中的商品重复
-				List<String> skuIds = session.getRelationEntityList().stream().map(s -> s.getPromotionSessionId() + "_" + s.getSkuId().toString()).collect(Collectors.toList());
-				// 放入redis
-				redisTemplatel.opsForList().leftPushAll(key, skuIds);
-			} else {
-				log.info("已经存在活动:{}", key);
-			}
-		});
+				// 幂等性 redis是否已经存在活动信息
+				if (!redisTemplatel.hasKey(key)) {
+					//收集商品skuid
+					// s.getPromotionSessionId()+"_"+s.getSkuId() 避免场次中的商品重复
+					List<String> skuIds = session.getRelationEntityList().stream().map(s -> s.getPromotionSessionId() + "_" + s.getSkuId().toString()).collect(Collectors.toList());
+					// 放入redis
+					redisTemplatel.opsForList().leftPushAll(key, skuIds);
+				} else {
+					log.info("已经存在活动:{}", key);
+				}
+			});
+		}
 	}
 
 	private void saveSessionSkuInfos(List<SeckillSessionWithSkus> skuHasStockList) {
@@ -164,41 +170,57 @@ public class SeckillServiceImpl implements SeckillService {
 	 * @Description: 当前时间可以秒杀的商品
 	 */
 	@Override
+	@SentinelResource(value = "getCurrentSeckillSkusResource", blockHandler = "getCurrentSeckillSkusBlockHandler")
 	public List<SeckillSkuRedisTo> getCurrentSeckillSkus() {
 		List<SeckillSkuRedisTo> list = new ArrayList<>();
 		// 1、确定当前时间的秒杀场次
 		// 获取当前时间戳
 		long now = System.currentTimeMillis();
 		// 匹配key
-		Set<String> sessionKeys = redisTemplatel.keys(SESSION_CACHE_PREFIX + "*");
-		for (String key : sessionKeys) {
-			// key : SESSION_CACHE_PREFIX + session.getId().toString() + startTime + "_" + endTime;
-			String[] split = key.replace(SESSION_CACHE_PREFIX, "").split("_");
-			long startTime = Long.parseLong(split[1]);
-			long endTime = Long.parseLong(split[2]);
+		// 使用sentinel 保护资源 资源名称 seckillSkus
+		try (Entry seckillSkus = SphU.entry("seckillSkus")) {
+			Set<String> sessionKeys = redisTemplatel.keys(SESSION_CACHE_PREFIX + "*");
+			for (String key : sessionKeys) {
+				// key : SESSION_CACHE_PREFIX + session.getId().toString() + startTime + "_" + endTime;
+				String[] split = key.replace(SESSION_CACHE_PREFIX, "").split("_");
+				long startTime = Long.parseLong(split[1]);
+				long endTime = Long.parseLong(split[2]);
 
-			// 符合秒杀场次
-			// 2、获取当前场次的商品信息
-			if (now > startTime && now < endTime) {
-				Long size = redisTemplatel.opsForList().size(key);
-				List<String> range = redisTemplatel.opsForList().range(key, 0, size - 1);
-				BoundHashOperations<String, String, String> boundHashOps = redisTemplatel.boundHashOps(SKUKILL_CACHE_PREFIX);
-				if (range != null) {
-					List<String> items = boundHashOps.multiGet(range);
-					List<SeckillSkuRedisTo> collect = JSON.parseObject(items.toString(), new TypeToken<List<SeckillSkuRedisTo>>() {
-					}.getType());
+				// 符合秒杀场次
+				// 2、获取当前场次的商品信息
+				if (now > startTime && now < endTime) {
+					Long size = redisTemplatel.opsForList().size(key);
+					List<String> range = redisTemplatel.opsForList().range(key, 0, size - 1);
+					BoundHashOperations<String, String, String> boundHashOps = redisTemplatel.boundHashOps(SKUKILL_CACHE_PREFIX);
+					if (range != null) {
+						List<String> items = boundHashOps.multiGet(range);
+						List<SeckillSkuRedisTo> collect = JSON.parseObject(items.toString(), new TypeToken<List<SeckillSkuRedisTo>>() {
+						}.getType());
 //					List<SeckillSkuRedisTo> collect = range.stream().map(s -> {
 //						SeckillSkuRedisTo seckillSkuRedisTo = JSON.parseObject(String.valueOf(boundHashOps.get(s)), SeckillSkuRedisTo.class);
 ////						seckillSkuRedisTo.setRandomCode(null);
 ////						log.warn("秒杀商品 : {}", seckillSkuRedisTo);
 //						return seckillSkuRedisTo;
 //					}).collect(Collectors.toList());
-					list.addAll(collect);
+						list.addAll(collect);
+					}
 				}
 			}
+		} catch (BlockException e) {
+			log.error("资源限流{}", e.getMessage());
+			e.printStackTrace();
 		}
 		return list;
 	}
+
+	// 熔断降级调用的方法
+	public List<SeckillSkuRedisTo> getCurrentSeckillSkusBlockHandler(BlockException blockException) {
+		blockException.printStackTrace();
+		log.warn("注解方式熔断降级 getCurrentSeckillSkusBlockHandler");
+		ArrayList<SeckillSkuRedisTo> list = new ArrayList<>();
+		return list;
+	}
+
 
 	// 返回当前商品是否参与秒杀
 	@Override

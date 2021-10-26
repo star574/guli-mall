@@ -539,7 +539,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 			} catch (Exception e) {
 				e.printStackTrace();
 				// TODO 将没发送成功发送的消息重试发送
-
 			}
 		}
 	}

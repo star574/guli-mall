@@ -1,4 +1,4 @@
-package com.lsh.gulimall.seckill.config;
+package com.example.gulimall.thirdparty.config;
 
 import com.alibaba.csp.sentinel.adapter.servlet.callback.UrlBlockHandler;
 import com.alibaba.csp.sentinel.adapter.servlet.callback.WebCallbackManager;
