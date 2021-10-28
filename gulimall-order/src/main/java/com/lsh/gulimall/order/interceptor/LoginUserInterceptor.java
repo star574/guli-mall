@@ -35,7 +35,7 @@ public class LoginUserInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         if (loginUser == null) {
             request.getSession().setAttribute("msg", "请先进行登陆!");
-            response.sendRedirect("http://auth.springboot.ml/login.html?url=" + "http://order.springboot.ml" + requestURI);
+            response.sendRedirect("http://auth.gulimall.com/login.html?url=" + "http://order.gulimall.com" + requestURI);
             return false;
         }
         threadLocal.set(loginUser);

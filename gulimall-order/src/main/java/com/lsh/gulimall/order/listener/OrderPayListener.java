@@ -33,7 +33,7 @@ public class OrderPayListener {
      * @return: String
      * @Description: 支付宝支付成功异步通知 返回success 否则支付宝会再次通知（最大努力通知方案） 直到超过24小时
      */
-    // alipay.notify_url=https://order.springboot.ml/order/pay/alipay/success
+    // alipay.notify_url=https://order.gulimall.com/order/pay/alipay/success
     @PostMapping("/order/pay/alipay/success")
     public String paySuccess(PayAsyncVo payAsyncVo, HttpServletRequest request) throws AlipayApiException, UnsupportedEncodingException {
         log.warn("收到支付宝支付结果异步通知!");

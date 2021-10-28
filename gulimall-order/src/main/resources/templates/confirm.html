@@ -744,7 +744,7 @@
             </p>
             <p class="yfze_b">寄送至： <span id="receiveAddressEle"></span> 收货人：<span id="receiverEle"></span></p>
         </div>
-        <form action="https://order.springboot.ml/submitOrder" method="post">
+        <form action="https://order.gulimall.com/submitOrder" method="post">
             <input id="addrId" type="hidden" name="addrId">
             <!--            <input type="hidden" name="payType" value="">-->
             <input id="payPrice" type="hidden" name="payPrice" th:value="${orderConfirmData.getPayPrice()}">
@@ -940,7 +940,7 @@
         <a href="/static/order/confirm/##">：4006561155 </a>
     </p>
     <p class="p1">
-        <a href="/static/order/confirm/##"> Copyright © 2004-2017 谷粒学院springboot.ml 版权所有</a>|
+        <a href="/static/order/confirm/##"> Copyright © 2004-2017 谷粒学院gulimall.com 版权所有</a>|
         <a href="/static/order/confirm/##"> 消费者维权热线：4006067733 经营证照</a>|
     </p>
     <p class="p1">
@@ -1004,7 +1004,7 @@
         /*发送ajax请求 获取运费信息*/
         /*提交地址id*/
         $("#addrId").val(addrId)
-        $.get("https://springboot.ml/api/ware/wareinfo/fare?addrId=" + addrId, function (res) {
+        $.get("https://gulimall.com/api/ware/wareinfo/fare?addrId=" + addrId, function (res) {
             $("#fareEle").text(res.data.fare)
             let dasdadas = [[${orderConfirmData.payPrice}]] * 1.0 + res.data.fare * 1.0
             /*提交的总额信息*/

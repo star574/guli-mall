@@ -118,7 +118,7 @@ public class LoginController {
                 attributes.addFlashAttribute("errors", errors);
             });
             //1.2 重定向到注册页
-            return "redirect:http://auth.springboot.ml/reg.html";
+            return "redirect:http://auth.gulimall.com/reg.html";
         } else {//2.若JSR303校验通过
 
             //判断验证码是否正确
@@ -132,19 +132,19 @@ public class LoginController {
                 R r = memberFeignClient.register(registerVo);
                 if (r.getCode() == 0) {
                     //调用成功，重定向登录页
-                    return "redirect:http://auth.springboot.ml/login.html";
+                    return "redirect:http://auth.gulimall.com/login.html";
                 } else {
                     //调用失败，返回注册页并显示错误信息
                     String msg = (String) r.get("msg");
                     errors.put("msg", msg);
                     attributes.addFlashAttribute("errors", errors);
-                    return "redirect:http://auth.springboot.ml/reg.html";
+                    return "redirect:http://auth.gulimall.com/reg.html";
                 }
             } else {
                 //2.2 验证码错误
                 errors.put("code", "验证码错误");
                 attributes.addFlashAttribute("errors", errors);
-                return "redirect:http://auth.springboot.ml/reg.html";
+                return "redirect:http://auth.gulimall.com/reg.html";
             }
         }
     }
@@ -160,12 +160,12 @@ public class LoginController {
             if (httpSession.getAttribute("url") != null) {
                 System.out.println("redirect:" + httpSession.getAttribute("url"));
                 Cookie cookie = new Cookie(CartConstant.TEMP_USER_COOKIE_NAME, data.getId().toString());
-                cookie.setDomain("springboot.ml");
+                cookie.setDomain("gulimall.com");
                 cookie.setMaxAge(CartConstant.TEMP_USER_COOKIE_TIMEOUT);
                 response.addCookie(cookie);
                 return "redirect:" + httpSession.getAttribute("url");
             }
-            return "redirect:http://springboot.ml";
+            return "redirect:http://gulimall.com";
         }
         System.out.println("登录失败: " + login.getData("msg", new TypeReference<String>() {
         }));
@@ -175,7 +175,7 @@ public class LoginController {
         }));
 
         redirectAttributes.addFlashAttribute("errors", stringStringHashMap);
-        return "redirect:http://auth.springboot.ml/login.html";
+        return "redirect:http://auth.gulimall.com/login.html";
     }
 
 
@@ -187,7 +187,7 @@ public class LoginController {
             httpSession.setAttribute("url", url);
         }
         if (attribute != null) {
-            return "redirect:http://springboot.ml";
+            return "redirect:http://gulimall.com";
         }
 
         return "login";
@@ -204,7 +204,7 @@ public class LoginController {
         if (attribute != null) {
             httpSession.removeAttribute(AuthServerConstant.LOGIN_USER);
         }
-        return "redirect:http://springboot.ml";
+        return "redirect:http://gulimall.com";
     }
 
 }

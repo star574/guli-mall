@@ -28,6 +28,7 @@ public class PayWebController {
 		// 返回付款页面
 		if (payVo != null) {
 			String result = alipayTemplate.pay(payVo);
+			System.out.println(result);
 			return result;
 		}
 		return JSON.toJSONString(R.error("订单已关闭,无法继续支付"));

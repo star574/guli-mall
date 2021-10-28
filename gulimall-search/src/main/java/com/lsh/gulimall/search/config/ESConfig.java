@@ -31,7 +31,7 @@ public class ESConfig {
 
 		RestClientBuilder builder = null;
 		// 可以指定多个es
-		HttpHost host=new HttpHost("47.101.55.148", 9200, HttpHost.DEFAULT_SCHEME_NAME);
+		HttpHost host=new HttpHost("192.168.2.88", 9200, HttpHost.DEFAULT_SCHEME_NAME);
 		builder=RestClient.builder(host);
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 		credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "luoshiheng574"));
