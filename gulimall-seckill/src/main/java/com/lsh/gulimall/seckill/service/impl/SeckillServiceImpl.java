@@ -288,21 +288,24 @@ public class SeckillServiceImpl implements SeckillService {
 		MemberRespVo memberRespVo = LoginUserInterceptor.threadLocal.get();
 		Long ttl = endTime - now;
 		String redis_key = memberRespVo.getId() + "_" + killId;
+		// 过期时间: 活动结束
 		Boolean aBoolean = redisTemplatel.opsForValue().setIfAbsent(redis_key, num.toString(), ttl, TimeUnit.MILLISECONDS);
 		if (aBoolean) {
 			// 占位成功   减分布式信号量 acquire阻塞的 tryAcquire非阻塞
 			try {
+				// tryAcquire redis信号量 缓存减库存
 				boolean b = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + key).tryAcquire(num, 200, TimeUnit.MILLISECONDS);
 				// 拿到信号量 秒杀成功 快速下单 发送mq消息 直接生成一个订单号
 				if (b) {
-					String orderSn = IdWorker.getTimeId();
-					SeckillOrderTo seckillOrderTo = new SeckillOrderTo();
+					String orderSn = IdWorker.getTimeId(); //订单号
+					SeckillOrderTo seckillOrderTo = new SeckillOrderTo(); // 订单信息
 					seckillOrderTo.setOrderSn(orderSn);
-					seckillOrderTo.setMemberId(memberRespVo.getId());
-					seckillOrderTo.setNum(num);
-					seckillOrderTo.setSkuId(seckillSkuRedisTo.getSkuId());
-					seckillOrderTo.setPromotionSessionId(seckillSkuRedisTo.getPromotionSessionId());
-					seckillOrderTo.setSeckillPrice(seckillSkuRedisTo.getSeckillPrice());
+					seckillOrderTo.setMemberId(memberRespVo.getId()); // 购买人
+					seckillOrderTo.setNum(num); //数量
+					seckillOrderTo.setSkuId(seckillSkuRedisTo.getSkuId()); // 商品id
+					seckillOrderTo.setPromotionSessionId(seckillSkuRedisTo.getPromotionSessionId()); // 活动场次
+					seckillOrderTo.setSeckillPrice(seckillSkuRedisTo.getSeckillPrice()); // 秒杀价格
+					// 发送到消息队列
 					rabbitTemplate.convertAndSend("order-event-exchange", "order.seckill.order", seckillOrderTo);
 					// 计算一下秒杀耗时
 					long end = System.currentTimeMillis();

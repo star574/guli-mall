@@ -44,8 +44,19 @@ public class SeckillController {
 		return R.ok().data(seckillSkuRedisTo);
 	}
 
+	/**
+	 * //TODO
+	 *
+	 * @param killId
+	 * @param key
+	 * @param num
+	 * @param model
+	 * @return: String
+	 * @Description: 秒杀实现
+	 */
 	@GetMapping("/kill")
 	public String seckill(@RequestParam("killId") String killId, @RequestParam("key") String key, @RequestParam("num") Integer num, Model model) {
+
 		// 秒杀返回订单号
 		String orderSn = seckillService.kill(killId, key, num);
 		model.addAttribute("orderSn", orderSn);
