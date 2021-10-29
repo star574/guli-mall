@@ -33,6 +33,12 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEnt
 		return new PageUtils(page);
 	}
 
+	@Override
+	public String test() {
+
+		return null;
+	}
+
 	/**
 	 * @param message
 	 * @return: void
