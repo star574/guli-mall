@@ -28,7 +28,6 @@ public class SckillSentinelConfig {
 		WebCallbackManager.setUrlBlockHandler(new UrlBlockHandler() {
 			@Override
 			public void blocked(HttpServletRequest request, HttpServletResponse response, BlockException ex) throws IOException {
-
 				response.setStatus(BizCodeEnume.TOO_MANY_REQUEST.getCode());
 				response.setCharacterEncoding("UTF-8");
 				response.setContentType("application/json");

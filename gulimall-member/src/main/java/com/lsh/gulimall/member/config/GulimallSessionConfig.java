@@ -22,10 +22,8 @@ public class GulimallSessionConfig {
 
 	/*自定义redis序列化器*/
 	@Bean
-	public RedisSerializer<Object> springSessionDefaultRedisSerializer(){
+	public RedisSerializer<Object> springSessionDefaultRedisSerializer() {
 
 		return new GenericJackson2JsonRedisSerializer();
 	}
-
-
 }

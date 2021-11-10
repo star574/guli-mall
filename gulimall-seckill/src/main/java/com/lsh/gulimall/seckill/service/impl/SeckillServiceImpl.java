@@ -255,6 +255,16 @@ public class SeckillServiceImpl implements SeckillService {
 	// TODO 秒杀后续流程
 	// TODO 生成订单应该发往延时队列 处理支付逾期
 	// TODO 定时任务 定期清理redis过期活动
+
+	/**
+	 * //TODO
+	 *
+	 * @param killId 秒杀skuId
+	 * @param key    随机码
+	 * @param num    秒杀数量
+	 * @return: String
+	 * @Description:
+	 */
 	@Override
 	public String kill(String killId, String key, Integer num) {
 
