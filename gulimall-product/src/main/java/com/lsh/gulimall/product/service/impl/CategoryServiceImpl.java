@@ -272,6 +272,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 				e.printStackTrace();
 			}
 			/*查询缓存中没有数据*/

@@ -77,6 +77,7 @@ public class ThreadTest {
 			try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 				e.printStackTrace();
 			}
 			System.out.println("任务2");

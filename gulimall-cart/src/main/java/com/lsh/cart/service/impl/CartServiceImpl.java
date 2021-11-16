@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
@@ -106,7 +105,8 @@ public class CartServiceImpl implements CartService {
             boundHashOps.put(skuId.toString(), s);
             log.info("添加购物车成功" + cartItem);
             return cartItem;
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
             e.printStackTrace();
         }
         return null;

@@ -65,7 +65,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 	StringRedisTemplate redisTemplate;
 
 	@Override
-	public void unlockStock(StockLockedTo lockedTo) {
+	public void unlockStockByOrder(StockLockedTo lockedTo) {
 		StockDetailTo detailTo = lockedTo.getDetailTo();
 		/*先去数据库查询有没有这条工作单 有：库存锁定成功 其他服务出现问题 没有：库存本身锁定失败 已经回滚 无需处理（解锁）*/
 		Long detailId = detailTo.getId();
@@ -100,7 +100,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
 
 	@Override
 	@Transactional
-	public void unlockStock(OrderTo order) {
+	public void unlockStockByOrder(OrderTo order) {
 		WareOrderTaskEntity wareOrderTask = wareOrderTaskService.getOrderTaskByOrderSn(order.getOrderSn());
 		if (wareOrderTask == null) {
 			// TODO 增加信号量

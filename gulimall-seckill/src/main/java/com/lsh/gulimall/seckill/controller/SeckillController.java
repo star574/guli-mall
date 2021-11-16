@@ -57,9 +57,13 @@ public class SeckillController {
 	@GetMapping("/kill")
 	public String seckill(@RequestParam("killId") String killId, @RequestParam("key") String key, @RequestParam("num") Integer num, Model model) {
 
-		// 秒杀返回订单号
-		String orderSn = seckillService.kill(killId, key, num);
-		model.addAttribute("orderSn", orderSn);
+		try {
+			// 秒杀返回订单号
+			String orderSn = seckillService.kill(killId, key, num);
+			model.addAttribute("orderSn", orderSn);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "success";
 	}
 

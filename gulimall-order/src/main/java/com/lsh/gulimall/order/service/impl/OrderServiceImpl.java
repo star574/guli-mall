@@ -45,7 +45,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -215,7 +214,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 		try {
 			/*必须调用get方法或者join方法 等待异步执行完成*/
 			completableFuture.get();
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -354,7 +353,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 		List<OrderItemEntity> orderEntityList = buildOrderItems(orderSn);
 
 		/*3.计算价格相关*/
-		computePrice(OrderEntity, orderEntityList);
+		if (OrderEntity != null && orderEntityList != null) {
+			computePrice(OrderEntity, orderEntityList);
+		}
 		orderCreateTo.setOrder(OrderEntity);
 		orderCreateTo.setItems(orderEntityList);
 		return orderCreateTo;
@@ -551,7 +552,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 		OrderEntity orderByOrderSn = this.getOrderByOrderSn(orderSn);
 
 		// 过期无法生成支付信息
-		if (orderByOrderSn.getStatus().intValue()!= OrderStatusEnum.CREATE_NEW.getCode()) {
+		if (orderByOrderSn.getStatus().intValue() != OrderStatusEnum.CREATE_NEW.getCode()) {
 			return null;
 		}
 		// 订单项

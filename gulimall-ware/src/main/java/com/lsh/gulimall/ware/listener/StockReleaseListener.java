@@ -1,20 +1,11 @@
 package com.lsh.gulimall.ware.listener;
 
-import com.alibaba.fastjson.TypeReference;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lsh.gulimall.common.to.mq.OrderTo;
-import com.lsh.gulimall.common.to.mq.StockDetailTo;
 import com.lsh.gulimall.common.to.mq.StockLockedTo;
-import com.lsh.gulimall.common.utils.R;
 import com.lsh.gulimall.ware.dao.WareSkuDao;
-import com.lsh.gulimall.ware.entity.WareOrderTaskDetailEntity;
-import com.lsh.gulimall.ware.entity.WareOrderTaskEntity;
-import com.lsh.gulimall.ware.entity.vo.OrderVo;
-import com.lsh.gulimall.ware.feign.OrderFeignClient;
 import com.lsh.gulimall.ware.service.WareOrderTaskDetailService;
 import com.lsh.gulimall.ware.service.WareOrderTaskService;
 import com.lsh.gulimall.ware.service.WareSkuService;
-import com.lsh.gulimall.ware.service.impl.WareSkuServiceImpl;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -24,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.function.Consumer;
 
 @Service
 @RabbitListener(queues = {"stock.release.stock.queue"})
@@ -61,7 +50,7 @@ public class StockReleaseListener {
 		log.warn("下单超时 收到解锁库存的信息-->{}", lockedTo);
 		/*解锁库存*/
 		try {
-			wareSkuService.unlockStock(lockedTo);
+			wareSkuService.unlockStockByOrder(lockedTo);
 			/*解锁成功*/
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (Exception e) {
@@ -82,7 +71,7 @@ public class StockReleaseListener {
 	public void handleOrderCloseRelease(OrderTo order, Message message, Channel channel) throws IOException {
 		try {
 			log.warn("订单已经关闭 收到解锁库存的信息-->{}", order);
-			wareSkuService.unlockStock(order);
+			wareSkuService.unlockStockByOrder(order);
 			/*手动确认消息*/
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 		} catch (Exception e) {
