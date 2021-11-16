@@ -44,8 +44,8 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static HttpResponse doGet(String host, String path, String method,
-	                                 Map<String, String> headers,
-	                                 Map<String, String> querys)
+									 Map<String, String> headers,
+									 Map<String, String> querys)
 			throws Exception {
 		HttpClient httpClient = wrapClient(host);
 
@@ -302,9 +302,7 @@ public class HttpUtils {
 			ClientConnectionManager ccm = httpClient.getConnectionManager();
 			SchemeRegistry registry = ccm.getSchemeRegistry();
 			registry.register(new Scheme("https", 443, ssf));
-		} catch (KeyManagementException ex) {
-			throw new RuntimeException(ex);
-		} catch (NoSuchAlgorithmException ex) {
+		} catch (KeyManagementException | NoSuchAlgorithmException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
