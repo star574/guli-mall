@@ -1,6 +1,6 @@
 package com.lsh.gulimall.common.utils;
 
-import org.apache.commons.lang.StringUtils;
+import com.alibaba.nacos.client.utils.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -29,7 +29,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@SuppressWarnings("all")
 public class HttpUtils {
 
 	/**
@@ -70,9 +70,9 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static HttpResponse doPost(String host, String path, String method,
-	                                  Map<String, String> headers,
-	                                  Map<String, String> querys,
-	                                  Map<String, String> bodys)
+									  Map<String, String> headers,
+									  Map<String, String> querys,
+									  Map<String, String> bodys)
 			throws Exception {
 		HttpClient httpClient = wrapClient(host);
 
@@ -108,9 +108,9 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static HttpResponse doPost(String host, String path, String method,
-	                                  Map<String, String> headers,
-	                                  Map<String, String> querys,
-	                                  String body)
+									  Map<String, String> headers,
+									  Map<String, String> querys,
+									  String body)
 			throws Exception {
 		HttpClient httpClient = wrapClient(host);
 
@@ -139,9 +139,9 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static HttpResponse doPost(String host, String path, String method,
-	                                  Map<String, String> headers,
-	                                  Map<String, String> querys,
-	                                  byte[] body)
+									  Map<String, String> headers,
+									  Map<String, String> querys,
+									  byte[] body)
 			throws Exception {
 		HttpClient httpClient = wrapClient(host);
 
@@ -169,9 +169,9 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static HttpResponse doPut(String host, String path, String method,
-	                                 Map<String, String> headers,
-	                                 Map<String, String> querys,
-	                                 String body)
+									 Map<String, String> headers,
+									 Map<String, String> querys,
+									 String body)
 			throws Exception {
 		HttpClient httpClient = wrapClient(host);
 
@@ -199,9 +199,9 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static HttpResponse doPut(String host, String path, String method,
-	                                 Map<String, String> headers,
-	                                 Map<String, String> querys,
-	                                 byte[] body)
+									 Map<String, String> headers,
+									 Map<String, String> querys,
+									 byte[] body)
 			throws Exception {
 		HttpClient httpClient = wrapClient(host);
 
@@ -229,8 +229,8 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static HttpResponse doDelete(String host, String path, String method,
-	                                    Map<String, String> headers,
-	                                    Map<String, String> querys)
+										Map<String, String> headers,
+										Map<String, String> querys)
 			throws Exception {
 		HttpClient httpClient = wrapClient(host);
 
@@ -302,7 +302,9 @@ public class HttpUtils {
 			ClientConnectionManager ccm = httpClient.getConnectionManager();
 			SchemeRegistry registry = ccm.getSchemeRegistry();
 			registry.register(new Scheme("https", 443, ssf));
-		} catch (KeyManagementException | NoSuchAlgorithmException ex) {
+		} catch (KeyManagementException ex) {
+			throw new RuntimeException(ex);
+		} catch (NoSuchAlgorithmException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
