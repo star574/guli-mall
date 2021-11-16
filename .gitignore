@@ -17,5 +17,5 @@ buildNumber.properties
 **/.gitignore
 **/.rebel.xml.bak
 **/*/rebel.xml
-renren-generator
 代码生成器: renren-generator
+/renren-generator/
