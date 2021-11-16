@@ -21,7 +21,7 @@ pipeline {
     stages {
     stage('拉取代码') {
       steps {
-        git(url: 'https://github.com/star574/gmp.git', credentialsId: 'github-token', branch: 'master', changelog: true, poll: false)
+        git(url: 'https://github.com/star574/guli-mall.git', credentialsId: 'github-token', branch: 'dev', changelog: true, poll: false)
         sh 'echo 正在构建:  $PROJECT_VERSION  版本号:  $PROJECT_VERSION'
       }
     }
@@ -30,7 +30,7 @@ pipeline {
         container ('maven') {
           withCredentials([string(credentialsId: "$SONAR_CREDENTIAL_ID", variable: 'SONAR_TOKEN')]) {
             withSonarQubeEnv('sonar') {
-             sh "mvn sonar:sonar -o -gs `pwd`/mvn-setting.xml -Dsonar.login=$SONAR_TOKEN"
+             sh "mvn sonar:sonar -o -gs `pwd`/guli-mall/mvn-setting.xml -Dsonar.login=$SONAR_TOKEN"
             }
           }
           timeout(time: 1, unit: 'HOURS') {
