@@ -16,28 +16,28 @@ pipeline {
 
       }
     }
-    stage('sonarqube 代码质量分析') {
-      steps {
-        container('maven') {
-          withCredentials([string(credentialsId: "$SONAR_CREDENTIAL_ID", variable: 'SONAR_TOKEN')]) {
-            withSonarQubeEnv('sonar') {
-              sh "mvn sonar:sonar  -gs `pwd`/mvn-settings.xml -Dsonar.login=$SONAR_TOKEN"
-            }
-
-          }
-
-          timeout(time: 1, unit: 'HOURS') {
-            waitForQualityGate true
-          }
-
-        }
-
-      }
-    }
+//     stage('sonarqube 代码质量分析') {
+//       steps {
+//         container('maven') {
+//           withCredentials([string(credentialsId: "$SONAR_CREDENTIAL_ID", variable: 'SONAR_TOKEN')]) {
+//             withSonarQubeEnv('sonar') {
+//               sh "mvn sonar:sonar  -gs `pwd`/mvn-settings.xml -Dsonar.login=$SONAR_TOKEN"
+//             }
+//
+//           }
+//
+//           timeout(time: 1, unit: 'HOURS') {
+//             waitForQualityGate true
+//           }
+//
+//         }
+//
+//       }
+//     }
     stage('构建 & 推送最新镜像') {
       steps {
         container('maven') {
-          sh 'mvn -o -Dmaven.test.skip=true -gs `pwd`/mvn-settings.xml clean package'
+          sh 'mvn -o -Dmaven.test.skip=true -gs `pwd`/mvn-settings.xml clean install'
           sh 'cd $PROJECT_NAME && docker build --no-cache -f Dockerfile -t $REGISTRY/$ALIYUNHUB_NAMESPACE/$PROJECT_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(passwordVariable : 'DOCKER_PASSWORD' ,usernameVariable : 'DOCKER_USERNAME' ,credentialsId : "$ALIYUN_CREDENTIAL_ID" ,)]) {
             sh 'echo "$DOCKER_PASSWORD" | docker login $REGISTRY -u "$DOCKER_USERNAME" --password-stdin'
