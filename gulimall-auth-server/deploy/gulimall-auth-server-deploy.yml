@@ -14,8 +14,6 @@ metadata:
 spec:
   # 副本数
   replicas: 1
-  nodeSelector:
-    deploy.type: k8s-node3
   selector:
     matchLabels:
       app: gulimall-auth-server
@@ -24,6 +22,7 @@ spec:
       labels:
         app: gulimall-auth-server
     spec:
+      nodeName: k8s-node3
       containers:
         # 容器名
         - name: gulimall-auth-server
