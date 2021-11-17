@@ -5,4 +5,4 @@ VOLUME /tmp
 COPY ./target/*.jar /root/app.jar
 EXPOSE 8080
 RUN bash -c 'touch /root/app.jar'
-CMD java -jar app.jar -Xms128m -Xmx500m --spring.profiles.active=prod
+CMD java -jar  -Xms128m -Xmx500m app.jar --spring.profiles.active=prod
