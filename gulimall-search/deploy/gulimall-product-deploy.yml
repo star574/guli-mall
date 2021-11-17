@@ -74,7 +74,7 @@ spec:
       port: 8080
       # targetPort 容器端口
       targetPort: 8080
-      nodePort: 20013
+      nodePort: 31013
   selector:
     app: gulimall-search
   type: NodePort
