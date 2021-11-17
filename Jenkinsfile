@@ -53,7 +53,7 @@ pipeline {
       stage('发布当前版本'){
           when{
             expression{
-              return params.PROJECT_VERSION =~ /v.*/
+              return params.PROJECT_VERSION =~ /latest/
             }
           }
           steps {
