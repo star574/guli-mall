@@ -46,8 +46,8 @@ pipeline {
 
       stage('部署到到k8s') {
           steps {
-            input(id: 'deploy-to-dev-$PROJECT_NAME', message: '是否发布$PROJECT_NAME?')
-            kubernetesDeploy(configs: '$PROJECT_NAME/deploy/**', enableConfigSubstitution: true, kubeconfigId: "$KUBECONFIG_CREDENTIAL_ID")
+            input(id: "deploy-to-dev-$PROJECT_NAME", message: "是否发布$PROJECT_NAME?"")
+            kubernetesDeploy(configs: "$PROJECT_NAME/deploy/**", enableConfigSubstitution: true, kubeconfigId: "$KUBECONFIG_CREDENTIAL_ID")
           }
       }
       stage('发布当前版本'){
