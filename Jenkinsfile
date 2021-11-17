@@ -33,11 +33,13 @@ pipeline {
     }
     stage('部署到到k8s') {
       steps {
+       container('maven') {
         withCredentials([usernamePassword(passwordVariable : 'DOCKER_PASSWORD' ,usernameVariable : 'DOCKER_USERNAME' ,credentialsId : "$ALIYUN_CREDENTIAL_ID" ,)]) {
             input(id: "deploy-to-dev-$PROJECT_NAME", message: "是否发布$PROJECT_NAME?")
             sh 'echo "$DOCKER_PASSWORD" | docker login $REGISTRY -u "$DOCKER_USERNAME" --password-stdin'
             sh 'docker pull $REGISTRY/$ALIYUNHUB_NAMESPACE/$PROJECT_NAME:latest '
             kubernetesDeploy(configs: "$PROJECT_NAME/deploy/**", enableConfigSubstitution: true, kubeconfigId: "$KUBECONFIG_CREDENTIAL_ID")
+        }
         }
       }
     }
