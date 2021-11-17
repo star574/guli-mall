@@ -6,7 +6,7 @@ pipeline {
 
   }
   stages {
-    stage('拉取代码') {
+    stage('拉取代码并编译') {
       steps {
            container('maven') {
               git(url: 'https://github.com/star574/guli-mall.git', credentialsId: 'github-token', branch: 'dev', changelog: true, poll: false)
@@ -15,7 +15,7 @@ pipeline {
         }
       }
     }
-    stage('sonarqube 编译并代码质量分析') {
+    stage('sonarqube 代码质量分析') {
           steps {
             container('maven') {
               withCredentials([string(credentialsId: "$SONAR_CREDENTIAL_ID", variable: 'SONAR_TOKEN')]) {
