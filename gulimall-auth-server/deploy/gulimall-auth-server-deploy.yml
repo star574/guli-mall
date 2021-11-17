@@ -14,6 +14,9 @@ metadata:
 spec:
   # 副本数
   replicas: 1
+    placement:
+      constraints:
+        - node.hostname == k8s-node3
   selector:
     matchLabels:
       app: gulimall-auth-server
@@ -25,7 +28,7 @@ spec:
       containers:
         # 容器名
         - name: gulimall-auth-server
-        # 镜像 动态取值
+          # 镜像 动态取值
           image: $REGISTRY/$ALIYUNHUB_NAMESPACE/$PROJECT_NAME:latest
           ports:
             - name: tcp-8080
