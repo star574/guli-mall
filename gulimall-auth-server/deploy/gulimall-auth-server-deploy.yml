@@ -18,6 +18,7 @@ spec:
     matchLabels:
       app: gulimall-auth-server
   template:
+    metadata:
       labels:
         app: gulimall-auth-server
     spec:
