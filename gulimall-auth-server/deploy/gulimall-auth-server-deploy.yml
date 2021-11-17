@@ -34,7 +34,7 @@ spec:
             # 资源限制
             limits:
               cpu: 1000m
-              memory: 300Mi
+              memory: 500Mi
             requests:
               cpu: 10m
               memory: 10Mi
