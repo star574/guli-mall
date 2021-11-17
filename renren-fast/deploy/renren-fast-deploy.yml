@@ -18,6 +18,7 @@ spec:
     matchLabels:
       app: renren-fast
   template:
+    metadata:
       labels:
         app: renren-fast
     spec:

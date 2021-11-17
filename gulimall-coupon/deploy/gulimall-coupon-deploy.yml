@@ -18,6 +18,7 @@ spec:
     matchLabels:
       app: gulimall-coupon
   template:
+    metadata:
       labels:
         app: gulimall-coupon
     spec:

@@ -18,6 +18,7 @@ spec:
     matchLabels:
       app: gulimall-third-party
   template:
+    metadata:
       labels:
         app: gulimall-third-party
     spec:
