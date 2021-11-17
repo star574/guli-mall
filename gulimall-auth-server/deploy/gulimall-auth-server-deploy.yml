@@ -14,9 +14,6 @@ metadata:
 spec:
   # 副本数
   replicas: 1
-    placement:
-      constraints:
-        - node.hostname == k8s-node3
   selector:
     matchLabels:
       app: gulimall-auth-server
