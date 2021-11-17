@@ -22,7 +22,6 @@ spec:
       labels:
         app: gulimall-auth-server
     spec:
-      nodeName: k8s-node3
       containers:
         # 容器名
         - name: gulimall-auth-server
