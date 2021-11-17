@@ -25,7 +25,7 @@ spec:
         # 容器名
         - name: gulimall-ware
         # 镜像 动态取值
-          image: $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME
+          image: $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:$PROJECT_VERSION
           ports:
             - name: tcp-8080
               containerPort: 8080
