@@ -19,15 +19,15 @@ public class RedissonConfig {
 	@Value("${spring.redis.host}")
 	private String ipAddr;
 
-	@Value("${spring.redis.password}")
-	private String password;
+//	@Value("${spring.redis.password}")
+//	private String password;
 
 	// redission通过redissonClient对象使用 // 如果是多个redis集群，可以配置
 	@Bean(destroyMethod = "shutdown")
 	public RedissonClient redisson() {
 		Config config = new Config();
 		// 创建单例模式的配置
-		config.useSingleServer().setAddress("redis://" + ipAddr + ":6379").setPassword(password);
+		config.useSingleServer().setAddress("redis://" + ipAddr + ":6379");
 		/*集群模式*/
 //		config.useClusterServers().addNodeAddress()
 		return Redisson.create(config);
