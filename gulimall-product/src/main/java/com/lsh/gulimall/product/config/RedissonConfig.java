@@ -29,6 +29,7 @@ public class RedissonConfig {
 		// 创建单例模式的配置
 		config.useSingleServer().setAddress("redis://" + ipAddr + ":6379");
 		/*集群模式*/
+		config.useSingleServer().setConnectionMinimumIdleSize(10);
 //		config.useClusterServers().addNodeAddress()
 		return Redisson.create(config);
 	}
