@@ -15,6 +15,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 public class GulimallGatewayApplication {
 	public static void main(String[] args) {
+		for (String arg : args) {
+			System.out.println(arg);
+		}
 		SpringApplication.run(GulimallGatewayApplication.class, args);
 	}
 
