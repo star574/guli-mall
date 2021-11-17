@@ -34,6 +34,7 @@ pipeline {
     stage('部署到到k8s') {
       steps {
         input(id: "deploy-to-dev-$PROJECT_NAME", message: "是否发布$PROJECT_NAME?")
+        sh 'docker pull $REGISTRY/$ALIYUNHUB_NAMESPACE/$PROJECT_NAME:latest '
         kubernetesDeploy(configs: "$PROJECT_NAME/deploy/**", enableConfigSubstitution: true, kubeconfigId: "$KUBECONFIG_CREDENTIAL_ID")
       }
     }
