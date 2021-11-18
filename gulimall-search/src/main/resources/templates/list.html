@@ -768,7 +768,7 @@
         </div>
 
 
-        <div class="JD_ipone_one c">
+        <div class="JD_ipone_one c" th:if="${result.navs!=null}">
             <div>
                 <a th:href="${nav.link}" th:each="nav:${result.navs}"><span th:text="${nav.navName}"></span><span
                         th:text="${nav.navValue}"></span>x</a>

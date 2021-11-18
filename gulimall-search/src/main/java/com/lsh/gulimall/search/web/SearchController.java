@@ -3,6 +3,7 @@ package com.lsh.gulimall.search.web;
 import com.lsh.gulimall.search.service.MallSearchService;
 import com.lsh.gulimall.search.vo.SearchParam;
 import com.lsh.gulimall.search.vo.SearchResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/")
+@Slf4j
 public class SearchController {
 
 	@Autowired
@@ -33,7 +35,7 @@ public class SearchController {
 		String queryString = request.getQueryString();
 		searchParam.set_queryString(queryString);
 		SearchResult result = mallSearchService.search(searchParam);
-
+		log.warn("搜索产品--------------------"+result);
 
 		model.addAttribute("result", result);
 
