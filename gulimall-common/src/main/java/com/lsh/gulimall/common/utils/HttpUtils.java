@@ -1,6 +1,6 @@
 package com.lsh.gulimall.common.utils;
 
-import com.alibaba.nacos.client.utils.StringUtils;
+import com.alibaba.nacos.common.utils.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
