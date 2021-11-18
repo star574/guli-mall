@@ -30,6 +30,6 @@ public class GulimallAuthServerApplication {
 
 	@PostConstruct
 	public void start() {
-		log.warn("购物车服务启动完成!");
+		log.warn("认证服务启动完成!");
 	}
 }
