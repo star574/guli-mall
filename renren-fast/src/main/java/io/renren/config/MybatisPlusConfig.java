@@ -10,13 +10,8 @@ package io.renren.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-import java.sql.SQLException;
 
 /**
  * mybatis-plus配置
@@ -27,13 +22,6 @@ import java.sql.SQLException;
 @Slf4j
 public class MybatisPlusConfig {
 
-	@Autowired
-	DataSource dataSource;
-
-	@PostConstruct
-	public void checkJDBC() throws SQLException {
-		log.warn("当前数据源信息" + dataSource.getConnection().getMetaData().getURL());
-	}
 
 	/**
 	 * 分页插件
