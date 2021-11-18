@@ -75,7 +75,7 @@ spec:
       port: 8080
       # targetPort 容器端口
       targetPort: 8080
-      nodePort: 31005
+      nodePort: 31004
   selector:
     app: gulimall-coupon
   type: NodePort
