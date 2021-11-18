@@ -18,20 +18,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.*;
 
 @Service("scheduleJobService")
 public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobDao, ScheduleJobEntity> implements ScheduleJobService {
 	@Autowired
 	private Scheduler scheduler;
+	@Autowired
+	private DataSource dataSource;
 
 	/**
 	 * 项目启动时，初始化定时器
 	 */
 	@PostConstruct
-	public void init() {
+	public void init() throws SQLException {
 		List<ScheduleJobEntity> scheduleJobList = this.list();
 		for (ScheduleJobEntity scheduleJob : scheduleJobList) {
+			System.out.println("数据源配置========================" + dataSource.getConnection().getMetaData().getURL());
 			CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, scheduleJob.getJobId());
 			//如果不存在，则创建
 			if (cronTrigger == null) {
