@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
@@ -29,6 +30,7 @@ public class MybatisPlusConfig {
 	@Autowired
 	DataSource dataSource;
 
+	@PostConstruct
 	public void checkJDBC() throws SQLException {
 		log.warn("当前数据源信息" + dataSource.getConnection().getMetaData().getURL());
 	}
