@@ -1241,7 +1241,8 @@
                                 <span th:text="'¥'+${product.skuPrice}">¥5199.00</span>
                             </p>
                             <p class="tab_JE">
-                                <a th:href="|http://item.gulimall.com/${product.skuId}.html|" th:utext="${product.skuTitle}">
+                                <a th:href="|http://item.gulimall.com/${product.skuId}.html|"
+                                   th:utext="${product.skuTitle}">
 
                                 </a>
                             </p>
@@ -1268,13 +1269,12 @@
                     <!--分页-->
                     <div class="filter_page">
                         <div class="page_wrap">
-                            <span class="page_span1">
+                            <span class="page_span1"
+                                  th:if="${result!=null && result.pageNavs!=null && result.pageNavs.szie()!=0 }">
                                 <a class="page_a"
                                    th:if="${result.pageNum>1}" th:attr="pn=${(result.pageNum)-1}">
                                     < 上一页
                                 </a>
-
-
                                 <a class="page_a" href="#" th:each="nav:${result.pageNavs}"
                                    th:attr="pn=${nav},style=${nav==result.pageNum?'border: 0;color:#ee2222;background: #fff':''
                                    }">[[${nav}]]</a>
