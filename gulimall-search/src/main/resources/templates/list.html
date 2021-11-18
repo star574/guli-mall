@@ -1267,10 +1267,10 @@
                         </div>
                     </div>
                     <!--分页-->
-                    <div class="filter_page">
+                    <div class="filter_page" th:if="${result!=null && result.pageNavs!=null && result.pageNavs.szie()!=0 }">
                         <div class="page_wrap">
                             <span class="page_span1"
-                                  th:if="${result!=null && result.pageNavs!=null && result.pageNavs.szie()!=0 }">
+                                  >
                                 <a class="page_a"
                                    th:if="${result.pageNum>1}" th:attr="pn=${(result.pageNum)-1}">
                                     < 上一页
