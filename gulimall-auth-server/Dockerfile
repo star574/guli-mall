@@ -5,4 +5,4 @@ VOLUME /tmp
 COPY ./target/*.jar /root/app.jar
 EXPOSE 8080
 RUN bash -c 'touch /root/app.jar'
-ENTRYPOINT ["java",'-jar','-Xms128m',"app.jar","--spring.profiles.active=prod"]
+CMD java -jar -Xms128m app.jar --server.port=8080 --spring.profiles.active=prod
