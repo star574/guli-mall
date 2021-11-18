@@ -12,19 +12,27 @@ import io.renren.common.exception.RRException;
 import io.renren.common.utils.Constant;
 import io.renren.modules.job.entity.ScheduleJobEntity;
 import org.quartz.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 
 /**
  * 定时任务工具类
  *
  * @author Mark shihengluo574@gmail.com
  */
+@Component
 public class ScheduleUtils {
     private final static String JOB_NAME = "TASK_";
+    @Autowired
+    private DataSource dataSource;
     
     /**
      * 获取触发器key
      */
     public static TriggerKey getTriggerKey(Long jobId) {
+
         return TriggerKey.triggerKey(JOB_NAME + jobId);
     }
     
