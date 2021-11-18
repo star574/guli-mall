@@ -73,6 +73,7 @@ pipeline {
     KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
     REGISTRY = 'registry.cn-shanghai.aliyuncs.com'
     ALIYUNHUB_NAMESPACE = 'star574'
+    DOCKERHUB_NAMESPACE = 'star574'
     GITHUB_ACCOUNT = 'star574'
     SONAR_CREDENTIAL_ID = 'sonar-qube'
     BRANCH_NAME = 'dev'
