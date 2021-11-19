@@ -112,7 +112,7 @@ public class MallSearchServiceIml implements MallSearchService {
 				ParsedStringTerms attr_name_agg = aggregations1.get("attr_name_agg");
 				String attrName = attr_name_agg.getBuckets().get(0).getKeyAsString();
 				/*属性名*/
-				attrVo.setAttrName(attrName);
+				attrVo.setAttrName(attrName+".keyword");
 
 				ParsedStringTerms attr_value_agg = aggregations1.get("attr_value_agg");
 				List<String> attrValues = attr_value_agg.getBuckets().stream().map(bucket1 -> {
@@ -140,12 +140,12 @@ public class MallSearchServiceIml implements MallSearchService {
 				/*品牌名*/
 				ParsedStringTerms brand_name_agg = bucket.getAggregations().get("brand_name_agg");
 				String brandName = brand_name_agg.getBuckets().get(0).getKeyAsString();
-				brandVo.setBrandName(brandName);
+				brandVo.setBrandName(brandName+".keyword");
 
 				/*品牌图片*/
 				ParsedStringTerms brand_img_agg = bucket.getAggregations().get("brand_img_agg");
 				String brandImg = brand_img_agg.getBuckets().get(0).getKeyAsString();
-				brandVo.setBrandImg(brandImg);
+				brandVo.setBrandImg(brandImg+".keyword");
 
 				brandVos.add(brandVo);
 			}
@@ -164,7 +164,7 @@ public class MallSearchServiceIml implements MallSearchService {
 				ParsedStringTerms catalogNameAgg = aggregations1.get("catalog_name_agg");
 				String catalogName = catalogNameAgg.getBuckets().get(0).getKeyAsString();
 				/*catalog name*/
-				catalogVo.setCatalogName(catalogName);
+				catalogVo.setCatalogName(catalogName+".keyword");
 				catalogVoList.add(catalogVo);
 			}
 			searchResult.setCatalogs(catalogVoList);
