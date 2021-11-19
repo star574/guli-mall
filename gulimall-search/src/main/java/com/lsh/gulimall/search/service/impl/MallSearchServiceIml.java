@@ -112,7 +112,7 @@ public class MallSearchServiceIml implements MallSearchService {
 				ParsedStringTerms attr_name_agg = aggregations1.get("attr_name_agg");
 				String attrName = attr_name_agg.getBuckets().get(0).getKeyAsString();
 				/*属性名*/
-				attrVo.setAttrName(attrName+".keyword");
+				attrVo.setAttrName(attrName);
 
 				ParsedStringTerms attr_value_agg = aggregations1.get("attr_value_agg");
 				List<String> attrValues = attr_value_agg.getBuckets().stream().map(bucket1 -> {
@@ -140,12 +140,12 @@ public class MallSearchServiceIml implements MallSearchService {
 				/*品牌名*/
 				ParsedStringTerms brand_name_agg = bucket.getAggregations().get("brand_name_agg");
 				String brandName = brand_name_agg.getBuckets().get(0).getKeyAsString();
-				brandVo.setBrandName(brandName+".keyword");
+				brandVo.setBrandName(brandName);
 
 				/*品牌图片*/
 				ParsedStringTerms brand_img_agg = bucket.getAggregations().get("brand_img_agg");
 				String brandImg = brand_img_agg.getBuckets().get(0).getKeyAsString();
-				brandVo.setBrandImg(brandImg+".keyword");
+				brandVo.setBrandImg(brandImg);
 
 				brandVos.add(brandVo);
 			}
@@ -164,7 +164,7 @@ public class MallSearchServiceIml implements MallSearchService {
 				ParsedStringTerms catalogNameAgg = aggregations1.get("catalog_name_agg");
 				String catalogName = catalogNameAgg.getBuckets().get(0).getKeyAsString();
 				/*catalog name*/
-				catalogVo.setCatalogName(catalogName+".keyword");
+				catalogVo.setCatalogName(catalogName);
 				catalogVoList.add(catalogVo);
 			}
 			searchResult.setCatalogs(catalogVoList);
@@ -317,9 +317,9 @@ public class MallSearchServiceIml implements MallSearchService {
 
 		/*子聚合*/
 		/*品牌名字*/
-		brand_agg.subAggregation(AggregationBuilders.terms("brand_name_agg").field("brandName").size(1));
+		brand_agg.subAggregation(AggregationBuilders.terms("brand_name_agg").field("brandName.keyword").size(1));
 		/*品牌图片*/
-		brand_agg.subAggregation(AggregationBuilders.terms("brand_img_agg").field("brandImg").size(1));
+		brand_agg.subAggregation(AggregationBuilders.terms("brand_img_agg").field("brandImg.keyword").size(1));
 //		1
 		searchSourceBuilder.aggregation(brand_agg);
 
@@ -336,7 +336,7 @@ public class MallSearchServiceIml implements MallSearchService {
 		/*子聚合*/
 		TermsAggregationBuilder attr_id_agg = AggregationBuilders.terms("attr_id_agg").field("attrs.attrId");
 		/*子子*/
-		TermsAggregationBuilder attr_name_agg = AggregationBuilders.terms("attr_name_agg").field("attrs.attrName").size(1);
+		TermsAggregationBuilder attr_name_agg = AggregationBuilders.terms("attr_name_agg").field("attrs.attrName.keyword").size(1);
 		TermsAggregationBuilder attr_value_agg = AggregationBuilders.terms("attr_value_agg").field("attrs.attrValue").size(50);
 
 		attr_id_agg.subAggregation(attr_name_agg);
