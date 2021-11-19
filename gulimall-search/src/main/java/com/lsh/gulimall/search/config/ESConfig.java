@@ -34,12 +34,13 @@ public class ESConfig {
 
 		RestClientBuilder builder = null;
 		// 可以指定多个es
-		HttpHost host=new HttpHost(this.host, 9200, HttpHost.DEFAULT_SCHEME_NAME);
-		builder=RestClient.builder(host);
+		System.out.println("ES连接地址:-------------" + this.host);
+		HttpHost host = new HttpHost(this.host, 9200, HttpHost.DEFAULT_SCHEME_NAME);
+		builder = RestClient.builder(host);
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 //		credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("elastic", "luoshiheng574"));
 		builder.setHttpClientConfigCallback(f -> f.setDefaultCredentialsProvider(credentialsProvider));
-		RestHighLevelClient restClient = new RestHighLevelClient( builder);
+		RestHighLevelClient restClient = new RestHighLevelClient(builder);
 
 		return restClient;
 	}
